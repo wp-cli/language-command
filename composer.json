@@ -32,9 +32,11 @@
             "dev-master": "1.x-dev"
         },
         "commands": [
-            "core language add",
-            "core language list",
-            "core language remove"
+            "language core activate",
+            "language core install",
+            "language core list",
+            "language core uninstall",
+            "language core update"
         ]
     }
 }
