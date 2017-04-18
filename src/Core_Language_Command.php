@@ -30,11 +30,3 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	protected $obj_type = 'core';
 
 }
-
-WP_CLI::add_command( 'core language', 'Core_Language_Command', array(
-	'before_invoke' => function() {
-		if ( \WP_CLI\Utils\wp_version_compare( '4.0', '<' ) ) {
-			WP_CLI::error( "Requires WordPress 4.0 or greater." );
-		}
-	})
-);
