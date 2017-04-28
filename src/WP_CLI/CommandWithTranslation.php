@@ -135,6 +135,10 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 
 		$language_codes = $args;
 
+		if(  1 < count( $language_codes )  &&  in_array( true , $assoc_args ) ){
+			\WP_CLI::error( "Single language can be active at a time." );
+		}
+
 		$available = $this->get_installed_languages();
 
 		foreach ($language_codes as $language_code) {
