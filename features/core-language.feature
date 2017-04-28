@@ -23,6 +23,15 @@ Feature: Manage translation files for a WordPress install
       """
     And STDERR should be empty
 
+    When I run `wp core language install en_CA en_NZ`
+    Then the wp-content/languages/admin-en_CA.po file should exist
+    And the wp-content/languages/en_CA.po file should exist
+    And STDOUT should contain:
+      """
+      Success: Language installed.
+      """
+    And STDERR should be empty
+
     When I run `ls {SUITE_CACHE_DIR}/translation | grep core-default-`
     Then STDOUT should contain:
       """
