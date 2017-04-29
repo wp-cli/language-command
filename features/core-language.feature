@@ -145,6 +145,15 @@ Feature: Manage translation files for a WordPress install
       Success: Language uninstalled.
       """
 
+    When I run `wp core language uninstall en_CA en_NZ`
+     Then the wp-content/languages/admin-en_CA.po file should not exist
+     And the wp-content/languages/en_CA.po file should not exist
+     And STDOUT should be:
+       """
+      Success: Language uninstalled.
+      Success: Language uninstalled.
+      """
+
     When I try `wp core language uninstall en_GB`
     Then STDERR should be:
       """
