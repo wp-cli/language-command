@@ -112,6 +112,12 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
 
+    When I try `wp core language install en_CA en_NZ --activate`
+    Then STDERR should be:
+      """
+      Error: Only a single language can be active.
+      """
+
     When I run `wp core language activate en_US`
     Then STDOUT should be:
       """
