@@ -23,6 +23,15 @@ Feature: Manage translation files for a WordPress install
       """
     And STDERR should be empty
 
+    When I run `wp core language install en_CA en_NZ`
+    Then the wp-content/languages/admin-en_CA.po file should exist
+    And the wp-content/languages/en_CA.po file should exist
+    And STDOUT should contain:
+      """
+      Success: Language installed.
+      """
+    And STDERR should be empty
+
     When I run `ls {SUITE_CACHE_DIR}/translation | grep core-default-`
     Then STDOUT should contain:
       """
@@ -102,6 +111,12 @@ Feature: Manage translation files for a WordPress install
       Warning: Language 'en_AU' already active.
       """
     And STDOUT should be empty
+
+    When I try `wp core language install en_CA en_NZ --activate`
+    Then STDERR should be:
+      """
+      Error: Only a single language can be active.
+      """
 
     When I run `wp core language activate en_US`
     Then STDOUT should be:
