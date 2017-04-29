@@ -197,9 +197,5 @@ Feature: Manage translation files for a WordPress install
     When I run `wp core language install nl_NL`
     Then STDOUT should contain:
       """
-      Using cached file '/tmp/wp-cli-home/.wp-cli/cache/translation/core-default-4.5.3-nl_NL-1468579428.zip'...
-      Unpacking the update...
-      Installing the latest version...
-      Translation updated successfully.
-      Success: Language installed.
+      Downloading translation from https://downloads.wordpress.org/translation/core/4.5.3
       """
