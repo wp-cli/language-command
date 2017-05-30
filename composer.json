@@ -20,7 +20,9 @@
         "psr-4": {
             "": "src/"
         },
-        "files": [ "language-command.php" ]
+        "files": [
+            "language-command.php"
+        ]
     },
     "require": {},
     "require-dev": {
@@ -37,6 +39,7 @@
             "language core list",
             "language core uninstall",
             "language core update"
-        ]
+        ],
+        "bundled": true
     }
 }
