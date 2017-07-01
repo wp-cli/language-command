@@ -33,7 +33,14 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 * : Limit the output to specific fields.
 	 *
 	 * [--format=<format>]
-	 * : Accepted values: table, csv, json. Default: table
+	 * : Render output in a particular format.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 * ---
 	 *
 	 * ## AVAILABLE FIELDS
 	 *
