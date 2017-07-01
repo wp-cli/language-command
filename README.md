@@ -71,7 +71,14 @@ wp language core list [--field=<field>] [--<field>=<value>] [--fields=<fields>] 
 		Limit the output to specific fields.
 
 	[--format=<format>]
-		Accepted values: table, csv, json. Default: table
+		Render output in a particular format.
+		---
+		default: table
+		options:
+		  - table
+		  - csv
+		  - json
+		---
 
 **AVAILABLE FIELDS**
 
