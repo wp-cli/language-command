@@ -61,7 +61,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # List language,english_name,status fields of available languages.
-	 *     $ wp core language list --fields=language,english_name,status
+	 *     $ wp language core list --fields=language,english_name,status
 	 *     +----------------+-------------------------+-------------+
 	 *     | language       | english_name            | status      |
 	 *     +----------------+-------------------------+-------------+
@@ -133,7 +133,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # Install the Japanese language.
-	 *     $ wp core language install ja
+	 *     $ wp language core install ja
 	 *     Success: Language installed.
 	 *
 	 * @subcommand install
@@ -179,7 +179,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     $ wp core language update
+	 *     $ wp language core update
 	 *     Updating 'Japanese' translation for Akismet 3.1.11...
 	 *     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
 	 *     Translation updated successfully.
@@ -270,7 +270,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     $ wp core language activate ja
+	 *     $ wp language core activate ja
 	 *     Success: Language activated.
 	 *
 	 * @subcommand activate
@@ -411,7 +411,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     $ wp core language uninstall ja
+	 *     $ wp language core uninstall ja
 	 *     Success: Language uninstalled.
 	 *
 	 * @subcommand uninstall
