@@ -16,3 +16,7 @@ WP_CLI::add_command( 'language core', 'Core_Language_Command', array(
 		}
 	})
 );
+
+if ( class_exists( 'WP_CLI\Dispatcher\CommandNamespace' ) ) {
+	WP_CLI::add_command( 'language', 'Language_Namespace' );
+}
