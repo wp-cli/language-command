@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Manage core language.
+ * Installs, activates, and manages core language packs.
  *
  * ## EXAMPLES
  *
- *     # Install language
+ *     # Install the Dutch core language pack.
  *     $ wp language core install nl_NL
  *     Success: Language installed.
  *
- *     # Activate language
+ *     # Activate the Dutch core language pack.
  *     $ wp language core activate nl_NL
  *     Success: Language activated.
  *
- *     # Uninstall language
+ *     # Uninstall the Dutch core language pack.
  *     $ wp language core uninstall nl_NL
  *     Success: Language uninstalled.
  *
- *     # List installed languages
+ *     # List installed core language packages.
  *     $ wp language core list --status=installed
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
  *     | language | english_name | native_name | status    | update    | updated             |

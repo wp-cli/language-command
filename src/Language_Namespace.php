@@ -3,15 +3,15 @@
 use WP_CLI\Dispatcher\CommandNamespace;
 
 /**
- * Manage language files.
+ * Installs, activates, and manages language packs.
  *
  * ## EXAMPLES
  *
- *     # Install language
+ *     # Install the Dutch core language pack.
  *     $ wp language core install nl_NL
  *     Success: Language installed.
  *
- *     # Activate language
+ *     # Activate the Dutch core language pack.
  *     $ wp language core activate nl_NL
  *     Success: Language activated.
  */
