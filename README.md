@@ -11,6 +11,26 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 
 This package implements the following commands:
 
+### wp language
+
+Installs, activates, and manages language packs.
+
+~~~
+wp language
+~~~
+
+**EXAMPLES**
+
+    # Install the Dutch core language pack.
+    $ wp language core install nl_NL
+    Success: Language installed.
+
+    # Activate the Dutch core language pack.
+    $ wp language core activate nl_NL
+    Success: Language activated.
+
+
+
 ### wp language core activate
 
 Activate a given language.

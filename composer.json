@@ -34,6 +34,7 @@
             "dev-master": "1.x-dev"
         },
         "commands": [
+            "language",
             "language core activate",
             "language core install",
             "language core list",
