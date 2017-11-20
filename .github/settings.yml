@@ -1,0 +1,26 @@
+# Used by Probot Settings: https://probot.github.io/apps/settings/
+repository:
+  description: Manage language packs.
+  labels:
+    - name: scope:documentation
+      color: 0e8a16
+    - name: scope:testing
+      color: 5319e7
+    - name: good-first-issue
+      color: eb6420
+    - name: state:unconfirmed
+      color: bfe5bf
+    - name: state:unsupported
+      color: bfe5bf
+    - name: command:language
+      color: c5def5
+    - name: command:language-core-activate
+      color: c5def5
+    - name: command:language-core-install
+      color: c5def5
+    - name: command:language-core-list
+      color: c5def5
+    - name: command:language-core-uninstall
+      color: c5def5
+    - name: command:language-core-update
+      color: c5def5
