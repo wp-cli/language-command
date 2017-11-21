@@ -47,6 +47,8 @@ Feature: Manage translation files for a WordPress install
       """
       Warning: Language 'en_AU' already installed.
       """
+    And STDOUT should be empty
+    And the return code should be 0
 
     When I run `wp language core list --fields=language,english_name,status`
     Then STDOUT should be a table containing rows:
@@ -94,29 +96,33 @@ Feature: Manage translation files for a WordPress install
       | az        | Azerbaijani      | uninstalled   |
       | en_GB     | English (UK)     | active        |
 
-    When I run `wp language core install en_AU --activate`
+    When I try `wp language core install en_AU --activate`
     Then STDERR should contain:
       """
       Warning: Language 'en_AU' already installed.
       """
-    And STDOUT should contain:
+    And STDOUT should be:
       """
       Success: Language activated.
       """
+    And the return code should be 0
 
-    When I run `wp language core install en_AU --activate`
+    When I try `wp language core install en_AU --activate`
     Then STDERR should contain:
       """
       Warning: Language 'en_AU' already installed.
       Warning: Language 'en_AU' already active.
       """
     And STDOUT should be empty
+    And the return code should be 0
 
     When I try `wp language core install en_CA en_NZ --activate`
     Then STDERR should be:
       """
       Error: Only a single language can be active.
       """
+    And STDOUT should be empty
+    And the return code should be 1
 
     When I run `wp language core activate en_US`
     Then STDOUT should be:
@@ -136,6 +142,8 @@ Feature: Manage translation files for a WordPress install
       """
       Error: Language not installed.
       """
+    And STDOUT should be empty
+    And the return code should be 1
 
     When I run `wp language core uninstall en_GB`
     Then the wp-content/languages/admin-en_GB.po file should not exist
@@ -159,6 +167,8 @@ Feature: Manage translation files for a WordPress install
       """
       Error: Language not installed.
       """
+    And STDOUT should be empty
+    And the return code should be 1
 
     When I run `wp language core install en_GB --activate`
     Then the wp-content/languages/admin-en_GB.po file should exist
@@ -175,6 +185,8 @@ Feature: Manage translation files for a WordPress install
       """
       Error: Language 'invalid_lang' not found.
       """
+    And STDOUT should be empty
+    And the return code should be 1
 
   @require-wp-4.0
   Scenario: Don't allow active language to be uninstalled
@@ -188,11 +200,13 @@ Feature: Manage translation files for a WordPress install
       """
       Warning: The 'en_GB' language is active.
       """
+    And STDOUT should be empty
+    And the return code should be 0
 
   @require-wp-4.0
   Scenario: Ensure correct language is installed for WP version
     Given a WP install
-	And an empty cache
+    And an empty cache
     And I run `wp core download --version=4.5.3 --force`
 
     When I run `wp language core install nl_NL`
