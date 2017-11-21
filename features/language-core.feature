@@ -101,7 +101,7 @@ Feature: Manage translation files for a WordPress install
       """
       Warning: Language 'en_AU' already installed.
       """
-    Then STDOUT should be:
+    And STDOUT should be:
       """
       Success: Language activated.
       """
