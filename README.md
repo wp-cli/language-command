@@ -1,7 +1,7 @@
 wp-cli/language-command
 =======================
 
-Manage language packs.
+Installs, activates, and manages language packs.
 
 [![Build Status](https://travis-ci.org/wp-cli/language-command.svg?branch=master)](https://travis-ci.org/wp-cli/language-command)
 
@@ -31,13 +31,47 @@ wp language
 
 
 
+### wp language core
+
+Installs, activates, and manages core language packs.
+
+~~~
+wp language core
+~~~
+
+**EXAMPLES**
+
+    # Install the Dutch core language pack.
+    $ wp language core install nl_NL
+    Success: Language installed.
+
+    # Activate the Dutch core language pack.
+    $ wp language core activate nl_NL
+    Success: Language activated.
+
+    # Uninstall the Dutch core language pack.
+    $ wp language core uninstall nl_NL
+    Success: Language uninstalled.
+
+    # List installed core language packages.
+    $ wp language core list --status=installed
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+    | language | english_name | native_name | status    | update    | updated             |
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+    | nl_NL    | Dutch        | Nederlands  | installed | available | 2016-05-13 08:12:50 |
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+
+
+
 ### wp language core activate
 
-Activate a given language.
+Activates a given language.
 
 ~~~
 wp language core activate <language>
 ~~~
+
+**OPTIONS**
 
 	<language>
 		Language code to activate.
@@ -51,13 +85,15 @@ wp language core activate <language>
 
 ### wp language core install
 
-Install a given language.
+Installs a given language.
 
 ~~~
 wp language core install <language>... [--activate]
 ~~~
 
 Downloads the language pack from WordPress.org.
+
+**OPTIONS**
 
 	<language>...
 		Language code to install.
@@ -75,11 +111,13 @@ Downloads the language pack from WordPress.org.
 
 ### wp language core list
 
-List all available languages.
+Lists all available languages.
 
 ~~~
 wp language core list [--field=<field>] [--<field>=<value>] [--fields=<fields>] [--format=<format>]
 ~~~
+
+**OPTIONS**
 
 	[--field=<field>]
 		Display the value of a single field
@@ -131,11 +169,13 @@ These fields are optionally available:
 
 ### wp language core uninstall
 
-Uninstall a given language.
+Uninstalls a given language.
 
 ~~~
 wp language core uninstall <language>...
 ~~~
+
+**OPTIONS**
 
 	<language>...
 		Language code to uninstall.
@@ -149,13 +189,15 @@ wp language core uninstall <language>...
 
 ### wp language core update
 
-Update installed languages.
+Updates installed languages.
 
 ~~~
 wp language core update [--dry-run]
 ~~~
 
 Updates installed languages for core, plugins and themes.
+
+**OPTIONS**
 
 	[--dry-run]
 		Preview which translations would be updated.
@@ -203,7 +245,7 @@ Once you've decided to commit the time to seeing your pull request through, [ple
 
 ## Support
 
-Github issues aren't for general support questions, but there are other venues you can try: http://wp-cli.org/#support
+Github issues aren't for general support questions, but there are other venues you can try: https://wp-cli.org/#support
 
 
 *This README.md is generated dynamically from the project's codebase using `wp scaffold package-readme` ([doc](https://github.com/wp-cli/scaffold-package-command#wp-scaffold-package-readme)). To suggest changes, please submit a pull request against the corresponding part of the codebase.*

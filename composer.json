@@ -1,6 +1,6 @@
 {
     "name": "wp-cli/language-command",
-    "description": "Manage language packs.",
+    "description": "Installs, activates, and manages language packs.",
     "type": "wp-cli-package",
     "homepage": "https://github.com/wp-cli/language-command",
     "support": {
@@ -35,6 +35,7 @@
         },
         "commands": [
             "language",
+            "language core",
             "language core activate",
             "language core install",
             "language core list",
