@@ -21,7 +21,9 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		);
 
 	/**
-	 * List all available languages.
+	 * Lists all available languages.
+	 *
+	 * ## OPTIONS
 	 *
 	 * [--field=<field>]
 	 * : Display the value of a single field
@@ -120,9 +122,11 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Install a given language.
+	 * Installs a given language.
 	 *
 	 * Downloads the language pack from WordPress.org.
+	 *
+	 * ## OPTIONS
 	 *
 	 * <language>...
 	 * : Language code to install.
@@ -170,9 +174,11 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Update installed languages.
+	 * Updates installed languages.
 	 *
 	 * Updates installed languages for core, plugins and themes.
+	 *
+	 * ## OPTIONS
 	 *
 	 * [--dry-run]
 	 * : Preview which translations would be updated.
@@ -263,7 +269,9 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Activate a given language.
+	 * Activates a given language.
+	 *
+	 * ## OPTIONS
 	 *
 	 * <language>
 	 * : Language code to activate.
@@ -404,7 +412,9 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Uninstall a given language.
+	 * Uninstalls a given language.
+	 *
+	 * ## OPTIONS
 	 *
 	 * <language>...
 	 * : Language code to uninstall.
