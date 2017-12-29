@@ -75,7 +75,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 */
 	public function list_( $args, $assoc_args ) {
 
-		$translations = $this->get_all_languages();
+		$translations = $this->get_all_languages( $args['slug'] );
 		$available = $this->get_installed_languages();
 
 		$updates = $this->get_translation_updates();
@@ -154,10 +154,10 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 
 		foreach ($language_codes as $language_code) {
 
-			if ( in_array( $language_code, $available ) ) {
+			if ( in_array( $language_code, $available, true ) ) {
 				\WP_CLI::warning( "Language '{$language_code}' already installed." );
 			} else {
-				$response = $this->download_language_pack( $language_code );
+				$response = $this->download_language_pack( $language_code, $args['slug'] );
 
 				if ( is_wp_error( $response ) ) {
 					\WP_CLI::error( $response );
@@ -206,7 +206,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		}
 
 		// Gets a list of all languages.
-		$all_languages = $this->get_all_languages();
+		$all_languages = $this->get_all_languages( $args['slug'] );
 
 		// Formats the updates list.
 		foreach ( $updates as $update ) {
@@ -312,7 +312,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 *
 	 * @return array
 	 */
-	private function get_translation_updates() {
+	protected function get_translation_updates() {
 		$available = $this->get_installed_languages();
 		$func = function() use ( $available ) {
 			return $available;
@@ -338,11 +338,12 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 * @see wp_download_language_pack()
 	 *
 	 * @param string $download Language code to download.
+	 * @param string $slug Plugin or theme slug. Not used for core.
 	 * @return string|WP_Error Returns the language code if successfully downloaded, or a WP_Error object on failure.
 	 */
-	private function download_language_pack( $download ) {
+	private function download_language_pack( $download, $slug = null ) {
 
-		$translations = $this->get_all_languages();
+		$translations = $this->get_all_languages( $slug );
 
 		foreach ( $translations as $translation ) {
 			if ( $translation['language'] === $download ) {
@@ -386,13 +387,18 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	/**
 	 * Return a list of all languages
 	 *
+	 * @param string $slug Plugin or theme slug. Not used fore core.
+	 *
 	 * @return array
 	 */
-	protected function get_all_languages() {
+	protected function get_all_languages( $slug = null ) {
 		require_once ABSPATH . '/wp-admin/includes/translation-install.php';
 		require ABSPATH . WPINC . '/version.php';
 
-		$response = translations_api( $this->obj_type, array( 'version' => $wp_version ) );
+		$response = translations_api( $this->obj_type, array(
+			'version' => $wp_version,
+			'slug'    => $slug
+		) );
 		if ( is_wp_error( $response ) ) {
 			\WP_CLI::error( $response );
 		}
