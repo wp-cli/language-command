@@ -63,6 +63,8 @@ wp language core
 
 
 
+
+
 ### wp language core activate
 
 Activates a given language.
@@ -193,6 +195,352 @@ Updates installed languages.
 
 ~~~
 wp language core update [--dry-run]
+~~~
+
+Updates installed languages for core, plugins and themes.
+
+**OPTIONS**
+
+	[--dry-run]
+		Preview which translations would be updated.
+
+**EXAMPLES**
+
+    $ wp language core update
+    Updating 'Japanese' translation for Akismet 3.1.11...
+    Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
+    Translation updated successfully.
+    Updating 'Japanese' translation for Twenty Fifteen 1.5...
+    Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
+    Translation updated successfully.
+    Success: Updated 2/2 translations.
+
+
+
+### wp language plugin
+
+Installs, activates, and manages plugin language packs.
+
+~~~
+wp language plugin
+~~~
+
+**EXAMPLES**
+
+    # Install the Dutch theme language pack.
+    $ wp language plugin install nl_NL
+    Success: Language installed.
+
+    # Activate the Dutch theme language pack.
+    $ wp language plugin activate nl_NL
+    Success: Language activated.
+
+    # Uninstall the Dutch theme language pack.
+    $ wp language plugin uninstall nl_NL
+    Success: Language uninstalled.
+
+    # List installed theme language packages.
+    $ wp language plugin list --status=installed
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+    | language | english_name | native_name | status    | update    | updated             |
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+    | nl_NL    | Dutch        | Nederlands  | installed | available | 2016-05-13 08:12:50 |
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+
+
+
+
+
+### wp language plugin install
+
+Installs a given language.
+
+~~~
+wp language plugin install <plugin> <language>...
+~~~
+
+Downloads the language pack from WordPress.org.
+
+**OPTIONS**
+
+	<plugin>
+		Plugin to install language for.
+
+	<language>...
+		Language code to install.
+
+**EXAMPLES**
+
+    # Install the Japanese language.
+    $ wp language core install ja
+    Success: Language installed.
+
+
+
+### wp language plugin list
+
+Lists all available languages.
+
+~~~
+wp language plugin list [<plugin>...] [--all] [--field=<field>] [--<field>=<value>] [--fields=<fields>] [--format=<format>]
+~~~
+
+**OPTIONS**
+
+	[<plugin>...]
+		One or more plugins to list languages for.
+
+	[--all]
+		If set, available languages for all plugins will be listed.
+
+	[--field=<field>]
+		Display the value of a single field.
+
+	[--<field>=<value>]
+		Filter results by key=value pairs.
+
+	[--fields=<fields>]
+		Limit the output to specific fields.
+
+	[--format=<format>]
+		Render output in a particular format.
+		---
+		default: table
+		options:
+		  - table
+		  - csv
+		  - json
+		---
+
+**AVAILABLE FIELDS**
+
+These fields will be displayed by default for each translation:
+
+* plugin
+* language
+* english_name
+* native_name
+* status
+* update
+* updated
+
+These fields are optionally available:
+
+* version
+* package
+
+**EXAMPLES**
+
+    # List language,english_name,status fields of available languages.
+    $ wp language plugin list --fields=language,english_name,status
+    +----------------+-------------------------+-------------+
+    | language       | english_name            | status      |
+    +----------------+-------------------------+-------------+
+    | ar             | Arabic                  | uninstalled |
+    | ary            | Moroccan Arabic         | uninstalled |
+    | az             | Azerbaijani             | uninstalled |
+
+
+
+### wp language plugin uninstall
+
+Uninstalls a given language.
+
+~~~
+wp language plugin uninstall <language>...
+~~~
+
+**OPTIONS**
+
+	<language>...
+		Language code to uninstall.
+
+**EXAMPLES**
+
+    $ wp language core uninstall ja
+    Success: Language uninstalled.
+
+
+
+### wp language plugin update
+
+Updates installed languages.
+
+~~~
+wp language plugin update [--dry-run]
+~~~
+
+Updates installed languages for core, plugins and themes.
+
+**OPTIONS**
+
+	[--dry-run]
+		Preview which translations would be updated.
+
+**EXAMPLES**
+
+    $ wp language core update
+    Updating 'Japanese' translation for Akismet 3.1.11...
+    Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
+    Translation updated successfully.
+    Updating 'Japanese' translation for Twenty Fifteen 1.5...
+    Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
+    Translation updated successfully.
+    Success: Updated 2/2 translations.
+
+
+
+### wp language theme
+
+Installs, activates, and manages theme language packs.
+
+~~~
+wp language theme
+~~~
+
+**EXAMPLES**
+
+    # Install the Dutch theme language pack.
+    $ wp language theme install nl_NL
+    Success: Language installed.
+
+    # Activate the Dutch theme language pack.
+    $ wp language theme activate nl_NL
+    Success: Language activated.
+
+    # Uninstall the Dutch theme language pack.
+    $ wp language theme uninstall nl_NL
+    Success: Language uninstalled.
+
+    # List installed theme language packages.
+    $ wp language theme list --status=installed
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+    | language | english_name | native_name | status    | update    | updated             |
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+    | nl_NL    | Dutch        | Nederlands  | installed | available | 2016-05-13 08:12:50 |
+    +----------+--------------+-------------+-----------+-----------+---------------------+
+
+
+
+
+
+### wp language theme install
+
+Installs a given language.
+
+~~~
+wp language theme install <theme> <language>...
+~~~
+
+Downloads the language pack from WordPress.org.
+
+**OPTIONS**
+
+	<theme>
+		Theme to install language for.
+
+	<language>...
+		Language code to install.
+
+**EXAMPLES**
+
+    # Install the Japanese language.
+    $ wp language core install ja
+    Success: Language installed.
+
+
+
+### wp language theme list
+
+Lists all available languages.
+
+~~~
+wp language theme list [<theme>...] [--all] [--field=<field>] [--<field>=<value>] [--fields=<fields>] [--format=<format>]
+~~~
+
+**OPTIONS**
+
+	[<theme>...]
+		One or more themes to list languages for.
+
+	[--all]
+		If set, available languages for all themes will be listed.
+
+	[--field=<field>]
+		Display the value of a single field.
+
+	[--<field>=<value>]
+		Filter results by key=value pairs.
+
+	[--fields=<fields>]
+		Limit the output to specific fields.
+
+	[--format=<format>]
+		Render output in a particular format.
+		---
+		default: table
+		options:
+		  - table
+		  - csv
+		  - json
+		---
+
+**AVAILABLE FIELDS**
+
+These fields will be displayed by default for each translation:
+
+* theme
+* language
+* english_name
+* native_name
+* status
+* update
+* updated
+
+These fields are optionally available:
+
+* version
+* package
+
+**EXAMPLES**
+
+    # List language,english_name,status fields of available languages.
+    $ wp language theme list --fields=language,english_name,status
+    +----------------+-------------------------+-------------+
+    | language       | english_name            | status      |
+    +----------------+-------------------------+-------------+
+    | ar             | Arabic                  | uninstalled |
+    | ary            | Moroccan Arabic         | uninstalled |
+    | az             | Azerbaijani             | uninstalled |
+
+
+
+### wp language theme uninstall
+
+Uninstalls a given language.
+
+~~~
+wp language theme uninstall <language>...
+~~~
+
+**OPTIONS**
+
+	<language>...
+		Language code to uninstall.
+
+**EXAMPLES**
+
+    $ wp language core uninstall ja
+    Success: Language uninstalled.
+
+
+
+### wp language theme update
+
+Updates installed languages.
+
+~~~
+wp language theme update [--dry-run]
 ~~~
 
 Updates installed languages for core, plugins and themes.
