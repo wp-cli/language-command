@@ -192,7 +192,7 @@ Feature: Manage translation files for a WordPress install
   Scenario: Don't allow active language to be uninstalled
     Given a WP install
 
-    When I run `wp language plugin install hello-dolly en_GB --activate`
+    When I run `wp language core install en_GB --activate`
     Then STDOUT should not be empty
 
     When I try `wp language plugin uninstall en_GB`
@@ -202,15 +202,3 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
     And the return code should be 0
-
-  @require-wp-4.0
-  Scenario: Ensure correct language is installed for WP version
-    Given a WP install
-    And an empty cache
-    And I run `wp core download --version=4.5.3 --force`
-
-    When I run `wp language plugin install hello-dolly en_GB`
-    Then STDOUT should contain:
-      """
-      Downloading translation from https://downloads.wordpress.org/translation/plugin/4.5.3
-      """

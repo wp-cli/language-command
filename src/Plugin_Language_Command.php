@@ -150,9 +150,6 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * <language>...
 	 * : Language code to install.
 	 *
-	 * [--activate]
-	 * : If set, the language will be activated immediately after install.
-	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Install the Japanese language.
@@ -164,12 +161,6 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	public function install( $args, $assoc_args ) {
 		$plugin         = array_shift( $args );
 		$language_codes = $args;
-
-		$activate = \WP_CLI\Utils\get_flag_value( $assoc_args, 'activate' );
-
-		if ( $activate && 1 < count( $language_codes ) ) {
-			\WP_CLI::error( 'Only a single language can be active.' );
-		}
 
 		$available = $this->get_installed_languages();
 
@@ -185,10 +176,6 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				} else {
 					\WP_CLI::success( 'Language installed.' );
 				}
-			}
-
-			if ( $activate ) {
-				$this->activate( array( $language_code ), array() );
 			}
 		}
 	}
