@@ -178,7 +178,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			if ( in_array( $language_code, $available, true ) ) {
 				\WP_CLI::warning( "Language '{$language_code}' already installed." );
 			} else {
-				$response = $this->download_language_pack( $language_code, 'plugin', $plugin );
+				$response = $this->download_language_pack( $language_code, $plugin );
 
 				if ( is_wp_error( $response ) ) {
 					\WP_CLI::error( $response );
