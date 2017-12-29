@@ -302,7 +302,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 * @param string $slug Plugin or theme slug. Not used for core.
 	 * @return string|WP_Error Returns the language code if successfully downloaded, or a WP_Error object on failure.
 	 */
-	private function download_language_pack( $download, $slug = null ) {
+	protected function download_language_pack( $download, $slug = null ) {
 
 		$translations = $this->get_all_languages( $slug );
 
