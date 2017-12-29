@@ -75,7 +75,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 */
 	public function list_( $args, $assoc_args ) {
 
-		$translations = $this->get_all_languages( $args['slug'] );
+		$translations = $this->get_all_languages();
 		$available = $this->get_installed_languages();
 
 		$updates = $this->get_translation_updates();
@@ -157,7 +157,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 			if ( in_array( $language_code, $available, true ) ) {
 				\WP_CLI::warning( "Language '{$language_code}' already installed." );
 			} else {
-				$response = $this->download_language_pack( $language_code, $args['slug'] );
+				$response = $this->download_language_pack( $language_code );
 
 				if ( is_wp_error( $response ) ) {
 					\WP_CLI::error( $response );
@@ -206,7 +206,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		}
 
 		// Gets a list of all languages.
-		$all_languages = $this->get_all_languages( $args['slug'] );
+		$all_languages = $this->get_all_languages();
 
 		// Formats the updates list.
 		foreach ( $updates as $update ) {
