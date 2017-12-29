@@ -318,7 +318,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		}
 		$translation = (object) $translation;
 
-		$translation->type = 'core';
+		$translation->type = rtrim( $this->obj_type, 's' );
 
 		$upgrader = 'WP_CLI\\LanguagePackUpgrader';
 		$result = Utils\get_upgrader( $upgrader )->upgrade( $translation, array( 'clear_update_cache' => false ) );
