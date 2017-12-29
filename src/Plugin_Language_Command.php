@@ -138,6 +138,62 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
+	 * Installs a given language.
+	 *
+	 * Downloads the language pack from WordPress.org.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <plugin>
+	 * : Plugin to install language for.
+	 *
+	 * <language>...
+	 * : Language code to install.
+	 *
+	 * [--activate]
+	 * : If set, the language will be activated immediately after install.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Install the Japanese language.
+	 *     $ wp language core install ja
+	 *     Success: Language installed.
+	 *
+	 * @subcommand install
+	 */
+	public function install( $args, $assoc_args ) {
+		$plugin         = array_shift( $args );
+		$language_codes = $args;
+
+		$activate = \WP_CLI\Utils\get_flag_value( $assoc_args, 'activate' );
+
+		if ( $activate && 1 < count( $language_codes ) ) {
+			\WP_CLI::error( 'Only a single language can be active.' );
+		}
+
+		$available = $this->get_installed_languages();
+
+		foreach ( $language_codes as $language_code ) {
+
+			if ( in_array( $language_code, $available, true ) ) {
+				\WP_CLI::warning( "Language '{$language_code}' already installed." );
+			} else {
+				$response = $this->download_language_pack( $language_code, 'plugin', $plugin );
+
+				if ( is_wp_error( $response ) ) {
+					\WP_CLI::error( $response );
+				} else {
+					\WP_CLI::success( 'Language installed.' );
+				}
+			}
+
+			if ( $activate ) {
+				$this->activate( array( $language_code ), array() );
+			}
+		}
+	}
+
+	/**
 	 * Gets all available plugins.
 	 *
 	 * Uses the same filter core uses in plugins.php to determine which plugins
