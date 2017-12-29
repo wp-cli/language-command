@@ -26,7 +26,44 @@
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
  */
 class Core_Language_Command extends WP_CLI\CommandWithTranslation {
-
 	protected $obj_type = 'core';
 
+	/**
+	 * Activates a given language.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <language>
+	 * : Language code to activate.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     $ wp language core activate ja
+	 *     Success: Language activated.
+	 *
+	 * @subcommand activate
+	 */
+	public function activate( $args, $assoc_args ) {
+
+		list( $language_code ) = $args;
+
+		$available = $this->get_installed_languages();
+
+		if ( ! in_array( $language_code, $available ) ) {
+			\WP_CLI::error( "Language not installed." );
+		}
+
+		if ( $language_code == 'en_US' ) {
+			$language_code = '';
+		}
+
+		if ( $language_code === get_locale() ) {
+			\WP_CLI::warning( "Language '{$language_code}' already active." );
+
+			return;
+		}
+
+		update_option( 'WPLANG', $language_code );
+		\WP_CLI::success( "Language activated." );
+	}
 }
