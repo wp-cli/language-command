@@ -6,15 +6,11 @@
  * ## EXAMPLES
  *
  *     # Install the Dutch theme language pack.
- *     $ wp language theme install nl_NL
+ *     $ wp language theme install twentyten nl_NL
  *     Success: Language installed.
  *
- *     # Activate the Dutch theme language pack.
- *     $ wp language theme activate nl_NL
- *     Success: Language activated.
- *
  *     # Uninstall the Dutch theme language pack.
- *     $ wp language theme uninstall nl_NL
+ *     $ wp language theme uninstall twentyten nl_NL
  *     Success: Language uninstalled.
  *
  *     # List installed theme language packages.
@@ -180,4 +176,58 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 	}
 
+	/**
+	 * Uninstalls a given language.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <theme>
+	 * : Theme to uninstall language for.
+	 *
+	 * <language>...
+	 * : Language code to uninstall.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     $ wp language theme uninstall twentyten ja
+	 *     Success: Language uninstalled.
+	 *
+	 * @subcommand uninstall
+	 */
+	public function uninstall( $args, $assoc_args ) {
+		/* @var WP_Filesystem_Base $wp_filesystem */
+		global $wp_filesystem;
+
+		$theme          = array_shift( $args );
+		$language_codes = $args;
+		$current_locale = get_locale();
+
+		$dir   = WP_LANG_DIR . "/$this->obj_type";
+		$files = scandir( $dir );
+
+		if ( ! $files ) {
+			\WP_CLI::error( 'No files found in language directory.' );
+		}
+
+		// As of WP 4.0, no API for deleting a language pack
+		WP_Filesystem();
+		$available = $this->get_installed_languages();
+
+		foreach ( $language_codes as $language_code ) {
+			if ( ! in_array( $language_code, $available, true ) ) {
+				\WP_CLI::error( 'Language not installed.' );
+			}
+
+			if ( $language_code === $current_locale ) {
+				\WP_CLI::warning( "The '{$language_code}' language is active." );
+				exit;
+			}
+
+			if ( $wp_filesystem->delete( "{$dir}/{$theme}-{$language_code}.po" ) && $wp_filesystem->delete( "{$dir}/{$theme}-{$language_code}.mo" ) ) {
+				\WP_CLI::success( 'Language uninstalled.' );
+			} else {
+				\WP_CLI::error( "Couldn't uninstall language." );
+			}
+		}
+	}
 }
