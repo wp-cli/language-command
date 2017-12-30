@@ -83,48 +83,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/themes directory should exist
     And the wp-content/languages/themes directory should exist
 
-    When I run `wp language theme list --field=language --status=active`
-    Then STDOUT should be:
-      """
-      en_GB
-      """
-
-    When I run `wp language theme list --fields=language,english_name,status`
-    Then STDOUT should be a table containing rows:
-      | language  | english_name     | status        |
-      | ar        | Arabic           | uninstalled   |
-      | az        | Azerbaijani      | uninstalled   |
-      | en_GB     | English (UK)     | active        |
-
-    When I try `wp language theme install twentyten en_AU --activate`
-    Then STDERR should contain:
-      """
-      Warning: Language 'en_AU' already installed.
-      """
-    And STDOUT should be:
-      """
-      Success: Language activated.
-      """
-    And the return code should be 0
-
-    When I try `wp language theme install twentyten en_AU --activate`
-    Then STDERR should contain:
-      """
-      Warning: Language 'en_AU' already installed.
-      Warning: Language 'en_AU' already active.
-      """
-    And STDOUT should be empty
-    And the return code should be 0
-
-    When I try `wp language theme install twentyten en_CA en_NZ --activate`
-    Then STDERR should be:
-      """
-      Error: Only a single language can be active.
-      """
-    And STDOUT should be empty
-    And the return code should be 1
-
-    When I run `wp language theme activate en_US`
+    When I run `wp language core activate en_US`
     Then STDOUT should be:
       """
       Success: Language activated.
@@ -170,16 +129,6 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 1
 
-    When I run `wp language theme install twentyten en_GB --activate`
-    Then the wp-content/languages/admin-en_GB.po file should exist
-    And the wp-content/languages/en_GB.po file should exist
-    And STDOUT should contain:
-      """
-      Success: Language installed.
-      Success: Language activated.
-      """
-    And STDERR should be empty
-
     When I try `wp language theme install twentyten invalid_lang`
     Then STDERR should be:
       """
@@ -195,7 +144,15 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language core install en_GB --activate`
     Then STDOUT should not be empty
 
-    When I try `wp language theme uninstall en_GB`
+    When I run `wp language theme install twentyten en_GB`
+    Then the wp-content/languages/thenes/twentyten-en_GB.po file should exist
+    And STDOUT should contain:
+      """
+      Success: Language installed.
+      """
+    And STDERR should be empty
+
+    When I try `wp language theme uninstall twentyten en_GB`
     Then STDERR should be:
       """
       Warning: The 'en_GB' language is active.
