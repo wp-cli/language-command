@@ -5,14 +5,14 @@ Feature: Manage translation files for a WordPress install
     Given a WP install
     And an empty cache
 
-    When I run `wp theme install twentyseventeen`
+    When I run `wp theme install twentyten`
     Then STDOUT should contain:
       """
       Theme installed successfully.
       """
     And STDERR should be empty
 
-    When I run `wp language theme list twentyseventeen --fields=language,english_name,status`
+    When I run `wp language theme list twentyten --fields=language,english_name,status`
     Then STDOUT should be a table containing rows:
       | language  | english_name            | status        |
       | cs_CZ     | Czech                   | uninstalled   |
@@ -20,24 +20,24 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | active        |
       | en_GB     | English (UK)            | uninstalled   |
 
-    When I run `wp language theme install twentyseventeen en_GB`
-    Then the wp-content/languages/themes/twentyseventeen-en_GB.po file should exist
+    When I run `wp language theme install twentyten en_GB`
+    Then the wp-content/languages/themes/twentyten-en_GB.po file should exist
     And STDOUT should contain:
       """
       Success: Language installed.
       """
     And STDERR should be empty
 
-    When I run `wp language theme install twentyseventeen cs_CZ de_DE`
-    Then the wp-content/languages/themes/twentyseventeen-cs_CZ.po file should exist
-    And the wp-content/languages/themes/twentyseventeen-es_ES.po file should exist
+    When I run `wp language theme install twentyten cs_CZ de_DE`
+    Then the wp-content/languages/themes/twentyten-cs_CZ.po file should exist
+    And the wp-content/languages/themes/twentyten-es_ES.po file should exist
     And STDOUT should contain:
       """
       Success: Language installed.
       """
     And STDERR should be empty
 
-    When I run `ls {SUITE_CACHE_DIR}/translation | grep theme-twentyseventeen-`
+    When I run `ls {SUITE_CACHE_DIR}/translation | grep theme-twentyten-`
     Then STDOUT should contain:
       """
       de_DE
@@ -47,7 +47,7 @@ Feature: Manage translation files for a WordPress install
       en_GB
       """
 
-    When I try `wp language theme install twentyseventeen en_GB`
+    When I try `wp language theme install twentyten en_GB`
     Then STDERR should be:
       """
       Warning: Language 'en_GB' already installed.
@@ -55,7 +55,7 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 0
 
-    When I run `wp language theme list twentyseventeen --fields=language,english_name,status`
+    When I run `wp language theme list twentyten --fields=language,english_name,status`
     Then STDOUT should be a table containing rows:
       | language  | english_name            | status      |
       | cs_CZ     | Czech                   | installed   |
@@ -63,7 +63,7 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | active      |
       | en_GB     | English (UK)            | installed   |
 
-    When I run `wp language theme list twentyseventeen --fields=language,english_name,update`
+    When I run `wp language theme list twentyten --fields=language,english_name,update`
     Then STDOUT should be a table containing rows:
       | language  | english_name            | update        |
       | ar        | Arabic                  | none          |
@@ -96,7 +96,7 @@ Feature: Manage translation files for a WordPress install
       | az        | Azerbaijani      | uninstalled   |
       | en_GB     | English (UK)     | active        |
 
-    When I try `wp language theme install twentyseventeen en_AU --activate`
+    When I try `wp language theme install twentyten en_AU --activate`
     Then STDERR should contain:
       """
       Warning: Language 'en_AU' already installed.
@@ -107,7 +107,7 @@ Feature: Manage translation files for a WordPress install
       """
     And the return code should be 0
 
-    When I try `wp language theme install twentyseventeen en_AU --activate`
+    When I try `wp language theme install twentyten en_AU --activate`
     Then STDERR should contain:
       """
       Warning: Language 'en_AU' already installed.
@@ -116,7 +116,7 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 0
 
-    When I try `wp language theme install twentyseventeen en_CA en_NZ --activate`
+    When I try `wp language theme install twentyten en_CA en_NZ --activate`
     Then STDERR should be:
       """
       Error: Only a single language can be active.
@@ -130,7 +130,7 @@ Feature: Manage translation files for a WordPress install
       Success: Language activated.
       """
 
-    When I run `wp language theme list twentyseventeen --fields=language,english_name,status`
+    When I run `wp language theme list twentyten --fields=language,english_name,status`
     Then STDOUT should be a table containing rows:
       | language  | english_name            | status        |
       | ar        | Arabic                  | uninstalled   |
@@ -145,7 +145,7 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 1
 
-    When I run `wp language theme uninstall twentyseventeen en_GB`
+    When I run `wp language theme uninstall twentyten en_GB`
     Then the wp-content/languages/admin-en_GB.po file should not exist
     And the wp-content/languages/en_GB.po file should not exist
     And STDOUT should be:
@@ -153,7 +153,7 @@ Feature: Manage translation files for a WordPress install
       Success: Language uninstalled.
       """
 
-    When I run `wp language theme uninstall twentyseventeen en_CA en_NZ`
+    When I run `wp language theme uninstall twentyten en_CA en_NZ`
      Then the wp-content/languages/admin-en_CA.po file should not exist
      And the wp-content/languages/en_CA.po file should not exist
      And STDOUT should be:
@@ -170,7 +170,7 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 1
 
-    When I run `wp language theme install twentyseventeen en_GB --activate`
+    When I run `wp language theme install twentyten en_GB --activate`
     Then the wp-content/languages/admin-en_GB.po file should exist
     And the wp-content/languages/en_GB.po file should exist
     And STDOUT should contain:
@@ -180,7 +180,7 @@ Feature: Manage translation files for a WordPress install
       """
     And STDERR should be empty
 
-    When I try `wp language theme install twentyseventeen invalid_lang`
+    When I try `wp language theme install twentyten invalid_lang`
     Then STDERR should be:
       """
       Error: Language 'invalid_lang' not found.
