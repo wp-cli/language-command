@@ -28,7 +28,7 @@ Feature: Manage translation files for a WordPress install
       """
     And STDERR should be empty
 
-    When I run `wp language theme install cs_CZ de_DE`
+    When I run `wp language theme install twentyseventeen cs_CZ de_DE`
     Then the wp-content/languages/themes/twentyseventeen-cs_CZ.po file should exist
     And the wp-content/languages/themes/twentyseventeen-es_ES.po file should exist
     And STDOUT should contain:
