@@ -18,7 +18,7 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 	 *
 	 * @param string $package The URI of the package. If this is the full path to an
 	 *                        existing local file, it will be returned untouched.
-	 * @return string|WP_Error The full path to the downloaded package file, or a WP_Error object.
+	 * @return string|\WP_Error The full path to the downloaded package file, or a WP_Error object.
 	 */
 	public function download_package( $package ) {
 
@@ -27,9 +27,9 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 		 *
 		 * @since 3.7.0
 		 *
-		 * @param bool    $reply   Whether to bail without returning the package. Default is false.
-		 * @param string  $package The package file name.
-		 * @param object  $this    The WP_Upgrader instance.
+		 * @param bool          $reply   Whether to bail without returning the package. Default is false.
+		 * @param string        $package The package file name.
+		 * @param \WP_Upgrader  $this    The WP_Upgrader instance.
 		 */
 		$reply = apply_filters( 'upgrader_pre_download', false, $package, $this );
 		if ( false !== $reply ) {
