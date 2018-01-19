@@ -22,8 +22,17 @@
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
  */
 class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
-
 	protected $obj_type = 'plugins';
+
+	protected $obj_fields = array(
+		'plugin',
+		'language',
+		'english_name',
+		'native_name',
+		'status',
+		'update',
+		'updated',
+	);
 
 	/**
 	 * Lists all available languages.
