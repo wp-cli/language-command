@@ -254,6 +254,10 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		$updates   = array();
 		$transient = get_site_transient( $transient );
 
+		if ( empty( $transient->translations ) ) {
+			return $updates;
+		}
+
 		foreach ( $transient->translations as $translation ) {
 			$updates[] = (object) $translation;
 		}
