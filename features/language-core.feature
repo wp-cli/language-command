@@ -65,23 +65,18 @@ Feature: Manage translation files for a WordPress install
 
     When I run `wp language core list --fields=language,english_name,update`
     Then STDOUT should be a table containing rows:
-      | language  | english_name            | update        |
-      | ar        | Arabic                  | none          |
-      | az        | Azerbaijani             | none          |
-      | en_AU     | English (Australia)     | available     |
-      | en_US     | English (United States) | none          |
-      | en_GB     | English (UK)            | available     |
-
-    When I run `wp language core update --dry-run`
-    Then save STDOUT 'Available (\d+) translations updates' as {UPDATES}
+      | language  | english_name            | update   |
+      | ar        | Arabic                  | none     |
+      | az        | Azerbaijani             | none     |
+      | en_AU     | English (Australia)     | none     |
+      | en_US     | English (United States) | none     |
+      | en_GB     | English (UK)            | none     |
 
     When I run `wp language core update`
     Then STDOUT should contain:
       """
-      Success: Updated {UPDATES}/{UPDATES} translations.
+      Success: Translations are up to date.
       """
-    And the wp-content/languages/plugins directory should exist
-    And the wp-content/languages/themes directory should exist
 
     When I run `wp language core list --field=language --status=active`
     Then STDOUT should be:
