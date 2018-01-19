@@ -94,19 +94,19 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			}, array_keys( wp_get_themes() ) );
 		}
 
-		$available      = $this->get_installed_languages();
 		$updates        = $this->get_translation_updates();
 		$current_locale = get_locale();
 
 		$translations = array();
 
 		foreach ( $args as $theme ) {
-			$theme_translations = $this->get_all_languages( $theme );
+			$installed_translations = $this->get_installed_languages( $theme );
+			$available_translations = $this->get_all_languages( $theme );
 
-			foreach ( $theme_translations as $key => $translation ) {
+			foreach ( $available_translations as $key => $translation ) {
 				$translation['theme'] = $theme;
 
-				$translation['status'] = in_array( $translation['language'], $available, true ) ? 'installed' : 'uninstalled';
+				$translation['status'] = in_array( $translation['language'], $installed_translations, true ) ? 'installed' : 'uninstalled';
 
 				if ( $current_locale === $translation['language'] ) {
 					$translation['status'] = 'active';
@@ -121,7 +121,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				$fields = array_keys( $translation );
 				foreach ( $fields as $field ) {
 					if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
-						unset( $theme_translations[ $key ] );
+						unset( $translation[ $key ] );
 					}
 				}
 
@@ -158,7 +158,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		$theme         = array_shift( $args );
 		$language_codes = $args;
 
-		$available = $this->get_installed_languages();
+		$available = $this->get_installed_languages( $theme );
 
 		foreach ( $language_codes as $language_code ) {
 

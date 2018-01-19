@@ -294,11 +294,13 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	/**
 	 * Return a list of installed languages.
 	 *
+	 * @param string $slug Optional. Plugin or theme slug. Defaults to 'default' for core.
+	 *
 	 * @return array
 	 */
-	protected function get_installed_languages() {
+	protected function get_installed_languages( $slug = 'default' ) {
 		$available = wp_get_installed_translations( $this->obj_type );
-		$available = ! empty( $available['default'] ) ? array_keys( $available['default'] ) : array();
+		$available = ! empty( $available[ $slug ] ) ? array_keys( $available[ $slug ] ) : array();
 		$available[] = 'en_US';
 
 		return $available;
