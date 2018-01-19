@@ -274,6 +274,11 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 
 		$translation->type = rtrim( $this->obj_type, 's' );
 
+		// Make sure caching in LanguagePackUpgrader works.
+		if ( ! isset( $translation->slug ) ) {
+			$translation->slug = $slug;
+		}
+
 		$upgrader = 'WP_CLI\\LanguagePackUpgrader';
 		$result = Utils\get_upgrader( $upgrader )->upgrade( $translation, array( 'clear_update_cache' => false ) );
 
