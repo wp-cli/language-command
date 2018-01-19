@@ -235,7 +235,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 
 				wp_clean_themes_cache();
 				// Check for Theme translation updates.
-				wp_update_plugins();
+				wp_update_themes();
 
 				remove_filter( 'themes_update_check_locales', $func );
 
