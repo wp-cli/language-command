@@ -22,8 +22,17 @@
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
  */
 class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
-
 	protected $obj_type = 'themes';
+
+	protected $obj_fields = array(
+		'theme',
+		'language',
+		'english_name',
+		'native_name',
+		'status',
+		'update',
+		'updated',
+	);
 
 	/**
 	 * Lists all available languages.

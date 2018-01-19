@@ -9,7 +9,6 @@ use WP_CLI\Formatter;
  * @package wp-cli
  */
 abstract class CommandWithTranslation extends \WP_CLI_Command {
-
 	protected $obj_type;
 
 	protected $obj_fields = array(
