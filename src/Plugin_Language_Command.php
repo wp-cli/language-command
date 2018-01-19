@@ -117,13 +117,6 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 				$translation['update'] = $update ? 'available' : 'none';
 
-				$fields = array_keys( $translation );
-				foreach ( $fields as $field ) {
-					if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
-						unset( $translation[ $key ] );
-					}
-				}
-
 				$translations[] = $translation;
 			}
 		}
