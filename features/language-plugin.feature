@@ -65,12 +65,11 @@ Feature: Manage translation files for a WordPress install
 
     When I run `wp language plugin list hello-dolly --fields=language,english_name,update`
     Then STDOUT should be a table containing rows:
-      | language  | english_name            | update        |
-      | ar        | Arabic                  | none          |
-      | az        | Azerbaijani             | none          |
-      | de_DE     | English (Australia)     | available     |
-      | en_US     | English (United States) | none          |
-      | en_GB     | English (UK)            | available     |
+      | language  | english_name            | update   |
+      | cs_CZ     | Czech                   | none     |
+      | de_DE     | German                  | none     |
+      | en_US     | English (United States) | none     |
+      | en_GB     | English (UK)            | none     |
 
     When I run `wp language plugin update --dry-run`
     Then save STDOUT 'Available (\d+) translations updates' as {UPDATES}
