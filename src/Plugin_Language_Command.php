@@ -112,7 +112,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			$installed_translations = $this->get_installed_languages( $plugin );
 			$available_translations = $this->get_all_languages( $plugin );
 
-			foreach ( $available_translations as $key => $translation ) {
+			foreach ( $available_translations as $translation ) {
 				$translation['plugin'] = $plugin;
 				$translation['status'] = in_array( $translation['language'], $installed_translations, true ) ? 'installed' : 'uninstalled';
 

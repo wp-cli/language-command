@@ -112,7 +112,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			$installed_translations = $this->get_installed_languages( $theme );
 			$available_translations = $this->get_all_languages( $theme );
 
-			foreach ( $available_translations as $key => $translation ) {
+			foreach ( $available_translations as $translation ) {
 				$translation['theme'] = $theme;
 
 				$translation['status'] = in_array( $translation['language'], $installed_translations, true ) ? 'installed' : 'uninstalled';
