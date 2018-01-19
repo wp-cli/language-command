@@ -230,4 +230,28 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			}
 		}
 	}
+
+	/**
+	 * Updates installed languages.
+	 *
+	 * Updates installed languages for themes.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--dry-run]
+	 * : Preview which translations would be updated.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     $ wp language theme update
+	 *     Updating 'Japanese' translation for Twenty Fifteen 1.5...
+	 *     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
+	 *     Translation updated successfully.
+	 *     Success: Updated 1/1 translations.
+	 *
+	 * @subcommand update
+	 */
+	public function update( $args, $assoc_args ) {
+		parent::update( $args, $assoc_args );
+	}
 }
