@@ -94,19 +94,18 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			}, array_keys( $this->get_all_plugins() ) );
 		}
 
-		$available      = $this->get_installed_languages();
 		$updates        = $this->get_translation_updates();
 		$current_locale = get_locale();
 
 		$translations = array();
 
 		foreach ( $args as $plugin ) {
-			$plugin_translations = $this->get_all_languages( $plugin );
+			$installed_translations = $this->get_installed_languages( $plugin );
+			$available_translations = $this->get_all_languages( $plugin );
 
-			foreach ( $plugin_translations as $key => $translation ) {
+			foreach ( $available_translations as $key => $translation ) {
 				$translation['plugin'] = $plugin;
-
-				$translation['status'] = in_array( $translation['language'], $available, true ) ? 'installed' : 'uninstalled';
+				$translation['status'] = in_array( $translation['language'], $installed_translations, true ) ? 'installed' : 'uninstalled';
 
 				if ( $current_locale === $translation['language'] ) {
 					$translation['status'] = 'active';
@@ -121,7 +120,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				$fields = array_keys( $translation );
 				foreach ( $fields as $field ) {
 					if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
-						unset( $plugin_translations[ $key ] );
+						unset( $translation[ $key ] );
 					}
 				}
 
@@ -158,7 +157,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		$plugin         = array_shift( $args );
 		$language_codes = $args;
 
-		$available = $this->get_installed_languages();
+		$available = $this->get_installed_languages( $plugin );
 
 		foreach ( $language_codes as $language_code ) {
 
@@ -211,7 +210,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		// As of WP 4.0, no API for deleting a language pack
 		WP_Filesystem();
-		$available = $this->get_installed_languages();
+		$available = $this->get_installed_languages( $plugin );
 
 		foreach ( $language_codes as $language_code ) {
 			if ( ! in_array( $language_code, $available, true ) ) {
