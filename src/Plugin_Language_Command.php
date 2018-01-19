@@ -232,6 +232,30 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
+	 * Updates installed languages.
+	 *
+	 * Updates installed languages for plugins.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--dry-run]
+	 * : Preview which translations would be updated.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     $ wp language plugin update
+	 *     Updating 'Japanese' translation for Akismet 3.1.11...
+	 *     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
+	 *     Translation updated successfully.
+	 *     Success: Updated 1/1 translations.
+	 *
+	 * @subcommand update
+	 */
+	public function update( $args, $assoc_args ) {
+		parent::update( $args, $assoc_args );
+	}
+
+	/**
 	 * Gets all available plugins.
 	 *
 	 * Uses the same filter core uses in plugins.php to determine which plugins
