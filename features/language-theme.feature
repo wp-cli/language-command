@@ -81,7 +81,6 @@ Feature: Manage translation files for a WordPress install
       Success: Updated {UPDATES}/{UPDATES} translations.
       """
     And the wp-content/languages/themes directory should exist
-    And the wp-content/languages/themes directory should exist
 
     When I run `wp language core activate en_US`
     Then STDOUT should be:
@@ -145,7 +144,7 @@ Feature: Manage translation files for a WordPress install
     Then STDOUT should not be empty
 
     When I run `wp language theme install twentyten en_GB`
-    Then the wp-content/languages/thenes/twentyten-en_GB.po file should exist
+    Then the wp-content/languages/themes/twentyten-en_GB.po file should exist
     And STDOUT should contain:
       """
       Success: Language installed.
