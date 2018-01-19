@@ -205,7 +205,9 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Get all updates available for all translations
+	 * Get all updates available for all translations.
+	 *
+	 * @see wp_get_translation_updates()
 	 *
 	 * @return array
 	 */
@@ -225,6 +227,8 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 				wp_update_plugins();
 
 				remove_filter( 'plugins_update_check_locales', $func );
+
+				$transient = 'update_plugins';
 				break;
 			case 'themes':
 				add_filter( 'themes_update_check_locales', $func );
@@ -234,16 +238,27 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 				wp_update_plugins();
 
 				remove_filter( 'themes_update_check_locales', $func );
+
+				$transient = 'update_themes';
 				break;
 			default:
 				delete_site_transient( 'update_core' );
 
 				// Check for Core translation updates.
 				wp_version_check();
+
+				$transient = 'update_core';
+				break;
 		}
 
-		// Returns a list of all translations updates available.
-		return wp_get_translation_updates();
+		$updates   = array();
+		$transient = get_site_transient( $transient );
+
+		foreach ( $transient->translations as $translation ) {
+			$updates[] = (object) $translation;
+		}
+
+		return $updates;
 	}
 
 	/**
