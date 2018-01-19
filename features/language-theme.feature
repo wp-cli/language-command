@@ -30,7 +30,7 @@ Feature: Manage translation files for a WordPress install
 
     When I run `wp language theme install twentyten cs_CZ de_DE`
     Then the wp-content/languages/themes/twentyten-cs_CZ.po file should exist
-    And the wp-content/languages/themes/twentyten-es_ES.po file should exist
+    And the wp-content/languages/themes/twentyten-de_DE.po file should exist
     And STDOUT should contain:
       """
       Success: Language installed.
@@ -65,12 +65,11 @@ Feature: Manage translation files for a WordPress install
 
     When I run `wp language theme list twentyten --fields=language,english_name,update`
     Then STDOUT should be a table containing rows:
-      | language  | english_name            | update        |
-      | ar        | Arabic                  | none          |
-      | az        | Azerbaijani             | none          |
-      | en_AU     | English (Australia)     | available     |
-      | en_US     | English (United States) | none          |
-      | en_GB     | English (UK)            | available     |
+      | language  | english_name            | update   |
+      | cs_CZ     | Czech                   | none     |
+      | de_DE     | German                  | none     |
+      | en_US     | English (United States) | none     |
+      | en_GB     | English (UK)            | none     |
 
     When I run `wp language theme update --dry-run`
     Then save STDOUT 'Available (\d+) translations updates' as {UPDATES}
