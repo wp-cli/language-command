@@ -81,7 +81,6 @@ Feature: Manage translation files for a WordPress install
       Success: Updated {UPDATES}/{UPDATES} translations.
       """
     And the wp-content/languages/plugins directory should exist
-    And the wp-content/languages/themes directory should exist
 
     When I run `wp language core activate en_GB`
     Then STDOUT should be:
