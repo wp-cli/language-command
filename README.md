@@ -197,7 +197,7 @@ Updates installed languages.
 wp language core update [--dry-run]
 ~~~
 
-Updates installed languages for core, plugins and themes.
+Updates installed languages for core.
 
 **OPTIONS**
 
@@ -207,13 +207,10 @@ Updates installed languages for core, plugins and themes.
 **EXAMPLES**
 
     $ wp language core update
-    Updating 'Japanese' translation for Akismet 3.1.11...
-    Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
+    Updating 'Japanese' translation for WordPress 4.9.2...
+    Downloading translation from https://downloads.wordpress.org/translation/core/4.9.2/ja.zip...
     Translation updated successfully.
-    Updating 'Japanese' translation for Twenty Fifteen 1.5...
-    Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
-    Translation updated successfully.
-    Success: Updated 2/2 translations.
+    Success: Updated 1/1 translations.
 
 
 
@@ -228,15 +225,11 @@ wp language plugin
 **EXAMPLES**
 
     # Install the Dutch theme language pack.
-    $ wp language plugin install nl_NL
+    $ wp language plugin install hello-dolly nl_NL
     Success: Language installed.
 
-    # Activate the Dutch theme language pack.
-    $ wp language plugin activate nl_NL
-    Success: Language activated.
-
     # Uninstall the Dutch theme language pack.
-    $ wp language plugin uninstall nl_NL
+    $ wp language plugin uninstall hello-dolly nl_NL
     Success: Language uninstalled.
 
     # List installed theme language packages.
@@ -347,17 +340,20 @@ These fields are optionally available:
 Uninstalls a given language.
 
 ~~~
-wp language plugin uninstall <language>...
+wp language plugin uninstall <plugin> <language>...
 ~~~
 
 **OPTIONS**
+
+	<plugin>
+		Plugin to uninstall language for.
 
 	<language>...
 		Language code to uninstall.
 
 **EXAMPLES**
 
-    $ wp language core uninstall ja
+    $ wp language plugin uninstall hello-dolly ja
     Success: Language uninstalled.
 
 
@@ -370,7 +366,7 @@ Updates installed languages.
 wp language plugin update [--dry-run]
 ~~~
 
-Updates installed languages for core, plugins and themes.
+Updates installed languages for plugins.
 
 **OPTIONS**
 
@@ -379,14 +375,11 @@ Updates installed languages for core, plugins and themes.
 
 **EXAMPLES**
 
-    $ wp language core update
+    $ wp language plugin update
     Updating 'Japanese' translation for Akismet 3.1.11...
     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
     Translation updated successfully.
-    Updating 'Japanese' translation for Twenty Fifteen 1.5...
-    Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
-    Translation updated successfully.
-    Success: Updated 2/2 translations.
+    Success: Updated 1/1 translations.
 
 
 
@@ -401,15 +394,11 @@ wp language theme
 **EXAMPLES**
 
     # Install the Dutch theme language pack.
-    $ wp language theme install nl_NL
+    $ wp language theme install twentyten nl_NL
     Success: Language installed.
 
-    # Activate the Dutch theme language pack.
-    $ wp language theme activate nl_NL
-    Success: Language activated.
-
     # Uninstall the Dutch theme language pack.
-    $ wp language theme uninstall nl_NL
+    $ wp language theme uninstall twentyten nl_NL
     Success: Language uninstalled.
 
     # List installed theme language packages.
@@ -520,17 +509,20 @@ These fields are optionally available:
 Uninstalls a given language.
 
 ~~~
-wp language theme uninstall <language>...
+wp language theme uninstall <theme> <language>...
 ~~~
 
 **OPTIONS**
+
+	<theme>
+		Theme to uninstall language for.
 
 	<language>...
 		Language code to uninstall.
 
 **EXAMPLES**
 
-    $ wp language core uninstall ja
+    $ wp language theme uninstall twentyten ja
     Success: Language uninstalled.
 
 
@@ -543,7 +535,7 @@ Updates installed languages.
 wp language theme update [--dry-run]
 ~~~
 
-Updates installed languages for core, plugins and themes.
+Updates installed languages for themes.
 
 **OPTIONS**
 
@@ -552,14 +544,11 @@ Updates installed languages for core, plugins and themes.
 
 **EXAMPLES**
 
-    $ wp language core update
-    Updating 'Japanese' translation for Akismet 3.1.11...
-    Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
-    Translation updated successfully.
+    $ wp language theme update
     Updating 'Japanese' translation for Twenty Fifteen 1.5...
     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
     Translation updated successfully.
-    Success: Updated 2/2 translations.
+    Success: Updated 1/1 translations.
 
 ## Installing
 
