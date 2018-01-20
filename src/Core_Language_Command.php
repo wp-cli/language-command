@@ -29,6 +29,97 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	protected $obj_type = 'core';
 
 	/**
+	 * Lists all available languages.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--field=<field>]
+	 * : Display the value of a single field
+	 *
+	 * [--<field>=<value>]
+	 * : Filter results by key=value pairs.
+	 *
+	 * [--fields=<fields>]
+	 * : Limit the output to specific fields.
+	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 * ---
+	 *
+	 * ## AVAILABLE FIELDS
+	 *
+	 * These fields will be displayed by default for each translation:
+	 *
+	 * * language
+	 * * english_name
+	 * * native_name
+	 * * status
+	 * * update
+	 * * updated
+	 *
+	 * These fields are optionally available:
+	 *
+	 * * version
+	 * * package
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # List language,english_name,status fields of available languages.
+	 *     $ wp language core list --fields=language,english_name,status
+	 *     +----------------+-------------------------+-------------+
+	 *     | language       | english_name            | status      |
+	 *     +----------------+-------------------------+-------------+
+	 *     | ar             | Arabic                  | uninstalled |
+	 *     | ary            | Moroccan Arabic         | uninstalled |
+	 *     | az             | Azerbaijani             | uninstalled |
+	 *
+	 * @subcommand list
+	 */
+	public function list_( $args, $assoc_args ) {
+
+		$translations = $this->get_all_languages();
+		$available = $this->get_installed_languages();
+
+		$updates = $this->get_translation_updates();
+
+		$current_locale = get_locale();
+		$translations = array_map( function( $translation ) use ( $available, $current_locale, $updates ) {
+			$translation['status'] = ( in_array( $translation['language'], $available ) ) ? 'installed' : 'uninstalled';
+			if ( $current_locale == $translation['language'] ) {
+				$translation['status'] = 'active';
+			}
+
+			$update = wp_list_filter( $updates, array(
+				'language' => $translation['language']
+			) );
+			if ( $update ) {
+				$translation['update'] = 'available';
+			} else {
+				$translation['update'] = 'none';
+			}
+
+			return $translation;
+		}, $translations );
+
+		foreach( $translations as $key => $translation ) {
+			foreach( array_keys( $translation ) as $field ) {
+				if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] != $translation[ $field ] ) {
+					unset( $translations[ $key ] );
+				}
+			}
+		}
+
+		$formatter = $this->get_formatter( $assoc_args );
+		$formatter->display_items( $translations );
+	}
+
+	/**
 	 * Installs a given language.
 	 *
 	 * Downloads the language pack from WordPress.org.
