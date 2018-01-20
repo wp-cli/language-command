@@ -28,6 +28,15 @@
 class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	protected $obj_type = 'core';
 
+	protected $obj_fields = array(
+		'language',
+		'english_name',
+		'native_name',
+		'status',
+		'update',
+		'updated',
+	);
+
 	/**
 	 * Lists all available languages.
 	 *
@@ -82,16 +91,15 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand list
 	 */
 	public function list_( $args, $assoc_args ) {
-
 		$translations = $this->get_all_languages();
-		$available = $this->get_installed_languages();
-
-		$updates = $this->get_translation_updates();
+		$available    = $this->get_installed_languages();
+		$updates      = $this->get_translation_updates();
 
 		$current_locale = get_locale();
+
 		$translations = array_map( function( $translation ) use ( $available, $current_locale, $updates ) {
 			$translation['status'] = ( in_array( $translation['language'], $available ) ) ? 'installed' : 'uninstalled';
-			if ( $current_locale == $translation['language'] ) {
+			if ( $current_locale === $translation['language'] ) {
 				$translation['status'] = 'active';
 			}
 
@@ -109,7 +117,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		foreach( $translations as $key => $translation ) {
 			foreach( array_keys( $translation ) as $field ) {
-				if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] != $translation[ $field ] ) {
+				if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
 					unset( $translations[ $key ] );
 				}
 			}
@@ -141,29 +149,29 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand install
 	 */
 	public function install( $args, $assoc_args ) {
-		$language_codes = $args;
+		$language_codes = (array) $args;
 
 		if(  1 < count( $language_codes )  &&  in_array( true , $assoc_args , true ) ){
-			\WP_CLI::error( 'Only a single language can be active.' );
+			WP_CLI::error( 'Only a single language can be active.' );
 		}
 
 		$available = $this->get_installed_languages();
 
-		foreach ($language_codes as $language_code) {
+		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
-				\WP_CLI::warning( "Language '{$language_code}' already installed." );
+				WP_CLI::warning( "Language '{$language_code}' already installed." );
 			} else {
 				$response = $this->download_language_pack( $language_code );
 
 				if ( is_wp_error( $response ) ) {
-					\WP_CLI::error( $response );
+					WP_CLI::error( $response );
 				} else {
-					\WP_CLI::success( "Language installed." );
+					WP_CLI::success( 'Language installed.' );
 				}
 			}
 
-			if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'activate' ) ) {
+			if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'activate' ) ) {
 				$this->activate( array( $language_code ), array() );
 			}
 		}
@@ -183,29 +191,30 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Success: Language uninstalled.
 	 *
 	 * @subcommand uninstall
+	 * @throws WP_CLI\ExitException
 	 */
 	public function uninstall( $args, $assoc_args ) {
 		global $wp_filesystem;
 
-		$language_codes = $args;
+		$language_codes = (array) $args;
 
 		$available = $this->get_installed_languages();
 
 		foreach ($language_codes as $language_code) {
 
-			if ( ! in_array( $language_code, $available ) ) {
-				\WP_CLI::error( "Language not installed." );
+			if ( ! in_array( $language_code, $available, true ) ) {
+				WP_CLI::error( 'Language not installed.' );
 			}
 
 			$dir = 'core' === $this->obj_type ? '' : "/$this->obj_type";
 			$files = scandir( WP_LANG_DIR . $dir );
 			if ( ! $files ) {
-				\WP_CLI::error( "No files found in language directory." );
+				WP_CLI::error( 'No files found in language directory.' );
 			}
 
 			$current_locale = get_locale();
 			if ( $language_code === $current_locale ) {
-				\WP_CLI::warning( "The '{$language_code}' language is active." );
+				WP_CLI::warning( "The '{$language_code}' language is active." );
 				exit;
 			}
 
@@ -218,16 +227,18 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 				}
 				$extension_length = strlen( $language_code ) + 4;
 				$ending = substr( $file, -$extension_length );
-				if ( ! in_array( $file, array( $language_code . '.po', $language_code . '.mo' ) ) && ! in_array( $ending, array( '-' . $language_code . '.po', '-' . $language_code . '.mo' ) ) ) {
+				if ( ! in_array( $file, array( $language_code . '.po', $language_code . '.mo' ), true ) && ! in_array( $ending, array( '-' . $language_code . '.po', '-' . $language_code . '.mo' ), true ) ) {
 					continue;
 				}
+
+				/* @var WP_Filesystem_Base $wp_filesystem */
 				$deleted = $wp_filesystem->delete( WP_LANG_DIR . $dir . '/' . $file );
 			}
 
 			if ( $deleted ) {
-				\WP_CLI::success( "Language uninstalled." );
+				WP_CLI::success( 'Language uninstalled.' );
 			} else {
-				\WP_CLI::error( "Couldn't uninstall language." );
+				WP_CLI::error( "Couldn't uninstall language." );
 			}
 		}
 	}
@@ -246,6 +257,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Success: Language activated.
 	 *
 	 * @subcommand activate
+	 * @throws WP_CLI\ExitException
 	 */
 	public function activate( $args, $assoc_args ) {
 
@@ -253,21 +265,21 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$available = $this->get_installed_languages();
 
-		if ( ! in_array( $language_code, $available ) ) {
-			\WP_CLI::error( "Language not installed." );
+		if ( ! in_array( $language_code, $available, true ) ) {
+			WP_CLI::error( 'Language not installed.' );
 		}
 
-		if ( $language_code == 'en_US' ) {
+		if ( $language_code === 'en_US' ) {
 			$language_code = '';
 		}
 
 		if ( $language_code === get_locale() ) {
-			\WP_CLI::warning( "Language '{$language_code}' already active." );
+			WP_CLI::warning( "Language '{$language_code}' already active." );
 
 			return;
 		}
 
 		update_option( 'WPLANG', $language_code );
-		\WP_CLI::success( "Language activated." );
+		WP_CLI::success( 'Language activated.' );
 	}
 }
