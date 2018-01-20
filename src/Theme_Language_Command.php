@@ -114,7 +114,6 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 			foreach ( $available_translations as $translation ) {
 				$translation['theme'] = $theme;
-
 				$translation['status'] = in_array( $translation['language'], $installed_translations, true ) ? 'installed' : 'uninstalled';
 
 				if ( $current_locale === $translation['language'] ) {
@@ -220,7 +219,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		// As of WP 4.0, no API for deleting a language pack
 		WP_Filesystem();
-		$available = $this->get_installed_languages();
+		$available = $this->get_installed_languages( $theme );
 
 		foreach ( $language_codes as $language_code ) {
 			if ( ! in_array( $language_code, $available, true ) ) {
