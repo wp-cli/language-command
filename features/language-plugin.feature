@@ -95,7 +95,7 @@ Feature: Manage translation files for a WordPress install
       | language  | english_name     | status        |
       | de_DE     | German           | installed     |
       | en_GB     | English (UK)     | active        |
-      | fr_FR     | French           | uninstalled   |
+      | fr_FR     | French (France)  | uninstalled   |
 
     When I run `wp language plugin uninstall hello-dolly en_GB`
     Then the wp-content/languages/plugins/hello-dolly-en_GB.po file should not exist
