@@ -60,29 +60,26 @@ Feature: Manage translation files for a WordPress install
       | language  | english_name            | status      |
       | cs_CZ     | Czech                   | installed   |
       | de_DE     | German                  | installed   |
-      | en_US     | English (United States) | active      |
       | en_GB     | English (UK)            | installed   |
+      | en_US     | English (United States) | active      |
 
     When I run `wp language theme list twentyten --fields=language,english_name,update`
     Then STDOUT should be a table containing rows:
       | language  | english_name            | update   |
       | cs_CZ     | Czech                   | none     |
       | de_DE     | German                  | none     |
-      | en_US     | English (United States) | none     |
       | en_GB     | English (UK)            | none     |
-
-    When I run `wp language theme update --dry-run`
-    Then save STDOUT 'Available (\d+) translations updates' as {UPDATES}
+      | en_US     | English (United States) | none     |
 
     When I run `wp language theme update`
     Then STDOUT should contain:
       """
-      Success: Updated {UPDATES}/{UPDATES} translations.
+      Success: Translations are up to date.
       """
     And the wp-content/languages/themes directory should exist
 
-    When I run `wp language core activate en_US`
-    Then STDOUT should be:
+    When I try `wp language core install en_GB --activate`
+    Then STDOUT should contain:
       """
       Success: Language activated.
       """
@@ -90,36 +87,22 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language theme list twentyten --fields=language,english_name,status`
     Then STDOUT should be a table containing rows:
       | language  | english_name            | status        |
-      | ar        | Arabic                  | uninstalled   |
-      | en_US     | English (United States) | active        |
-      | en_GB     | English (UK)            | installed     |
+      | cs_CZ     | Czech                   | installed     |
+      | de_DE     | German                  | installed     |
+      | en_US     | English (United States) | installed     |
+      | en_GB     | English (UK)            | active        |
 
-    When I try `wp language theme activate invalid_lang`
-    Then STDERR should be:
+    When I run `wp language theme uninstall twentyten cs_CZ de_DE`
+    Then the wp-content/languages/themes/twentyten-cs_CZ.po file should not exist
+    And the wp-content/languages/themes/twentyten-cs_CZ.mo file should not exist
+    And the wp-content/languages/themes/twentyten-de_DE.po file should not exist
+    And the wp-content/languages/themes/twentyten-de_DE.mo file should not exist
       """
-      Error: Language not installed.
-      """
-    And STDOUT should be empty
-    And the return code should be 1
-
-    When I run `wp language theme uninstall twentyten en_GB`
-    Then the wp-content/languages/admin-en_GB.po file should not exist
-    And the wp-content/languages/en_GB.po file should not exist
-    And STDOUT should be:
-      """
-      Success: Language uninstalled.
-      """
-
-    When I run `wp language theme uninstall twentyten en_CA en_NZ`
-     Then the wp-content/languages/admin-en_CA.po file should not exist
-     And the wp-content/languages/en_CA.po file should not exist
-     And STDOUT should be:
-       """
       Success: Language uninstalled.
       Success: Language uninstalled.
       """
 
-    When I try `wp language theme uninstall en_GB`
+    When I try `wp language theme uninstall twentyten de_DE`
     Then STDERR should be:
       """
       Error: Language not installed.
