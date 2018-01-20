@@ -71,18 +71,15 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | none     |
       | en_GB     | English (UK)            | none     |
 
-    When I run `wp language plugin update --dry-run`
-    Then save STDOUT 'Available (\d+) translations updates' as {UPDATES}
-
     When I run `wp language plugin update`
     Then STDOUT should contain:
       """
-      Success: Updated {UPDATES}/{UPDATES} translations.
+      Success: Translations are up to date.
       """
     And the wp-content/languages/plugins directory should exist
 
-    When I run `wp language core activate en_GB`
-    Then STDOUT should be:
+    When I try `wp language core install en_GB --activate`
+    Then STDOUT should contain:
       """
       Success: Language activated.
       """
@@ -96,9 +93,9 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language plugin list hello-dolly --fields=language,english_name,status`
     Then STDOUT should be a table containing rows:
       | language  | english_name     | status        |
-      | ar        | Arabic           | uninstalled   |
-      | az        | Azerbaijani      | uninstalled   |
+      | de_DE     | German           | installed     |
       | en_GB     | English (UK)     | active        |
+      | fr_FR     | French           | uninstalled   |
 
     When I run `wp language plugin uninstall hello-dolly en_GB`
     Then the wp-content/languages/plugins/hello-dolly-en_GB.po file should not exist
