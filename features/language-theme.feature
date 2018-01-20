@@ -5,12 +5,11 @@ Feature: Manage translation files for a WordPress install
     Given a WP install
     And an empty cache
 
-    When I run `wp theme install twentyten`
-    Then STDOUT should contain:
-      """
-      Theme installed successfully.
-      """
-    And STDERR should be empty
+    When I try `wp theme install twentyten`
+    Then STDOUT should not be empty
+
+    When I run `wp theme is-installed twentyten`
+    Then the return code should be 0
 
     When I run `wp language theme list twentyten --fields=language,english_name,status`
     Then STDOUT should be a table containing rows:
