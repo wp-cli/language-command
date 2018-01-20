@@ -97,30 +97,32 @@ Feature: Manage translation files for a WordPress install
       | en_GB     | English (UK)     | active        |
       | fr_FR     | French (France)  | uninstalled   |
 
-    When I run `wp language plugin uninstall hello-dolly en_GB`
-    Then the wp-content/languages/plugins/hello-dolly-en_GB.po file should not exist
-    And the wp-content/languages/plugins/hello-dolly-en_GB.mo file should not exist
+    When I run `wp language plugin uninstall hello-dolly cs_CZ de_DE`
+    Then the wp-content/languages/plugins/hello-dolly-cs_CZ.po file should not exist
+    And the wp-content/languages/plugins/hello-dolly-cs_CZ.mo file should not exist
+    And the wp-content/languages/plugins/hello-dolly-de_DE.po file should not exist
+    And the wp-content/languages/plugins/hello-dolly-de_DE.mo file should not exist
     And STDOUT should be:
       """
       Success: Language uninstalled.
-      """
-
-    When I run `wp language plugin uninstall hello-dolly en_CA en_NZ`
-     Then the wp-content/languages/plugins/hello-dolly-en_CA.po file should not exist
-     And the wp-content/languages/plugins/hello-dolly-en_NZ.po file should not exist
-     And STDOUT should be:
-       """
-      Success: Language uninstalled.
       Success: Language uninstalled.
       """
 
-    When I try `wp language plugin uninstall en_GB`
+    When I try `wp language plugin uninstall hello-dolly fr_FR`
     Then STDERR should be:
       """
       Error: Language not installed.
       """
     And STDOUT should be empty
     And the return code should be 1
+
+    When I try `wp language plugin uninstall hello-dolly en_GB`
+    Then STDERR should be:
+      """
+      Warning: The 'en_GB' language is active.
+      """
+    And STDOUT should be empty
+    And the return code should be 0
 
     When I try `wp language plugin install hello-dolly invalid_lang`
     Then STDERR should be:
