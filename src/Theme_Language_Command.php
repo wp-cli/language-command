@@ -163,8 +163,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand install
 	 */
 	public function install( $args, $assoc_args ) {
-		$theme         = array_shift( $args );
-		$language_codes = $args;
+		$theme          = array_shift( $args );
+		$language_codes = (array) $args;
 
 		$available = $this->get_installed_languages( $theme );
 
@@ -207,7 +207,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		global $wp_filesystem;
 
 		$theme          = array_shift( $args );
-		$language_codes = $args;
+		$language_codes = (array) $args;
 		$current_locale = get_locale();
 
 		$dir   = WP_LANG_DIR . "/$this->obj_type";
@@ -223,18 +223,18 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		foreach ( $language_codes as $language_code ) {
 			if ( ! in_array( $language_code, $available, true ) ) {
-				\WP_CLI::error( 'Language not installed.' );
+				WP_CLI::error( 'Language not installed.' );
 			}
 
 			if ( $language_code === $current_locale ) {
-				\WP_CLI::warning( "The '{$language_code}' language is active." );
+				WP_CLI::warning( "The '{$language_code}' language is active." );
 				exit;
 			}
 
 			if ( $wp_filesystem->delete( "{$dir}/{$theme}-{$language_code}.po" ) && $wp_filesystem->delete( "{$dir}/{$theme}-{$language_code}.mo" ) ) {
-				\WP_CLI::success( 'Language uninstalled.' );
+				WP_CLI::success( 'Language uninstalled.' );
 			} else {
-				\WP_CLI::error( "Couldn't uninstall language." );
+				WP_CLI::error( "Couldn't uninstall language." );
 			}
 		}
 	}

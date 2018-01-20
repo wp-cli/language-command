@@ -164,7 +164,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 */
 	public function install( $args, $assoc_args ) {
 		$plugin         = array_shift( $args );
-		$language_codes = $args;
+		$language_codes = (array) $args;
 
 		$available = $this->get_installed_languages( $plugin );
 
@@ -207,7 +207,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		global $wp_filesystem;
 
 		$plugin         = array_shift( $args );
-		$language_codes = $args;
+		$language_codes = (array) $args;
 		$current_locale = get_locale();
 
 		$dir   = WP_LANG_DIR . "/$this->obj_type";

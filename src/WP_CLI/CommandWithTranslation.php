@@ -1,24 +1,19 @@
 <?php
 
 namespace WP_CLI;
-use WP_CLI\Formatter;
+
+use WP_CLI;
+use WP_CLI_Command;
 
 /**
  * Base class for WP-CLI commands that deal with translations
  *
  * @package wp-cli
  */
-abstract class CommandWithTranslation extends \WP_CLI_Command {
+abstract class CommandWithTranslation extends WP_CLI_Command {
 	protected $obj_type;
 
-	protected $obj_fields = array(
-		'language',
-		'english_name',
-		'native_name',
-		'status',
-		'update',
-		'updated',
-		);
+	protected $obj_fields;
 
 	/**
 	 * Callback to sort array by a 'language' key.
@@ -34,7 +29,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		$updates = $this->get_translation_updates();
 
 		if ( empty( $updates ) ) {
-			\WP_CLI::success( 'Translations are up to date.' );
+			WP_CLI::success( 'Translations are up to date.' );
 
 			return;
 		}
@@ -77,9 +72,9 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		$num_to_update	 = count( $available_updates );
 
 		// Only preview which translations would be updated.
-		if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
-			\WP_CLI::line( sprintf( 'Available %d translations updates:', $num_to_update ) );
-			\WP_CLI\Utils\format_items( 'table', $available_updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
+			WP_CLI::line( sprintf( 'Available %d translations updates:', $num_to_update ) );
+			Utils\format_items( 'table', $available_updates, array( 'Type', 'Name', 'Version', 'Language' ) );
 
 			return;
 		}
@@ -89,7 +84,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 
 		// Update translations.
 		foreach ( $available_updates as $update ) {
-			\WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
+			WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
 
 			$result = Utils\get_upgrader( $upgrader )->upgrade( $update );
 
@@ -101,11 +96,11 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		$line = "Updated $num_updated/$num_to_update translations.";
 
 		if ( $num_to_update === $num_updated ) {
-			\WP_CLI::success( $line );
+			WP_CLI::success( $line );
 		} else if ( $num_updated > 0 ) {
-			\WP_CLI::warning( $line );
+			WP_CLI::warning( $line );
 		} else {
-			\WP_CLI::error( $line );
+			WP_CLI::error( $line );
 		}
 
 	}
@@ -208,7 +203,9 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
-		} else if ( ! $result ) {
+		}
+
+		if ( ! $result ) {
 			return new \WP_Error( 'not_installed', "Could not install language '{$download}'." );
 		}
 
@@ -246,7 +243,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 			'slug'    => $slug
 		) );
 		if ( is_wp_error( $response ) ) {
-			\WP_CLI::error( $response );
+			WP_CLI::error( $response );
 		}
 		$translations = ! empty( $response['translations'] ) ? $response['translations'] : array();
 
@@ -257,7 +254,8 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 			'updated' => '',
 		);
 
-		array_push( $translations, $en_us );
+		$translations[] = $en_us;
+
 		uasort( $translations, array( $this, 'sort_translations_callback' ) );
 
 		return $translations;
