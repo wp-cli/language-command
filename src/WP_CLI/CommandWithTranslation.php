@@ -63,7 +63,10 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			$update->Version	 = $update->version;
 			$update->Language	 = $translation->english_name;
 
-			$updates_per_type[ $update->type ] = $update;
+			if ( ! isset( $updates_per_type[ $update->type ] ) ) {
+				$updates_per_type[ $update->type ] = array();
+			}
+			$updates_per_type[ $update->type ][] = $update;
 		}
 
 		$obj_type = rtrim( $this->obj_type, 's' );
