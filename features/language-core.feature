@@ -73,7 +73,7 @@ Feature: Manage translation files for a WordPress install
       | en_GB     | English (UK)            | available     |
 
     When I run `wp language core update --dry-run`
-    Then save STDOUT 'Available (\d+) translations updates' as {UPDATES}
+    Then save STDOUT 'Found (\d+) translation updates that would be processed' as {UPDATES}
 
     When I run `wp language core update`
     Then STDOUT should contain:
