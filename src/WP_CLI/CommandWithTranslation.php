@@ -75,9 +75,9 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		$num_to_update	 = count( $available_updates );
 
 		// Only preview which translations would be updated.
-		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
-			WP_CLI::line( sprintf( 'Available %d translations updates:', $num_to_update ) );
-			Utils\format_items( 'table', $available_updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+		if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
+			\WP_CLI::line( sprintf( 'Found %d translation updates that would be processed:', count( $updates ) ) );
+			\WP_CLI\Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
 
 			return;
 		}
