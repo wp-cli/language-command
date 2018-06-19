@@ -24,7 +24,7 @@ function extract_from_phar( $path ) {
 
 	$fname = basename( $path );
 
-	$tmp_path = get_temp_dir() . "wp-cli-$fname";
+	$tmp_path = get_temp_dir() . uniqid( 'wp-cli-extract-from-phar-', true ) . "-$fname";
 
 	copy( $path, $tmp_path );
 
@@ -351,19 +351,21 @@ function pick_fields( $item, $fields ) {
  * @category Input
  *
  * @param  string  $content  Some form of text to edit (e.g. post content)
+ * @param  string  $title    Title to display in the editor.
+ * @param  string  $ext      Extension to use with the temp file.
  * @return string|bool       Edited text, if file is saved from editor; false, if no change to file.
  */
-function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
+function launch_editor_for_input( $input, $title = 'WP-CLI', $ext = 'tmp' ) {
 
 	check_proc_available( 'launch_editor_for_input' );
 
 	$tmpdir = get_temp_dir();
 
 	do {
-		$tmpfile = basename( $filename );
+		$tmpfile = basename( $title );
 		$tmpfile = preg_replace( '|\.[^.]*$|', '', $tmpfile );
 		$tmpfile .= '-' . substr( md5( mt_rand() ), 0, 6 );
-		$tmpfile = $tmpdir . $tmpfile . '.tmp';
+		$tmpfile = $tmpdir . $tmpfile . '.' . $ext;
 		$fp = fopen( $tmpfile, 'xb' );
 		if ( ! $fp && is_writable( $tmpdir ) && file_exists( $tmpfile ) ) {
 			$tmpfile = '';
@@ -773,6 +775,41 @@ function trailingslashit( $string ) {
 }
 
 /**
+ * Normalize a filesystem path.
+ *
+ * On Windows systems, replaces backslashes with forward slashes
+ * and forces upper-case drive letters.
+ * Allows for two leading slashes for Windows network shares, but
+ * ensures that all other duplicate slashes are reduced to a single one.
+ * Ensures upper-case drive letters on Windows systems.
+ *
+ * @access public
+ * @category System
+ *
+ * @param string $path Path to normalize.
+ * @return string Normalized path.
+ */
+function normalize_path( $path ) {
+	$path = str_replace( '\\', '/', $path );
+	$path = preg_replace( '|(?<=.)/+|', '/', $path );
+	if ( ':' === substr( $path, 1, 1 ) ) {
+		$path = ucfirst( $path );
+	}
+	return $path;
+}
+
+
+/**
+ * Convert Windows EOLs to *nix.
+ *
+ * @param string $str String to convert.
+ * @return string String with carriage return / newline pairs reduced to newlines.
+ */
+function normalize_eols( $str ) {
+	return str_replace( "\r\n", "\n", $str );
+}
+
+/**
  * Get the system's temp directory. Warns user if it isn't writable.
  *
  * @access public
@@ -1101,7 +1138,9 @@ function glob_brace( $pattern, $dummy_flags = null ) {
 function get_suggestion( $target, array $options, $threshold = 2 ) {
 
 	$suggestion_map = array(
+		'add' => 'create',
 		'check' => 'check-update',
+		'capability' => 'cap',
 		'clear' => 'flush',
 		'decrement' => 'decr',
 		'del' => 'delete',
@@ -1117,6 +1156,7 @@ function get_suggestion( $target, array $options, $threshold = 2 ) {
 		'regen' => 'regenerate',
 		'rep' => 'replace',
 		'repl' => 'replace',
+		'trash' => 'delete',
 		'v' => 'version',
 	);
 
@@ -1294,6 +1334,7 @@ function get_php_binary() {
 
 	// Available since PHP 5.4.
 	if ( defined( 'PHP_BINARY' ) ) {
+		// @codingStandardsIgnoreLine
 		return PHP_BINARY;
 	}
 
@@ -1376,6 +1417,24 @@ function esc_like( $text ) {
 }
 
 /**
+ * Escapes (backticks) MySQL identifiers (aka schema object names) - i.e. column names, table names, and database/index/alias/view etc names.
+ * See https://dev.mysql.com/doc/refman/5.5/en/identifiers.html
+ *
+ * @param string|array $idents A single identifier or an array of identifiers.
+ * @return string|array An escaped string if given a string, or an array of escaped strings if given an array of strings.
+ */
+function esc_sql_ident( $idents ) {
+	$backtick = function ( $v ) {
+		// Escape any backticks in the identifier by doubling.
+		return '`' . str_replace( '`', '``', $v ) . '`';
+	};
+	if ( is_string( $idents ) ) {
+		return $backtick( $idents );
+	}
+	return array_map( $backtick, $idents );
+}
+
+/**
  * Check whether a given string is a valid JSON representation.
  *
  * @param string $argument       String to evaluate.
@@ -1385,7 +1444,7 @@ function esc_like( $text ) {
  * @return bool Whether the provided string is a valid JSON representation.
  */
 function is_json( $argument, $ignore_scalars = true ) {
-	if ( empty( $argument ) || ! is_string( $argument ) ) {
+	if ( ! is_string( $argument ) || '' === $argument ) {
 		return false;
 	}
 
