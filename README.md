@@ -63,8 +63,6 @@ wp language core
 
 
 
-
-
 ### wp language core activate
 
 Activates a given language.
@@ -82,6 +80,30 @@ wp language core activate <language>
 
     $ wp language core activate ja
     Success: Language activated.
+
+
+
+### wp language core is-installed
+
+Checks if a given language is installed.
+
+~~~
+wp language core is-installed <language>
+~~~
+
+Returns exit code 0 when installed, 1 when uninstalled.
+
+**OPTIONS**
+
+	<language>
+		The language code to check.
+
+**EXAMPLES**
+
+    # Check whether the German language is installed; exit status 0 if installed, otherwise 1.
+    $ wp language core is-installed de_DE
+    $ echo $?
+    1
 
 
 
