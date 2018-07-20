@@ -133,7 +133,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Check whether the German language is installed; exit status 0 if installed, otherwise 1
+	 *     # Check whether the German language is installed; exit status 0 if installed, otherwise 1.
 	 *     $ wp language core is-installed de_DE
 	 *     $ echo $?
 	 *     1
