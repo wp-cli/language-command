@@ -129,7 +129,7 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 * <language>
-	 * : The language code to to check.
+	 * : The language code to check.
 	 *
 	 * ## EXAMPLES
 	 *
