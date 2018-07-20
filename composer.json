@@ -37,6 +37,7 @@
             "language",
             "language core",
             "language core activate",
+            "language core is-installed",
             "language core install",
             "language core list",
             "language core uninstall",
