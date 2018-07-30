@@ -1,6 +1,8 @@
 <?php
 
 class Site_Switch_Language_Command extends WP_CLI\CommandWithTranslation {
+	protected $obj_type = 'core';
+
 	/**
 	 * Activates a given language.
 	 *
@@ -17,7 +19,6 @@ class Site_Switch_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @throws WP_CLI\ExitException
 	 */
 	public function __invoke( $args, $assoc_args ) {
-
 		list( $language_code ) = $args;
 
 		$available = $this->get_installed_languages();
