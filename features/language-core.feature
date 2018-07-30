@@ -76,7 +76,7 @@ Feature: Manage translation files for a WordPress install
       | ar        | Arabic           | uninstalled   |
       | en_GB     | English (UK)     | installed     |
 
-    When I run `wp language core activate en_GB`
+    When I run `wp site switch-language en_GB`
     Then STDOUT should be:
       """
       Success: Language activated.
@@ -141,7 +141,7 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 1
 
-    When I run `wp language core activate en_US`
+    When I run `wp site switch-language en_US`
     Then STDOUT should be:
       """
       Success: Language activated.
@@ -154,7 +154,7 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | active        |
       | en_GB     | English (UK)            | installed     |
 
-    When I try `wp language core activate invalid_lang`
+    When I try `wp site switch-language invalid_lang`
     Then STDERR should be:
       """
       Error: Language not installed.
