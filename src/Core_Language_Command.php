@@ -128,6 +128,35 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
+	 * Checks if a given language is installed.
+	 *
+	 * Returns exit code 0 when installed, 1 when uninstalled.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <language>
+	 * : The language code to check.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Check whether the German language is installed; exit status 0 if installed, otherwise 1.
+	 *     $ wp language core is-installed de_DE
+	 *     $ echo $?
+	 *     1
+	 *
+	 * @subcommand is-installed
+	 */
+	public function is_installed( $args, $assoc_args = array() ) {
+		list( $language_code ) = $args;
+		$available = $this->get_installed_languages();
+		if ( in_array( $language_code, $available, true ) ) {
+			\WP_CLI::halt( 0 );
+		} else {
+			\WP_CLI::halt( 1 );
+		}
+	}
+
+	/**
 	 * Installs a given language.
 	 *
 	 * Downloads the language pack from WordPress.org.

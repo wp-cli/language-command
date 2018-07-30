@@ -15,6 +15,14 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | active        |
       | ja        | Japanese                | uninstalled   |
 
+    When I try `wp language core is-installed en_GB`
+    Then the return code should be 1
+    And STDERR should be empty
+
+    When I try `wp language core is-installed en_AU`
+    Then the return code should be 1
+    And STDERR should be empty
+
     When I run `wp language core install en_GB`
     And I run `wp language core install en_AU`
     Then the wp-content/languages/admin-en_GB.po file should exist
@@ -26,6 +34,12 @@ Feature: Manage translation files for a WordPress install
       Success: Language installed.
       """
     And STDERR should be empty
+
+    When I try `wp language core is-installed en_GB`
+    Then the return code should be 0
+
+    When I try `wp language core is-installed en_AU`
+    Then the return code should be 0
 
     When I run `wp language core install en_CA ja`
     Then the wp-content/languages/admin-en_CA.po file should exist
