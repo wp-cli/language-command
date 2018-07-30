@@ -201,7 +201,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 			}
 
 			if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'activate' ) ) {
-				$this->activate( array( $language_code ), array() );
+				$this->activate_language( $language_code );
 			}
 		}
 	}
@@ -317,6 +317,10 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		list( $language_code ) = $args;
 
+		$this->activate_language( $language_code );
+	}
+
+	public function activate_language( $language_code ) {
 		$available = $this->get_installed_languages();
 
 		if ( ! in_array( $language_code, $available, true ) ) {
