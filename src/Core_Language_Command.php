@@ -313,6 +313,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @throws WP_CLI\ExitException
 	 */
 	public function activate( $args, $assoc_args ) {
+		\WP_CLI::warning( 'This command is deprecated. use wp site switch-language instead' );
 
 		list( $language_code ) = $args;
 
@@ -333,6 +334,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		update_option( 'WPLANG', $language_code );
+
 		WP_CLI::success( 'Language activated.' );
 	}
 }
