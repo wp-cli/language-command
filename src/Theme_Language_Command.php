@@ -142,6 +142,43 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
+	 * Checks if a given language is installed.
+	 *
+	 * Returns exit code 0 when installed, 1 when uninstalled.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <theme>
+	 * : Theme to check for.
+	 *
+	 * <language>...
+	 * : The language code to check.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Check whether the German language is installed for Twenty Seventeen; exit status 0 if installed, otherwise 1.
+	 *     $ wp language theme is-installed twentyseventeen de_DE
+	 *     $ echo $?
+	 *     1
+	 *
+	 * @subcommand is-installed
+	 */
+	public function is_installed( $args, $assoc_args = array() ) {
+		$theme          = array_shift( $args );
+		$language_codes = (array) $args;
+
+		$available = $this->get_installed_languages( $theme );
+
+		foreach ( $language_codes as $language_code ) {
+			if ( ! in_array( $language_code, $available, true ) ) {
+				\WP_CLI::halt( 1 );
+			}
+		}
+
+		\WP_CLI::halt( 0 );
+	}
+
+	/**
 	 * Installs a given language.
 	 *
 	 * Downloads the language pack from WordPress.org.
@@ -156,8 +193,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Install the Japanese language.
-	 *     $ wp language core install ja
+	 *     # Install the Japanese language for Twenty Seventeen.
+	 *     $ wp language theme install twentyseventeen ja
 	 *     Success: Language installed.
 	 *
 	 * @subcommand install
