@@ -19,6 +19,14 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | active        |
       | en_GB     | English (UK)            | uninstalled   |
 
+    When I try `wp language theme is-installed twentyten en_GB`
+    Then the return code should be 1
+    And STDERR should be empty
+
+    When I try `wp language theme is-installed twentyten de_DE`
+    Then the return code should be 1
+    And STDERR should be empty
+
     When I run `wp language theme install twentyten en_GB`
     Then the wp-content/languages/themes/twentyten-en_GB.po file should exist
     And STDOUT should contain:
@@ -35,6 +43,12 @@ Feature: Manage translation files for a WordPress install
       Success: Language installed.
       """
     And STDERR should be empty
+
+    When I try `wp language theme is-installed twentyten en_GB`
+    Then the return code should be 0
+
+    When I try `wp language theme is-installed twentyten de_DE`
+    Then the return code should be 0
 
     When I run `ls {SUITE_CACHE_DIR}/translation | grep theme-twentyten-`
     Then STDOUT should contain:
