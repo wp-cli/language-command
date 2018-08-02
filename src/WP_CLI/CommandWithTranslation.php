@@ -114,9 +114,9 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			WP_CLI::success( $line );
 		} else if ( $num_updated > 0 ) {
 			WP_CLI::warning( $line );
+		} else {
+			WP_CLI::error( $line );
 		}
-
-		WP_CLI::error( $line );
 	}
 
 	/**
