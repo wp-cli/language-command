@@ -26,6 +26,8 @@ labels:
     color: c5def5
   - name: command:language-core-activate
     color: c5def5
+  - name: command:language-core-is-installed
+    color: c5def5
   - name: command:language-core-install
     color: c5def5
   - name: command:language-core-list
@@ -36,6 +38,8 @@ labels:
     color: c5def5
   - name: command:language-plugin
     color: c5def5
+  - name: command:language-plugin-is-installed
+    color: c5def5
   - name: command:language-plugin-install
     color: c5def5
   - name: command:language-plugin-list
@@ -45,6 +49,8 @@ labels:
   - name: command:language-plugin-update
     color: c5def5
   - name: command:language-theme
+    color: c5def5
+  - name: command:language-theme-is-installed
     color: c5def5
   - name: command:language-theme-install
     color: c5def5
