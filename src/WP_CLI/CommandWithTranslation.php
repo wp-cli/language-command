@@ -2,117 +2,18 @@
 
 namespace WP_CLI;
 
+use WP_CLI;
+use WP_CLI_Command;
+
 /**
  * Base class for WP-CLI commands that deal with translations
  *
  * @package wp-cli
  */
-abstract class CommandWithTranslation extends \WP_CLI_Command {
-
+abstract class CommandWithTranslation extends WP_CLI_Command {
 	protected $obj_type;
 
-	protected $obj_fields = array(
-		'language',
-		'english_name',
-		'native_name',
-		'status',
-		'update',
-		'updated',
-		);
-
-	/**
-	 * Lists all available languages.
-	 *
-	 * ## OPTIONS
-	 *
-	 * [--field=<field>]
-	 * : Display the value of a single field
-	 *
-	 * [--<field>=<value>]
-	 * : Filter results by key=value pairs.
-	 *
-	 * [--fields=<fields>]
-	 * : Limit the output to specific fields.
-	 *
-	 * [--format=<format>]
-	 * : Render output in a particular format.
-	 * ---
-	 * default: table
-	 * options:
-	 *   - table
-	 *   - csv
-	 *   - json
-	 * ---
-	 *
-	 * ## AVAILABLE FIELDS
-	 *
-	 * These fields will be displayed by default for each translation:
-	 *
-	 * * language
-	 * * english_name
-	 * * native_name
-	 * * status
-	 * * update
-	 * * updated
-	 *
-	 * These fields are optionally available:
-	 *
-	 * * version
-	 * * package
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # List language,english_name,status fields of available languages.
-	 *     $ wp language core list --fields=language,english_name,status
-	 *     +----------------+-------------------------+-------------+
-	 *     | language       | english_name            | status      |
-	 *     +----------------+-------------------------+-------------+
-	 *     | ar             | Arabic                  | uninstalled |
-	 *     | ary            | Moroccan Arabic         | uninstalled |
-	 *     | az             | Azerbaijani             | uninstalled |
-	 *
-	 * @subcommand list
-	 */
-	public function list_( $args, $assoc_args ) {
-
-		$translations = $this->get_all_languages();
-		$available = $this->get_installed_languages();
-
-		$updates = $this->get_translation_updates();
-
-		$current_locale = get_locale();
-		$translations = array_map( function( $translation ) use ( $available, $current_locale, $updates ) {
-			$translation['status'] = ( in_array( $translation['language'], $available ) ) ? 'installed' : 'uninstalled';
-			if ( $current_locale == $translation['language'] ) {
-				$translation['status'] = 'active';
-			}
-
-			$update = wp_list_filter( $updates, array(
-				'language' => $translation['language']
-			) );
-			if ( $update ) {
-				$translation['update'] = 'available';
-			} else {
-				$translation['update'] = 'none';
-			}
-
-			return $translation;
-		}, $translations );
-
-		foreach( $translations as $key => $translation ) {
-
-			$fields = array_keys( $translation );
-			foreach( $fields as $field ) {
-				if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] != $translation[ $field ] ) {
-					unset( $translations[ $key ] );
-				}
-			}
-		}
-
-		$formatter = $this->get_formatter( $assoc_args );
-		$formatter->display_items( $translations );
-
-	}
+	protected $obj_fields;
 
 	/**
 	 * Callback to sort array by a 'language' key.
@@ -122,117 +23,13 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Checks if a given language is installed.
-	 *
-	 * Returns exit code 0 when installed, 1 when uninstalled.
-	 *
-	 * ## OPTIONS
-	 *
-	 * <language>
-	 * : The language code to check.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Check whether the German language is installed; exit status 0 if installed, otherwise 1.
-	 *     $ wp language core is-installed de_DE
-	 *     $ echo $?
-	 *     1
-	 *
-	 * @subcommand is-installed
-	 */
-	public function is_installed( $args, $assoc_args = array() ) {
-
-		list( $language_code ) = $args;
-
-		$available = $this->get_installed_languages();
-
-		if ( in_array( $language_code, $available, true ) ) {
-			\WP_CLI::halt( 0 );
-		} else {
-			\WP_CLI::halt( 1 );
-		}
-	}
-
-	/**
-	 * Installs a given language.
-	 *
-	 * Downloads the language pack from WordPress.org.
-	 *
-	 * ## OPTIONS
-	 *
-	 * <language>...
-	 * : Language code to install.
-	 *
-	 * [--activate]
-	 * : If set, the language will be activated immediately after install.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Install the Japanese language.
-	 *     $ wp language core install ja
-	 *     Success: Language installed.
-	 *
-	 * @subcommand install
-	 */
-	public function install( $args, $assoc_args ) {
-
-		$language_codes = $args;
-
-		if(  1 < count( $language_codes )  &&  in_array( true , $assoc_args , true ) ){
-			\WP_CLI::error( 'Only a single language can be active.' );
-		}
-
-		$available = $this->get_installed_languages();
-
-		foreach ($language_codes as $language_code) {
-
-			if ( in_array( $language_code, $available ) ) {
-				\WP_CLI::warning( "Language '{$language_code}' already installed." );
-			} else {
-				$response = $this->download_language_pack( $language_code );
-
-				if ( is_wp_error( $response ) ) {
-					\WP_CLI::error( $response );
-				} else {
-					\WP_CLI::success( "Language installed." );
-				}
-			}
-
-			if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'activate' ) ) {
-				$this->activate( array( $language_code ), array() );
-			}
-		}
-
-	}
-
-	/**
-	 * Updates installed languages.
-	 *
-	 * Updates installed languages for core, plugins and themes.
-	 *
-	 * ## OPTIONS
-	 *
-	 * [--dry-run]
-	 * : Preview which translations would be updated.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     $ wp language core update
-	 *     Updating 'Japanese' translation for Akismet 3.1.11...
-	 *     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
-	 *     Translation updated successfully.
-	 *     Updating 'Japanese' translation for Twenty Fifteen 1.5...
-	 *     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
-	 *     Translation updated successfully.
-	 *     Success: Updated 2/2 translations.
-	 *
-	 * @subcommand update
+	 * Updates installed languages for the current object type.
 	 */
 	public function update( $args, $assoc_args ) {
-
 		$updates = $this->get_translation_updates();
+
 		if ( empty( $updates ) ) {
-			\WP_CLI::success( 'Translations are up to date.' );
+			WP_CLI::success( 'Translations are up to date.' );
 
 			return;
 		}
@@ -240,13 +37,15 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		// Gets a list of all languages.
 		$all_languages = $this->get_all_languages();
 
+		$updates_per_type = array();
+
 		// Formats the updates list.
 		foreach ( $updates as $update ) {
-			if ( 'plugin' == $update->type ) {
+			if ( 'plugin' === $update->type ) {
 				$plugins	 = get_plugins( '/' . $update->slug );
 				$plugin_data = array_shift( $plugins );
 				$name		 = $plugin_data['Name'];
-			} elseif ( 'theme' == $update->type ) {
+			} elseif ( 'theme' === $update->type ) {
 				$theme_data	 = wp_get_theme( $update->slug );
 				$name		 = $theme_data['Name'];
 			} else { // Core
@@ -263,7 +62,17 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 			$update->Name		 = $name;
 			$update->Version	 = $update->version;
 			$update->Language	 = $translation->english_name;
+
+			if ( ! isset( $updates_per_type[ $update->type ] ) ) {
+				$updates_per_type[ $update->type ] = array();
+			}
+			$updates_per_type[ $update->type ][] = $update;
 		}
+
+		$obj_type = rtrim( $this->obj_type, 's' );
+		$available_updates = $updates_per_type[ $obj_type ];
+
+		$num_to_update	 = count( $available_updates );
 
 		// Only preview which translations would be updated.
 		if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
@@ -277,90 +86,86 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		$results = array();
 
 		// Update translations.
-		foreach ( $updates as $update ) {
-			\WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
+		foreach ( $available_updates as $update ) {
+			WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
 
 			$result = Utils\get_upgrader( $upgrader )->upgrade( $update );
 
 			$results[] = $result;
 		}
 
-		$num_to_update	 = count( $updates );
-		$num_updated	 = count( array_filter( $results ) );
+		$num_updated = count( array_filter( $results ) );
 
 		$line = "Updated $num_updated/$num_to_update translations.";
 
-		if ( $num_to_update == $num_updated ) {
-			\WP_CLI::success( $line );
+		if ( $num_to_update === $num_updated ) {
+			WP_CLI::success( $line );
 		} else if ( $num_updated > 0 ) {
-			\WP_CLI::warning( $line );
+			WP_CLI::warning( $line );
 		} else {
-			\WP_CLI::error( $line );
+			WP_CLI::error( $line );
 		}
 
 	}
 
 	/**
-	 * Activates a given language.
+	 * Get all updates available for all translations.
 	 *
-	 * ## OPTIONS
-	 *
-	 * <language>
-	 * : Language code to activate.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     $ wp language core activate ja
-	 *     Success: Language activated.
-	 *
-	 * @subcommand activate
-	 */
-	public function activate( $args, $assoc_args ) {
-
-		list( $language_code ) = $args;
-
-		$available = $this->get_installed_languages();
-
-		if ( ! in_array( $language_code, $available ) ) {
-			\WP_CLI::error( "Language not installed." );
-		}
-
-		if ( $language_code == 'en_US' ) {
-			$language_code = '';
-		}
-
-		if ( $language_code === get_locale() ) {
-			\WP_CLI::warning( "Language '{$language_code}' already active." );
-
-			return;
-		}
-
-		update_option( 'WPLANG', $language_code );
-		\WP_CLI::success( "Language activated." );
-	}
-
-	/**
-	 * Get all updates available for all translations
+	 * @see wp_get_translation_updates()
 	 *
 	 * @return array
 	 */
-	private function get_translation_updates() {
+	protected function get_translation_updates() {
 		$available = $this->get_installed_languages();
+
 		$func = function() use ( $available ) {
 			return $available;
 		};
-		$filters = array( 'plugins_update_check_locales', 'themes_update_check_locales' );
-		foreach( $filters as $filter ) {
-			add_filter( $filter, $func );
+
+		switch( $this->obj_type ) {
+			case 'plugins':
+				add_filter( 'plugins_update_check_locales', $func );
+
+				wp_clean_plugins_cache();
+				// Check for Plugin translation updates.
+				wp_update_plugins();
+
+				remove_filter( 'plugins_update_check_locales', $func );
+
+				$transient = 'update_plugins';
+				break;
+			case 'themes':
+				add_filter( 'themes_update_check_locales', $func );
+
+				wp_clean_themes_cache();
+				// Check for Theme translation updates.
+				wp_update_themes();
+
+				remove_filter( 'themes_update_check_locales', $func );
+
+				$transient = 'update_themes';
+				break;
+			default:
+				delete_site_transient( 'update_core' );
+
+				// Check for Core translation updates.
+				wp_version_check();
+
+				$transient = 'update_core';
+				break;
 		}
-		$this->wp_clean_update_cache(); // Clear existing update caches.
-		wp_version_check();      // Check for Core translation updates.
-		wp_update_themes();      // Check for Theme translation updates.
-		wp_update_plugins();     // Check for Plugin translation updates.
-		foreach( $filters as $filter ) {
-			remove_filter( $filter, $func );
+
+		$updates   = array();
+		$transient = get_site_transient( $transient );
+
+		if ( empty( $transient->translations ) ) {
+			return $updates;
 		}
-		$updates = wp_get_translation_updates(); // Retrieves a list of all translations updates available.
+
+		foreach ( $transient->translations as $translation ) {
+			$updates[] = (object) $translation;
+		}
+
 		return $updates;
 	}
 
@@ -370,11 +175,12 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	 * @see wp_download_language_pack()
 	 *
 	 * @param string $download Language code to download.
-	 * @return string|WP_Error Returns the language code if successfully downloaded, or a WP_Error object on failure.
+	 * @param string $slug Plugin or theme slug. Not used for core.
+	 * @return string|\WP_Error Returns the language code if successfully downloaded, or a WP_Error object on failure.
 	 */
-	private function download_language_pack( $download ) {
+	protected function download_language_pack( $download, $slug = null ) {
 
-		$translations = $this->get_all_languages();
+		$translations = $this->get_all_languages( $slug );
 
 		foreach ( $translations as $translation ) {
 			if ( $translation['language'] === $download ) {
@@ -388,14 +194,21 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 		}
 		$translation = (object) $translation;
 
-		$translation->type = 'core';
+		$translation->type = rtrim( $this->obj_type, 's' );
+
+		// Make sure caching in LanguagePackUpgrader works.
+		if ( ! isset( $translation->slug ) ) {
+			$translation->slug = $slug;
+		}
 
 		$upgrader = 'WP_CLI\\LanguagePackUpgrader';
 		$result = Utils\get_upgrader( $upgrader )->upgrade( $translation, array( 'clear_update_cache' => false ) );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
-		} else if ( ! $result ) {
+		}
+
+		if ( ! $result ) {
 			return new \WP_Error( 'not_installed', "Could not install language '{$download}'." );
 		}
 
@@ -405,11 +218,13 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	/**
 	 * Return a list of installed languages.
 	 *
+	 * @param string $slug Optional. Plugin or theme slug. Defaults to 'default' for core.
+	 *
 	 * @return array
 	 */
-	protected function get_installed_languages() {
+	protected function get_installed_languages( $slug = 'default' ) {
 		$available = wp_get_installed_translations( $this->obj_type );
-		$available = ! empty( $available['default'] ) ? array_keys( $available['default'] ) : array();
+		$available = ! empty( $available[ $slug ] ) ? array_keys( $available[ $slug ] ) : array();
 		$available[] = 'en_US';
 
 		return $available;
@@ -418,15 +233,20 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 	/**
 	 * Return a list of all languages
 	 *
+	 * @param string $slug Optional. Plugin or theme slug. Not used fore core.
+	 *
 	 * @return array
 	 */
-	protected function get_all_languages() {
+	protected function get_all_languages( $slug = null ) {
 		require_once ABSPATH . '/wp-admin/includes/translation-install.php';
 		require ABSPATH . WPINC . '/version.php';
 
-		$response = translations_api( $this->obj_type, array( 'version' => $wp_version ) );
+		$response = translations_api( $this->obj_type, array(
+			'version' => $wp_version,
+			'slug'    => $slug
+		) );
 		if ( is_wp_error( $response ) ) {
-			\WP_CLI::error( $response );
+			WP_CLI::error( $response );
 		}
 		$translations = ! empty( $response['translations'] ) ? $response['translations'] : array();
 
@@ -437,98 +257,20 @@ abstract class CommandWithTranslation extends \WP_CLI_Command {
 			'updated' => '',
 		);
 
-		array_push( $translations, $en_us );
+		$translations[] = $en_us;
+
 		uasort( $translations, array( $this, 'sort_translations_callback' ) );
 
 		return $translations;
 	}
 
 	/**
-	 * Uninstalls a given language.
-	 *
-	 * ## OPTIONS
-	 *
-	 * <language>...
-	 * : Language code to uninstall.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     $ wp language core uninstall ja
-	 *     Success: Language uninstalled.
-	 *
-	 * @subcommand uninstall
-	 */
-	public function uninstall( $args, $assoc_args ) {
-		global $wp_filesystem;
-
-		$language_codes = $args;
-
-		$available = $this->get_installed_languages();
-
-		foreach ($language_codes as $language_code) {
-
-			if ( ! in_array( $language_code, $available ) ) {
-				\WP_CLI::error( "Language not installed." );
-			}
-
-			$dir = 'core' === $this->obj_type ? '' : "/$this->obj_type";
-			$files = scandir( WP_LANG_DIR . $dir );
-			if ( ! $files ) {
-				\WP_CLI::error( "No files found in language directory." );
-			}
-
-			$current_locale = get_locale();
-			if ( $language_code === $current_locale ) {
-				\WP_CLI::warning( "The '{$language_code}' language is active." );
-				exit;
-			}
-
-			// As of WP 4.0, no API for deleting a language pack
-			WP_Filesystem();
-			$deleted = false;
-			foreach ( $files as $file ) {
-				if ( '.' === $file[0] || is_dir( $file ) ) {
-					continue;
-				}
-				$extension_length = strlen( $language_code ) + 4;
-				$ending = substr( $file, -$extension_length );
-				if ( ! in_array( $file, array( $language_code . '.po', $language_code . '.mo' ) ) && ! in_array( $ending, array( '-' . $language_code . '.po', '-' . $language_code . '.mo' ) ) ) {
-					continue;
-				}
-				$deleted = $wp_filesystem->delete( WP_LANG_DIR . $dir . '/' . $file );
-			}
-
-			if ( $deleted ) {
-				\WP_CLI::success( "Language uninstalled." );
-			} else {
-				\WP_CLI::error( "Couldn't uninstall language." );
-			}
-
-		}
-
-	}
-
-	/**
 	 * Get Formatter object based on supplied parameters.
 	 *
 	 * @param array $assoc_args Parameters passed to command. Determines formatting.
-	 * @return \WP_CLI\Formatter
+	 * @return Formatter
 	 */
 	protected function get_formatter( &$assoc_args ) {
-		return new \WP_CLI\Formatter( $assoc_args, $this->obj_fields, $this->obj_type );
+		return new Formatter( $assoc_args, $this->obj_fields, $this->obj_type );
 	}
-
-	/**
-	 * Replicates wp_clean_update_cache() for use in WP 4.0
-	 */
-	private static function wp_clean_update_cache() {
-		if ( function_exists( 'wp_clean_plugins_cache' ) ) {
-			wp_clean_plugins_cache();
-		} else {
-			delete_site_transient( 'update_plugins' );
-		}
-		wp_clean_themes_cache();
-		delete_site_transient( 'update_core' );
-	}
-
 }
