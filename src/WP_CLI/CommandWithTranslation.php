@@ -50,6 +50,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 			// Formats the updates list.
 			foreach ( $updates as $update ) {
+				$name = 'WordPress'; // Core.
+
 				if ( 'plugin' === $update->type ) {
 					$plugins	 = get_plugins( '/' . $update->slug );
 					$plugin_data = array_shift( $plugins );
@@ -57,8 +59,6 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				} elseif ( 'theme' === $update->type ) {
 					$theme_data	 = wp_get_theme( $update->slug );
 					$name		 = $theme_data['Name'];
-				} else { // Core
-					$name = 'WordPress';
 				}
 
 				// Gets the translation data.
@@ -86,20 +86,22 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 			$num_to_update += count( $available_updates );
 
-			// Update translations.
-			foreach ( $available_updates as $update ) {
-				WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
+			if ( ! Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
+				// Update translations.
+				foreach ( $available_updates as $update ) {
+					WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
 
-				$result = Utils\get_upgrader( $upgrader )->upgrade( $update );
+					$result = Utils\get_upgrader( $upgrader )->upgrade( $update );
 
-				$results[] = $result;
+					$results[] = $result;
+				}
 			}
 		}
 
 		// Only preview which translations would be updated.
-		if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
-			\WP_CLI::line( sprintf( 'Found %d translation updates that would be processed:', count( $updates ) ) );
-			\WP_CLI\Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
+			WP_CLI::line( sprintf( 'Found %d translation updates that would be processed:', count( $updates ) ) );
+			Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
 
 			return;
 		}
@@ -112,9 +114,9 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			WP_CLI::success( $line );
 		} else if ( $num_updated > 0 ) {
 			WP_CLI::warning( $line );
-		} else {
-			WP_CLI::error( $line );
 		}
+
+		WP_CLI::error( $line );
 	}
 
 	/**
