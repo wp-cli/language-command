@@ -215,3 +215,10 @@ Feature: Manage translation files for a WordPress install
       """
       Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.2/de_DE_formal.zip
       """
+
+    When I run `wp plugin install akismet --version=4.0 --force`
+    And I run `wp language plugin update akismet`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/4.0/de_DE_formal.zip
+      """
