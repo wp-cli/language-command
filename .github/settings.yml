@@ -34,3 +34,23 @@ labels:
     color: c5def5
   - name: command:language-core-update
     color: c5def5
+  - name: command:language-plugin
+    color: c5def5
+  - name: command:language-plugin-install
+    color: c5def5
+  - name: command:language-plugin-list
+    color: c5def5
+  - name: command:language-plugin-uninstall
+    color: c5def5
+  - name: command:language-plugin-update
+    color: c5def5
+  - name: command:language-theme
+    color: c5def5
+  - name: command:language-theme-install
+    color: c5def5
+  - name: command:language-theme-list
+    color: c5def5
+  - name: command:language-theme-uninstall
+    color: c5def5
+  - name: command:language-theme-update
+    color: c5def5
