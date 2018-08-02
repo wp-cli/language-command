@@ -188,3 +188,15 @@ Feature: Manage translation files for a WordPress install
       """
       Success: No themes installed.
       """
+
+  @require-wp-4.0
+  Scenario: Ensure correct language is installed for theme version
+    Given a WP install
+    And an empty cache
+    And I run `wp theme install twentyseventeen --version=1.0 --force`
+
+    When I run `wp language theme install twentyseventeen de_DE`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.0/de_DE.zip
+      """

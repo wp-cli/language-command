@@ -185,17 +185,17 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 * @return string|\WP_Error Returns the language code if successfully downloaded, or a WP_Error object on failure.
 	 */
 	protected function download_language_pack( $download, $slug = null ) {
-
 		$translations = $this->get_all_languages( $slug );
+		$translation_to_load = null;
 
 		foreach ( $translations as $translation ) {
 			if ( $translation['language'] === $download ) {
-				$translation_to_load = true;
+				$translation_to_load = $translation;
 				break;
 			}
 		}
 
-		if ( empty( $translation_to_load ) ) {
+		if ( ! $translation_to_load ) {
 			return new \WP_Error( 'not_found', "Language '{$download}' not found." );
 		}
 		$translation = (object) $translation;
@@ -237,7 +237,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	}
 
 	/**
-	 * Return a list of all languages
+	 * Return a list of all languages.
 	 *
 	 * @param string $slug Optional. Plugin or theme slug. Not used for core.
 	 *
@@ -245,15 +245,31 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 */
 	protected function get_all_languages( $slug = null ) {
 		require_once ABSPATH . '/wp-admin/includes/translation-install.php';
-		require ABSPATH . WPINC . '/version.php';
+		require ABSPATH . WPINC . '/version.php'; // Include an unmodified $wp_version
 
-		$response = translations_api( $this->obj_type, array(
+		$args = array(
 			'version' => $wp_version,
-			'slug'    => $slug
-		) );
+		);
+
+		if ( $slug ) {
+			$args['slug'] = $slug;
+
+			if ( 'plugins' === $this->obj_type ) {
+				$plugins         = get_plugins( '/' . $slug );
+				$plugin_data     = array_shift( $plugins );
+				$args['version'] = $plugin_data['Version'];
+			} elseif ( 'themes' === $this->obj_type ) {
+				$theme_data      = wp_get_theme( $slug );
+				$args['version'] = $theme_data['Version'];
+			}
+		}
+
+		$response = translations_api( $this->obj_type, $args );
+
 		if ( is_wp_error( $response ) ) {
 			WP_CLI::error( $response );
 		}
+
 		$translations = ! empty( $response['translations'] ) ? $response['translations'] : array();
 
 		$en_us = array(

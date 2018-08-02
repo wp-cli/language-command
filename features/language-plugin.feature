@@ -203,3 +203,15 @@ Feature: Manage translation files for a WordPress install
       """
       Success: No plugins installed.
       """
+
+  @require-wp-4.0
+  Scenario: Ensure correct language is installed for plugin version
+    Given a WP install
+    And an empty cache
+    And I run `wp plugin install akismet --version=3.2 --force`
+
+    When I run `wp language plugin install akismet de_DE_formal`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.2/de_DE_formal.zip
+      """
