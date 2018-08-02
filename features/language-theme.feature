@@ -153,3 +153,24 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
     And the return code should be 0
+
+  @require-wp-4.0
+  Scenario: Not providing theme slugs should throw an error unless --all given
+    Given a WP install
+    And I run `wp theme path`
+    And save STDOUT as {THEME_DIR}
+
+    When I try `wp language theme list`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify one or more themes, or use --all.
+      """
+    And STDOUT should be empty
+
+    Given an empty {THEME_DIR} directory
+    When I run `wp language theme list --all`
+    Then STDOUT should be:
+      """
+      Success: No theme installed.
+      """
