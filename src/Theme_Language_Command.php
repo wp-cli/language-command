@@ -35,7 +35,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	);
 
 	/**
-	 * Lists all available languages.
+	 * Lists all available languages for one or more themes.
 	 *
 	 * ## OPTIONS
 	 *
@@ -97,10 +97,19 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	public function list_( $args, $assoc_args ) {
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
+		if ( ! $all && empty( $args ) ) {
+			WP_CLI::error( 'Please specify one or more themes, or use --all.' );
+		}
+
 		if ( $all ) {
 			$args = array_map( function( $file ){
 				return \WP_CLI\Utils\get_theme_name( $file );
 			}, array_keys( wp_get_themes() ) );
+
+			if ( empty( $args ) ) {
+				WP_CLI::success( 'No themes installed.' );
+				return;
+			}
 		}
 
 		$updates        = $this->get_translation_updates();

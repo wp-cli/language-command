@@ -168,3 +168,22 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
     And the return code should be 0
+
+  @require-wp-4.0
+  Scenario: Not providing plugin slugs should throw an error unless --all given
+    Given a WP install
+
+    When I try `wp language plugin list`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify one or more plugins, or use --all.
+      """
+    And STDOUT should be empty
+
+    Given I run `wp plugin uninstall --all`
+    When I run `wp language plugin list --all`
+    Then STDOUT should be:
+      """
+      Success: No plugins installed.
+      """
