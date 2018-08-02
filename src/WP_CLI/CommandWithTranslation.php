@@ -34,21 +34,6 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			return;
 		}
 
-		// Only preview which translations would be updated.
-		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
-			WP_CLI::line( sprintf( 'Found %d translation updates that would be processed:', count( $updates ) ) );
-
-			$fields = array( 'type', 'slug', 'language', 'version' );
-
-			if ( 'core' === $this->obj_type ) {
-				$fields = array( 'type', 'language', 'version' );
-			}
-
-			WP_CLI\Utils\format_items( 'table', $updates, $fields );
-
-			return;
-		}
-
 		if ( empty( $args ) ) {
 			$args = array( null ); // Used for core.
 		}
@@ -106,6 +91,14 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 				$results[] = $result;
 			}
+		}
+
+		// Only preview which translations would be updated.
+		if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
+			\WP_CLI::line( sprintf( 'Found %d translation updates that would be processed:', count( $updates ) ) );
+			\WP_CLI\Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+
+			return;
 		}
 
 		$num_updated = count( array_filter( $results ) );
