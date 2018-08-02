@@ -172,5 +172,5 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language theme list --all`
     Then STDOUT should be:
       """
-      Success: No theme installed.
+      Success: No themes installed.
       """
