@@ -200,3 +200,10 @@ Feature: Manage translation files for a WordPress install
       """
       Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.0/de_DE.zip
       """
+
+    When I run `wp theme install twentyseventeen --version=1.6 --force`
+    And I run `wp language theme update twentyseventeen`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.6/de_DE.zip
+      """
