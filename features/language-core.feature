@@ -93,7 +93,10 @@ Feature: Manage translation files for a WordPress install
       | ja        | Japanese                | none     |
 
     When I run `wp language core update --dry-run`
-    Then save STDOUT 'Found (\d+) translation updates that would be processed' as {UPDATES}
+    Then STDOUT should contain:
+      """
+      Found 2 translation updates that would be processed
+      """
 
     When I run `wp language core update`
     Then STDOUT should contain:
