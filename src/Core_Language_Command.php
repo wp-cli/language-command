@@ -273,8 +273,6 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Updates installed languages.
-	 *
 	 * Updates installed languages for core.
 	 *
 	 * ## OPTIONS

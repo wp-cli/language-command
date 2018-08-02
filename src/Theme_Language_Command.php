@@ -179,7 +179,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Installs a given language.
+	 * Installs a given language for a theme.
 	 *
 	 * Downloads the language pack from WordPress.org.
 	 *
@@ -222,7 +222,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Uninstalls a given language.
+	 * Uninstalls a given language for a theme.
 	 *
 	 * ## OPTIONS
 	 *
@@ -277,18 +277,22 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Updates installed languages.
-	 *
-	 * Updates installed languages for themes.
+	 * Updates installed languages for one or more themes.
 	 *
 	 * ## OPTIONS
+	 *
+	 * [<plugin>...]
+	 * : One or more plugins to update languages for.
+	 *
+	 * [--all]
+	 * : If set, languages for all themes will be updated.
 	 *
 	 * [--dry-run]
 	 * : Preview which translations would be updated.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     $ wp language theme update
+	 *     $ wp language theme update --all
 	 *     Updating 'Japanese' translation for Twenty Fifteen 1.5...
 	 *     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
 	 *     Translation updated successfully.
@@ -297,6 +301,23 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand update
 	 */
 	public function update( $args, $assoc_args ) {
+		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
+
+		if ( ! $all && empty( $args ) ) {
+			WP_CLI::error( 'Please specify one or more themes, or use --all.' );
+		}
+
+		if ( $all ) {
+			$args = array_map( function ( $file ) {
+				return \WP_CLI\Utils\get_theme_name( $file );
+			}, array_keys( wp_get_themes() ) );
+			if ( empty( $args ) ) {
+				WP_CLI::success( 'No themes installed.' );
+
+				return;
+			}
+		}
+
 		parent::update( $args, $assoc_args );
 	}
 }
