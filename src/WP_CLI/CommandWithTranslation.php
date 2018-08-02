@@ -239,7 +239,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	/**
 	 * Return a list of all languages
 	 *
-	 * @param string $slug Optional. Plugin or theme slug. Not used fore core.
+	 * @param string $slug Optional. Plugin or theme slug. Not used for core.
 	 *
 	 * @return array
 	 */
