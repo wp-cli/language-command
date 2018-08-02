@@ -84,7 +84,7 @@ Feature: Manage translation files for a WordPress install
       | en_GB     | English (UK)            | none     |
       | en_US     | English (United States) | none     |
 
-    When I run `wp language theme update`
+    When I run `wp language theme update --all`
     Then STDOUT should contain:
       """
       Success: Translations are up to date.
