@@ -250,7 +250,7 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language core update --dry-run`
     Then STDOUT should contain:
       """
-      Available 2 translations updates:
+      Found 2 translation updates that would be processed
       """
     And STDOUT should contain:
       """
