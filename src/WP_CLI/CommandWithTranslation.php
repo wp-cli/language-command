@@ -67,10 +67,13 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				) );
 				$translation = (object) reset( $translation );
 
-				$update->Type		 = ucfirst( $update->type );
-				$update->Name		 = $name;
-				$update->Version	 = $update->version;
-				$update->Language	 = $translation->english_name;
+				$update->Type    = ucfirst( $update->type );
+				$update->Name    = $name;
+				$update->Version = $update->version;
+
+				if ( isset( $translation->english_name ) ) {
+					$update->Language = $translation->english_name;
+				}
 
 				if ( ! isset( $updates_per_type[ $update->type ] ) ) {
 					$updates_per_type[ $update->type ] = array();
