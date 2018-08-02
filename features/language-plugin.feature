@@ -183,8 +183,22 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
 
+    When I try `wp language plugin update`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify one or more plugins, or use --all.
+      """
+    And STDOUT should be empty
+
     Given an empty {PLUGIN_DIR} directory
     When I run `wp language plugin list --all`
+    Then STDOUT should be:
+      """
+      Success: No plugins installed.
+      """
+
+    When I run `wp language plugin update --all`
     Then STDOUT should be:
       """
       Success: No plugins installed.
