@@ -92,12 +92,6 @@ Feature: Manage translation files for a WordPress install
       | en_GB     | English (UK)            | none     |
       | ja        | Japanese                | none     |
 
-    When I run `wp language core update --dry-run`
-    Then STDOUT should contain:
-      """
-      Found 2 translation updates that would be processed
-      """
-
     When I run `wp language core update`
     Then STDOUT should contain:
       """
