@@ -1,11 +1,8 @@
 {
     "name": "wp-cli/language-command",
-    "description": "Installs, activates, and manages language packs.",
     "type": "wp-cli-package",
+    "description": "Installs, activates, and manages language packs.",
     "homepage": "https://github.com/wp-cli/language-command",
-    "support": {
-        "issues": "https://github.com/wp-cli/language-command/issues"
-    },
     "license": "MIT",
     "authors": [
         {
@@ -14,26 +11,20 @@
             "homepage": "https://runcommand.io"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "autoload": {
-        "psr-4": {
-            "": "src/"
-        },
-        "files": [
-            "language-command.php"
-        ]
-    },
     "require": {
         "wp-cli/wp-cli": "^2"
     },
     "require-dev": {
         "wp-cli/wp-cli-tests": "^0"
     },
+    "config": {
+        "sort-packages": true
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"
         },
+        "bundled": true,
         "commands": [
             "language",
             "language core",
@@ -55,14 +46,23 @@
             "language theme list",
             "language theme uninstall",
             "language theme update"
-        ],
-        "bundled": true
+        ]
     },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        },
+        "files": [
+            "language-command.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
+        "behat": "run-behat-tests",
         "lint": "run-linter-tests",
         "phpcs": "run-phpcs-tests",
         "phpunit": "run-php-unit-tests",
-        "behat": "run-behat-tests",
         "prepare-tests": "install-package-tests",
         "test": [
             "@lint",
@@ -70,5 +70,8 @@
             "@phpunit",
             "@behat"
         ]
+    },
+    "support": {
+        "issues": "https://github.com/wp-cli/language-command/issues"
     }
 }
