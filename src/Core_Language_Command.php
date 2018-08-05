@@ -286,7 +286,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Updating 'Japanese' translation for WordPress 4.9.2...
 	 *     Downloading translation from https://downloads.wordpress.org/translation/core/4.9.2/ja.zip...
 	 *     Translation updated successfully.
-	 *     Success: Updated 1/1 translations.
+	 *     Success: Updated 1/1 translation.
 	 *
 	 * @subcommand update
 	 */

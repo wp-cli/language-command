@@ -305,7 +305,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Updating 'Japanese' translation for Akismet 3.1.11...
 	 *     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
 	 *     Translation updated successfully.
-	 *     Success: Updated 1/1 translations.
+	 *     Success: Updated 1/1 translation.
 	 *
 	 * @subcommand update
 	 */

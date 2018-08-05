@@ -5,6 +5,8 @@ namespace WP_CLI;
 use WP_CLI;
 use WP_CLI_Command;
 
+use function WP_CLI\Utils\pluralize;
+
 /**
  * Base class for WP-CLI commands that deal with translations
  *
@@ -100,7 +102,16 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 		// Only preview which translations would be updated.
 		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
-			WP_CLI::line( sprintf( 'Found %d translation updates that would be processed:', count( $updates ) ) );
+			$update_count = count( $updates );
+
+			WP_CLI::line(
+				sprintf(
+					'Found %d translation %s that would be processed:',
+					$update_count,
+					pluralize( 'update', $update_count )
+				)
+			);
+
 			Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
 
 			return;
@@ -108,7 +119,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 		$num_updated = count( array_filter( $results ) );
 
-		$line = "Updated $num_updated/$num_to_update translations.";
+		$line = sprintf( "Updated $num_updated/$num_to_update %s.", pluralize( 'translation', $num_updated ) );
 
 		if ( $num_to_update === $num_updated ) {
 			WP_CLI::success( $line );
