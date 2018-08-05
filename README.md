@@ -29,6 +29,14 @@ wp language
     $ wp language core activate nl_NL
     Success: Language activated.
 
+    # Install the Dutch language pack for Twenty Seventeen.
+    $ wp language theme install twentyseventeen nl_NL
+    Success: Language installed.
+
+    # Install the Dutch language pack for Akismet.
+    $ wp language plugin install akismet nl_NL
+    Success: Language installed.
+
 
 
 ### wp language core
@@ -213,13 +221,11 @@ wp language core uninstall <language>...
 
 ### wp language core update
 
-Updates installed languages.
+Updates installed languages for core.
 
 ~~~
 wp language core update [--dry-run]
 ~~~
-
-Updates installed languages for core.
 
 **OPTIONS**
 
@@ -264,11 +270,36 @@ wp language plugin
 
 
 
+### wp language plugin is-installed
+
+Checks if a given language is installed.
+
+~~~
+wp language plugin is-installed <plugin> <language>...
+~~~
+
+Returns exit code 0 when installed, 1 when uninstalled.
+
+**OPTIONS**
+
+	<plugin>
+		Plugin to check for.
+
+	<language>...
+		The language code to check.
+
+**EXAMPLES**
+
+    # Check whether the German language is installed for Akismet; exit status 0 if installed, otherwise 1.
+    $ wp language plugin is-installed akismet de_DE
+    $ echo $?
+    1
+
 
 
 ### wp language plugin install
 
-Installs a given language.
+Installs a given language for a plugin.
 
 ~~~
 wp language plugin install <plugin> <language>...
@@ -286,15 +317,15 @@ Downloads the language pack from WordPress.org.
 
 **EXAMPLES**
 
-    # Install the Japanese language.
-    $ wp language core install ja
+    # Install the Japanese language for Akismet.
+    $ wp language plugin install akismet ja
     Success: Language installed.
 
 
 
 ### wp language plugin list
 
-Lists all available languages.
+Lists all available languages for one or more plugins.
 
 ~~~
 wp language plugin list [<plugin>...] [--all] [--field=<field>] [--<field>=<value>] [--fields=<fields>] [--format=<format>]
@@ -359,7 +390,7 @@ These fields are optionally available:
 
 ### wp language plugin uninstall
 
-Uninstalls a given language.
+Uninstalls a given language for a plugin.
 
 ~~~
 wp language plugin uninstall <plugin> <language>...
@@ -382,22 +413,26 @@ wp language plugin uninstall <plugin> <language>...
 
 ### wp language plugin update
 
-Updates installed languages.
+Updates installed languages for one or more plugins.
 
 ~~~
-wp language plugin update [--dry-run]
+wp language plugin update [<plugin>...] [--all] [--dry-run]
 ~~~
-
-Updates installed languages for plugins.
 
 **OPTIONS**
+
+	[<plugin>...]
+		One or more plugins to update languages for.
+
+	[--all]
+		If set, languages for all plugins will be updated.
 
 	[--dry-run]
 		Preview which translations would be updated.
 
 **EXAMPLES**
 
-    $ wp language plugin update
+    $ wp language plugin update --all
     Updating 'Japanese' translation for Akismet 3.1.11...
     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
     Translation updated successfully.
@@ -433,11 +468,36 @@ wp language theme
 
 
 
+### wp language theme is-installed
+
+Checks if a given language is installed.
+
+~~~
+wp language theme is-installed <theme> <language>...
+~~~
+
+Returns exit code 0 when installed, 1 when uninstalled.
+
+**OPTIONS**
+
+	<theme>
+		Theme to check for.
+
+	<language>...
+		The language code to check.
+
+**EXAMPLES**
+
+    # Check whether the German language is installed for Twenty Seventeen; exit status 0 if installed, otherwise 1.
+    $ wp language theme is-installed twentyseventeen de_DE
+    $ echo $?
+    1
+
 
 
 ### wp language theme install
 
-Installs a given language.
+Installs a given language for a theme.
 
 ~~~
 wp language theme install <theme> <language>...
@@ -455,15 +515,15 @@ Downloads the language pack from WordPress.org.
 
 **EXAMPLES**
 
-    # Install the Japanese language.
-    $ wp language core install ja
+    # Install the Japanese language for Twenty Seventeen.
+    $ wp language theme install twentyseventeen ja
     Success: Language installed.
 
 
 
 ### wp language theme list
 
-Lists all available languages.
+Lists all available languages for one or more themes.
 
 ~~~
 wp language theme list [<theme>...] [--all] [--field=<field>] [--<field>=<value>] [--fields=<fields>] [--format=<format>]
@@ -528,7 +588,7 @@ These fields are optionally available:
 
 ### wp language theme uninstall
 
-Uninstalls a given language.
+Uninstalls a given language for a theme.
 
 ~~~
 wp language theme uninstall <theme> <language>...
@@ -551,22 +611,26 @@ wp language theme uninstall <theme> <language>...
 
 ### wp language theme update
 
-Updates installed languages.
+Updates installed languages for one or more themes.
 
 ~~~
-wp language theme update [--dry-run]
+wp language theme update [<plugin>...] [--all] [--dry-run]
 ~~~
-
-Updates installed languages for themes.
 
 **OPTIONS**
+
+	[<plugin>...]
+		One or more plugins to update languages for.
+
+	[--all]
+		If set, languages for all themes will be updated.
 
 	[--dry-run]
 		Preview which translations would be updated.
 
 **EXAMPLES**
 
-    $ wp language theme update
+    $ wp language theme update --all
     Updating 'Japanese' translation for Twenty Fifteen 1.5...
     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
     Translation updated successfully.

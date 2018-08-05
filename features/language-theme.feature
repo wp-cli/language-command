@@ -84,7 +84,7 @@ Feature: Manage translation files for a WordPress install
       | en_GB     | English (UK)            | none     |
       | en_US     | English (United States) | none     |
 
-    When I run `wp language theme update`
+    When I run `wp language theme update --all`
     Then STDOUT should contain:
       """
       Success: Translations are up to date.
@@ -168,9 +168,42 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
 
+    When I try `wp language theme update`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify one or more themes, or use --all.
+      """
+    And STDOUT should be empty
+
     Given an empty {THEME_DIR} directory
     When I run `wp language theme list --all`
     Then STDOUT should be:
       """
       Success: No themes installed.
+      """
+
+    When I run `wp language theme update --all`
+    Then STDOUT should be:
+      """
+      Success: No themes installed.
+      """
+
+  @require-wp-4.0
+  Scenario: Ensure correct language is installed for theme version
+    Given a WP install
+    And an empty cache
+    And I run `wp theme install twentyseventeen --version=1.0 --force`
+
+    When I run `wp language theme install twentyseventeen de_DE`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.0/de_DE.zip
+      """
+
+    When I run `wp theme install twentyseventeen --version=1.6 --force`
+    And I run `wp language theme update twentyseventeen`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.6/de_DE.zip
       """
