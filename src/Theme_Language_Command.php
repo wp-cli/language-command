@@ -305,7 +305,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Updating 'Japanese' translation for Twenty Fifteen 1.5...
 	 *     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
 	 *     Translation updated successfully.
-	 *     Success: Updated 1/1 translations.
+	 *     Success: Updated 1/1 translation.
 	 *
 	 * @subcommand update
 	 */
