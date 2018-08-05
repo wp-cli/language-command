@@ -5,8 +5,6 @@ namespace WP_CLI;
 use WP_CLI;
 use WP_CLI_Command;
 
-use function WP_CLI\Utils\pluralize;
-
 /**
  * Base class for WP-CLI commands that deal with translations
  *
@@ -108,7 +106,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				sprintf(
 					'Found %d translation %s that would be processed:',
 					$update_count,
-					pluralize( 'update', $update_count )
+					WP_CLI\Utils\pluralize( 'update', $update_count )
 				)
 			);
 
@@ -119,7 +117,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 		$num_updated = count( array_filter( $results ) );
 
-		$line = sprintf( "Updated $num_updated/$num_to_update %s.", pluralize( 'translation', $num_updated ) );
+		$line = sprintf( "Updated $num_updated/$num_to_update %s.", WP_CLI\Utils\pluralize( 'translation', $num_updated ) );
 
 		if ( $num_to_update === $num_updated ) {
 			WP_CLI::success( $line );
