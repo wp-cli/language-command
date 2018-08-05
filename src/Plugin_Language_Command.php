@@ -188,7 +188,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Installs a given language.
+	 * Installs a given language for a plugin.
 	 *
 	 * Downloads the language pack from WordPress.org.
 	 *
@@ -231,7 +231,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Uninstalls a given language.
+	 * Uninstalls a given language for a plugin.
 	 *
 	 * ## OPTIONS
 	 *
@@ -286,26 +286,47 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Updates installed languages.
-	 *
-	 * Updates installed languages for plugins.
+	 * Updates installed languages for one or more plugins.
 	 *
 	 * ## OPTIONS
+	 *
+	 * [<plugin>...]
+	 * : One or more plugins to update languages for.
+	 *
+	 * [--all]
+	 * : If set, languages for all plugins will be updated.
 	 *
 	 * [--dry-run]
 	 * : Preview which translations would be updated.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     $ wp language plugin update
+	 *     $ wp language plugin update --all
 	 *     Updating 'Japanese' translation for Akismet 3.1.11...
 	 *     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
 	 *     Translation updated successfully.
-	 *     Success: Updated 1/1 translations.
+	 *     Success: Updated 1/1 translation.
 	 *
 	 * @subcommand update
 	 */
 	public function update( $args, $assoc_args ) {
+		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
+
+		if ( ! $all && empty( $args ) ) {
+			WP_CLI::error( 'Please specify one or more plugins, or use --all.' );
+		}
+
+		if ( $all ) {
+			$args = array_map( function ( $file ) {
+				return \WP_CLI\Utils\get_plugin_name( $file );
+			}, array_keys( $this->get_all_plugins() ) );
+			if ( empty( $args ) ) {
+				WP_CLI::success( 'No plugins installed.' );
+
+				return;
+			}
+		}
+
 		parent::update( $args, $assoc_args );
 	}
 

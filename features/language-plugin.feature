@@ -85,7 +85,7 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | none     |
       | en_GB     | English (UK)            | none     |
 
-    When I run `wp language plugin update`
+    When I run `wp language plugin update --all`
     Then STDOUT should contain:
       """
       Success: Translations are up to date.
@@ -183,9 +183,42 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
 
+    When I try `wp language plugin update`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify one or more plugins, or use --all.
+      """
+    And STDOUT should be empty
+
     Given an empty {PLUGIN_DIR} directory
     When I run `wp language plugin list --all`
     Then STDOUT should be:
       """
       Success: No plugins installed.
+      """
+
+    When I run `wp language plugin update --all`
+    Then STDOUT should be:
+      """
+      Success: No plugins installed.
+      """
+
+  @require-wp-4.0
+  Scenario: Ensure correct language is installed for plugin version
+    Given a WP install
+    And an empty cache
+    And I run `wp plugin install akismet --version=3.2 --force`
+
+    When I run `wp language plugin install akismet de_DE_formal`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.2/de_DE_formal.zip
+      """
+
+    When I run `wp plugin install akismet --version=4.0 --force`
+    And I run `wp language plugin update akismet`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/4.0/de_DE_formal.zip
       """
