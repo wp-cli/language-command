@@ -301,3 +301,33 @@ Feature: Manage translation files for a WordPress install
       """
       Downloading translation from https://downloads.wordpress.org/translation/core/4.5.3
       """
+
+  @require-wp-4.0
+  Scenario: Ensure upgrader output is in English
+    Given a WP install
+    And an empty cache
+    And I run `wp core download --version=4.7.1 --force`
+
+    When I run `wp language core install de_DE --activate`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/core/4.7.1/de_DE.zip
+      """
+
+    When I run `wp language core install nl_NL`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/core/4.7.1/nl_NL.zip
+      """
+    And STDOUT should contain:
+      """
+      Installing the latest version
+      """
+    And STDOUT should not contain:
+      """
+      Lädt Übersetzung von https://downloads.wordpress.org/translation/core/4.7.1./nl_NL.zip
+      """
+    And STDOUT should not contain:
+      """
+      Die aktuelle Version wird installiert
+      """
