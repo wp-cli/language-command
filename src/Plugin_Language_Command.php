@@ -123,7 +123,9 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				}
 
 				$update = wp_list_filter( $updates, array(
-					'language' => $translation['language']
+					'language' => $translation['language'],
+					'type'     => 'plugin',
+					'slug'     => $plugin,
 				) );
 
 				$translation['update'] = $update ? 'available' : 'none';

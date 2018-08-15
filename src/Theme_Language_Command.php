@@ -125,7 +125,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				}
 
 				$update = wp_list_filter( $updates, array(
-					'language' => $translation['language']
+					'language' => $translation['language'],
+					'type'     => 'theme',
+					'slug'     => $theme,
 				) );
 
 				$translation['update'] = $update ? 'available' : 'none';
