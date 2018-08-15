@@ -97,9 +97,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$args = array_map( function( $file ){
-				return \WP_CLI\Utils\get_plugin_name( $file );
-			}, array_keys( $this->get_all_plugins() ) );
+			$args = array_map( '\WP_CLI\Utils\get_plugin_name', array_keys( $this->get_all_plugins() ) );
 
 			if ( empty( $args ) ) {
 				WP_CLI::success( 'No plugins installed.' );
@@ -312,9 +310,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$args = array_map( function ( $file ) {
-				return \WP_CLI\Utils\get_plugin_name( $file );
-			}, array_keys( $this->get_all_plugins() ) );
+			$args = array_map( '\WP_CLI\Utils\get_plugin_name', array_keys( $this->get_all_plugins() ) );
 			if ( empty( $args ) ) {
 				WP_CLI::success( 'No plugins installed.' );
 
