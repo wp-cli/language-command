@@ -209,16 +209,112 @@ Feature: Manage translation files for a WordPress install
     Given a WP install
     And an empty cache
     And I run `wp plugin install akismet --version=3.2 --force`
+    And I run `wp plugin install jetpack --version=6.0 --force`
 
     When I run `wp language plugin install akismet de_DE_formal`
     Then STDOUT should contain:
       """
       Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.2/de_DE_formal.zip
       """
+    And STDOUT should not contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/jetpack
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin list --all --fields=plugin,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | plugin   | language     | update | status      |
+      | akismet  | de_DE_formal | none   | installed   |
+      | jetpack  | de_DE        | none   | uninstalled |
+
+    When I run `wp language plugin install jetpack de_DE`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/jetpack/6.0/de_DE.zip
+      """
+    And STDOUT should not contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin list --all --fields=plugin,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | plugin   | language     | update | status    |
+      | akismet  | de_DE_formal | none   | installed |
+      | jetpack  | de_DE        | none   | installed |
 
     When I run `wp plugin install akismet --version=4.0 --force`
-    And I run `wp language plugin update akismet`
+    And I run `wp plugin install jetpack --version=6.4 --force`
+
+    When I run `wp language plugin list --all --fields=plugin,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | plugin   | language     | update    | status    |
+      | akismet  | de_DE_formal | available | installed |
+      | jetpack  | de_DE        | available | installed |
+
+    When I run `wp language plugin update akismet`
     Then STDOUT should contain:
       """
       Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/4.0/de_DE_formal.zip
       """
+    And STDOUT should not contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/jetpack
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin list --all --fields=plugin,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | plugin   | language     | update    | status    |
+      | akismet  | de_DE_formal | none      | installed |
+      | jetpack  | de_DE        | available | installed |
+
+    When I run `wp language plugin update jetpack`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/jetpack/6.4/de_DE.zip
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin list --all --fields=plugin,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | plugin   | language     | update | status    |
+      | akismet  | de_DE_formal | none   | installed |
+      | jetpack  | de_DE        | none   | installed |
+
+  @require-wp-4.0
+  Scenario: Ensure availability status is correct for each plugin
+    Given a WP install
+    And an empty cache
+    And I run `wp plugin install akismet --version=3.2 --force`
+    And I run `wp plugin install jetpack --version=6.0 --force`
+
+    When I run `wp language plugin install akismet de_DE`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.2/de_DE.zip
+      """
+
+    When I run `wp language plugin install jetpack de_DE`
+    And STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/jetpack/6.0/de_DE.zip
+      """
+    And STDERR should be empty
+
+    When I run `wp plugin install akismet --version=4.0 --force`
+    And I run `wp plugin install jetpack --version=6.4 --force`
+    And I run `wp language plugin update jetpack`
+    Then STDOUT should contain:
+      """
+      Downloading translation from https://downloads.wordpress.org/translation/plugin/jetpack/6.4/de_DE.zip
+      """
+
+    When I run `wp language plugin list --all --fields=plugin,language,update,status --status=installed`
+    Then STDOUT should be a table containing rows:
+      | plugin   | language | update    | status    |
+      | akismet  | de_DE    | available | installed |
+      | jetpack  | de_DE    | none      | installed |
+    And STDERR should be empty
