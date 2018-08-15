@@ -10,11 +10,38 @@ use WP_CLI;
  * @package wp-cli
  */
 class LanguagePackUpgrader extends \Language_Pack_Upgrader {
+	/**
+	 * Initialize the upgrade strings.
+	 *
+	 * Makes sure that the strings are always in English.
+	 */
+	public function upgrade_strings() {
+		$switched_locale = function_exists( 'switch_to_locale' ) && switch_to_locale( 'en_US' );
+
+		parent::upgrade_strings();
+
+		if ( $switched_locale ) {
+			restore_previous_locale();
+		}
+	}
+
+	/**
+	 * Initialize the generic strings.
+	 *
+	 * Makes sure that the strings are always in English.
+	 */
+	public function generic_strings() {
+		$switched_locale = function_exists( 'switch_to_locale' ) && switch_to_locale( 'en_US' );
+
+		parent::generic_strings();
+
+		if ( $switched_locale ) {
+			restore_previous_locale();
+		}
+	}
 
 	/**
 	 * Caches the download, and uses cached if available.
-	 *
-	 * @access public
 	 *
 	 * @param string $package The URI of the package. If this is the full path to an
 	 *                        existing local file, it will be returned untouched.
