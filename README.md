@@ -181,11 +181,6 @@ These fields will be displayed by default for each translation:
 * update
 * updated
 
-These fields are optionally available:
-
-* version
-* package
-
 **EXAMPLES**
 
     # List language,english_name,status fields of available languages.
@@ -238,7 +233,7 @@ wp language core update [--dry-run]
     Updating 'Japanese' translation for WordPress 4.9.2...
     Downloading translation from https://downloads.wordpress.org/translation/core/4.9.2/ja.zip...
     Translation updated successfully.
-    Success: Updated 1/1 translations.
+    Success: Updated 1/1 translation.
 
 
 
@@ -252,15 +247,15 @@ wp language plugin
 
 **EXAMPLES**
 
-    # Install the Dutch theme language pack.
+    # Install the Dutch plugin language pack.
     $ wp language plugin install hello-dolly nl_NL
     Success: Language installed.
 
-    # Uninstall the Dutch theme language pack.
+    # Uninstall the Dutch plugin language pack.
     $ wp language plugin uninstall hello-dolly nl_NL
     Success: Language uninstalled.
 
-    # List installed theme language packages.
+    # List installed plugin language packages.
     $ wp language plugin list --status=installed
     +----------+--------------+-------------+-----------+-----------+---------------------+
     | language | english_name | native_name | status    | update    | updated             |
@@ -370,11 +365,6 @@ These fields will be displayed by default for each translation:
 * update
 * updated
 
-These fields are optionally available:
-
-* version
-* package
-
 **EXAMPLES**
 
     # List language,english_name,status fields of available languages.
@@ -436,7 +426,7 @@ wp language plugin update [<plugin>...] [--all] [--dry-run]
     Updating 'Japanese' translation for Akismet 3.1.11...
     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
     Translation updated successfully.
-    Success: Updated 1/1 translations.
+    Success: Updated 1/1 translation.
 
 
 
@@ -568,11 +558,6 @@ These fields will be displayed by default for each translation:
 * update
 * updated
 
-These fields are optionally available:
-
-* version
-* package
-
 **EXAMPLES**
 
     # List language,english_name,status fields of available languages.
@@ -614,13 +599,13 @@ wp language theme uninstall <theme> <language>...
 Updates installed languages for one or more themes.
 
 ~~~
-wp language theme update [<plugin>...] [--all] [--dry-run]
+wp language theme update [<theme>...] [--all] [--dry-run]
 ~~~
 
 **OPTIONS**
 
-	[<plugin>...]
-		One or more plugins to update languages for.
+	[<theme>...]
+		One or more themes to update languages for.
 
 	[--all]
 		If set, languages for all themes will be updated.
@@ -634,7 +619,7 @@ wp language theme update [<plugin>...] [--all] [--dry-run]
     Updating 'Japanese' translation for Twenty Fifteen 1.5...
     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
     Translation updated successfully.
-    Success: Updated 1/1 translations.
+    Success: Updated 1/1 translation.
 
 ## Installing
 

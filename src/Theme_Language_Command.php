@@ -76,11 +76,6 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * * update
 	 * * updated
 	 *
-	 * These fields are optionally available:
-	 *
-	 * * version
-	 * * package
-	 *
 	 * ## EXAMPLES
 	 *
 	 *     # List language,english_name,status fields of available languages.
@@ -290,8 +285,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## OPTIONS
 	 *
-	 * [<plugin>...]
-	 * : One or more plugins to update languages for.
+	 * [<theme>...]
+	 * : One or more themes to update languages for.
 	 *
 	 * [--all]
 	 * : If set, languages for all themes will be updated.

@@ -72,11 +72,6 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * * update
 	 * * updated
 	 *
-	 * These fields are optionally available:
-	 *
-	 * * version
-	 * * package
-	 *
 	 * ## EXAMPLES
 	 *
 	 *     # List language,english_name,status fields of available languages.
