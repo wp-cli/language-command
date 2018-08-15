@@ -50,6 +50,10 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 			// Formats the updates list.
 			foreach ( $updates as $update ) {
+				if ( null !== $slug && $update->slug !== $slug ) {
+					continue;
+				}
+
 				$name = 'WordPress'; // Core.
 
 				if ( 'plugin' === $update->type ) {

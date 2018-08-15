@@ -76,11 +76,6 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * * update
 	 * * updated
 	 *
-	 * These fields are optionally available:
-	 *
-	 * * version
-	 * * package
-	 *
 	 * ## EXAMPLES
 	 *
 	 *     # List language,english_name,status fields of available languages.
@@ -130,7 +125,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				}
 
 				$update = wp_list_filter( $updates, array(
-					'language' => $translation['language']
+					'language' => $translation['language'],
+					'type'     => 'theme',
+					'slug'     => $theme,
 				) );
 
 				$translation['update'] = $update ? 'available' : 'none';
@@ -290,8 +287,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## OPTIONS
 	 *
-	 * [<plugin>...]
-	 * : One or more plugins to update languages for.
+	 * [<theme>...]
+	 * : One or more themes to update languages for.
 	 *
 	 * [--all]
 	 * : If set, languages for all themes will be updated.
@@ -317,9 +314,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$args = array_map( function ( $file ) {
-				return \WP_CLI\Utils\get_theme_name( $file );
-			}, array_keys( wp_get_themes() ) );
+			$args = array_map( '\WP_CLI\Utils\get_theme_name', array_keys( wp_get_themes() ) );
 			if ( empty( $args ) ) {
 				WP_CLI::success( 'No themes installed.' );
 

@@ -5,15 +5,15 @@
  *
  * ## EXAMPLES
  *
- *     # Install the Dutch theme language pack.
+ *     # Install the Dutch plugin language pack.
  *     $ wp language plugin install hello-dolly nl_NL
  *     Success: Language installed.
  *
- *     # Uninstall the Dutch theme language pack.
+ *     # Uninstall the Dutch plugin language pack.
  *     $ wp language plugin uninstall hello-dolly nl_NL
  *     Success: Language uninstalled.
  *
- *     # List installed theme language packages.
+ *     # List installed plugin language packages.
  *     $ wp language plugin list --status=installed
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
  *     | language | english_name | native_name | status    | update    | updated             |
@@ -76,11 +76,6 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * * update
 	 * * updated
 	 *
-	 * These fields are optionally available:
-	 *
-	 * * version
-	 * * package
-	 *
 	 * ## EXAMPLES
 	 *
 	 *     # List language,english_name,status fields of available languages.
@@ -102,9 +97,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$args = array_map( function( $file ){
-				return \WP_CLI\Utils\get_plugin_name( $file );
-			}, array_keys( $this->get_all_plugins() ) );
+			$args = array_map( '\WP_CLI\Utils\get_plugin_name', array_keys( $this->get_all_plugins() ) );
 
 			if ( empty( $args ) ) {
 				WP_CLI::success( 'No plugins installed.' );
@@ -130,7 +123,9 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				}
 
 				$update = wp_list_filter( $updates, array(
-					'language' => $translation['language']
+					'language' => $translation['language'],
+					'type'     => 'plugin',
+					'slug'     => $plugin,
 				) );
 
 				$translation['update'] = $update ? 'available' : 'none';
@@ -317,9 +312,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$args = array_map( function ( $file ) {
-				return \WP_CLI\Utils\get_plugin_name( $file );
-			}, array_keys( $this->get_all_plugins() ) );
+			$args = array_map( '\WP_CLI\Utils\get_plugin_name', array_keys( $this->get_all_plugins() ) );
 			if ( empty( $args ) ) {
 				WP_CLI::success( 'No plugins installed.' );
 
