@@ -331,3 +331,100 @@ Feature: Manage translation files for a WordPress install
       """
       Die aktuelle Version wird installiert
       """
+
+    @require-wp-4.0
+    Scenario: Show correct active language after switching
+      Given a WP install
+      And an empty cache
+
+      When I try `wp language core is-installed en_US`
+      Then the return code should be 0
+
+      When I run `wp language core install de_DE`
+      Then the wp-content/languages/admin-de_DE.po file should exist
+      And the wp-content/languages/de_DE.po file should exist
+      And STDOUT should contain:
+      """
+      Success: Language installed.
+      """
+      And STDERR should be empty
+
+      When I try `wp language core is-installed de_DE`
+      Then the return code should be 0
+
+      When I run `wp language core list --field=language --status=active`
+      Then STDOUT should be:
+      """
+      en_US
+      """
+
+      When I run `wp site switch-language de_DE`
+      Then STDOUT should be:
+      """
+      Success: Language activated.
+      """
+
+      When I run `wp language core list --field=language --status=active`
+      Then STDOUT should be:
+      """
+      de_DE
+      """
+
+      When I run `wp site switch-language en_US`
+      Then STDOUT should be:
+      """
+      Success: Language activated.
+      """
+
+      When I run `wp language core list --field=language --status=active`
+      Then STDOUT should be:
+      """
+      en_US
+      """
+
+  @require-wp-4.0
+  Scenario: Switch to formal language variant
+    Given a WP install
+    And an empty cache
+
+    When I run `wp language core install de_DE_formal`
+    Then the wp-content/languages/admin-de_DE_formal.po file should exist
+    And the wp-content/languages/de_DE_formal.po file should exist
+    And STDOUT should contain:
+      """
+      Success: Language installed.
+      """
+    And STDERR should be empty
+
+    When I try `wp language core is-installed de_DE_formal`
+    Then the return code should be 0
+
+    When I run `wp language core list --field=language --status=active`
+    Then STDOUT should be:
+      """
+      en_US
+      """
+
+    When I run `wp site switch-language de_DE_formal`
+    Then STDOUT should be:
+      """
+      Success: Language activated.
+      """
+
+    When I run `wp language core list --field=language --status=active`
+    Then STDOUT should be:
+      """
+      de_DE_formal
+      """
+
+    When I run `wp site switch-language en_US`
+    Then STDOUT should be:
+      """
+      Success: Language activated.
+      """
+
+    When I run `wp language core list --field=language --status=active`
+    Then STDOUT should be:
+      """
+      en_US
+      """
