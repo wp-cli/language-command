@@ -175,7 +175,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	public function install( $args, $assoc_args ) {
 		$language_codes = (array) $args;
 
-		if(  1 < count( $language_codes )  &&  in_array( true , $assoc_args , true ) ){
+		if ( 1 < count( $language_codes ) && in_array( true, $assoc_args, true ) ) {
 			WP_CLI::error( 'Only a single language can be active.' );
 		}
 
