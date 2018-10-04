@@ -202,7 +202,8 @@ Feature: Manage translation files for a WordPress install
     When I try `wp language core install invalid_lang`
     Then STDERR should be:
       """
-      Error: Language 'invalid_lang' not found.
+      Warning: Language 'invalid_lang' not found.
+      Error: No languages installed (1 failed).
       """
     And STDOUT should be empty
     And the return code should be 1
