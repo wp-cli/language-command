@@ -210,6 +210,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$available = $this->get_installed_languages( $plugin );
 
+		$successes = $errors = $skips = 0;
 		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
