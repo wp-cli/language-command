@@ -48,7 +48,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/ja.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 2 of 2 languages.
       """
     And STDERR should be empty
 
@@ -194,8 +194,8 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/en_GB.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
       Success: Language activated.
+      Success: Installed 1 of 1 languages.
       """
     And STDERR should be empty
 
@@ -231,7 +231,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/ja.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 2 of 2 languages.
       """
     And STDERR should be empty
 
@@ -348,7 +348,7 @@ Feature: Manage translation files for a WordPress install
       And the wp-content/languages/de_DE.po file should exist
       And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 1 of 1 languages.
       """
       And STDERR should be empty
 
@@ -395,7 +395,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/de_DE_formal.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 1 of 1 languages.
       """
     And STDERR should be empty
 
