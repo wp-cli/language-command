@@ -199,7 +199,12 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 *     # Install the Japanese language for Akismet.
 	 *     $ wp language plugin install akismet ja
-	 *     Success: Language installed.
+	 *     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/4.0.3/ja.zip...
+	 *     Unpacking the update...
+	 *     Installing the latest version...
+	 *     Translation updated successfully.
+	 *     Language 'ja' installed.
+	 *     Success: Installed 1 of 1 languages.
 	 *
 	 * @subcommand install
 	 */
