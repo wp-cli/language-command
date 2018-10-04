@@ -130,7 +130,10 @@ Feature: Manage translation files for a WordPress install
       Warning: Language 'invalid_lang' not found.
       Error: No languages installed (1 failed).
       """
-    And STDOUT should be empty
+    And STDOUT should be:
+      """
+      Language 'invalid_lang' not installed.
+      """
     And the return code should be 1
 
   @require-wp-4.0
