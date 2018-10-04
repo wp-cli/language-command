@@ -222,10 +222,11 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				$response = $this->download_language_pack( $language_code, $theme );
 
 				if ( is_wp_error( $response ) ) {
-					WP_CLI::warning( $response );
+					\WP_CLI::warning( $response );
+					\WP_CLI::log( "Language '{$language_code}' not installed." );
 					$errors++;
 				} else {
-					\WP_CLI::log( 'Language installed.' );
+					\WP_CLI::log( "Language '{$language_code}' installed." );
 					$successes++;
 				}
 			}
