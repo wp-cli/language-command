@@ -189,8 +189,11 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## OPTIONS
 	 *
-	 * <plugin>
+	 * [<plugin>]
 	 * : Plugin to install language for.
+	 *
+	 * [--all]
+	 * : If set, languages for all plugins will be installed.
 	 *
 	 * <language>...
 	 * : Language code to install.
@@ -209,9 +212,31 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand install
 	 */
 	public function install( $args, $assoc_args ) {
+		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
+
+		if ( ! $all && count( $args ) < 2 ) { // TODO
+			WP_CLI::error( 'Please specify a plugin, or use --all.' );
+		}
+
+		if ( $all ) {
+			$language_codes = (array) $args;
+			$this->install_for_all( $language_codes );
+			return;
+		}
+
 		$plugin         = array_shift( $args );
 		$language_codes = (array) $args;
-		$count          = count( $language_codes );
+		$this->install_for_single( $plugin, $language_codes );
+	}
+
+	/**
+	 * Installs translations for a plugin.
+	 *
+	 * @param string $plugin Slug of a plugin.
+	 * @param array $language_codes Language codes to install.
+	 */
+	private function install_for_single( $plugin, $language_codes ) {
+		$count = count( $language_codes );
 
 		$available = $this->get_installed_languages( $plugin );
 
@@ -231,6 +256,50 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				} else {
 					\WP_CLI::log( "Language '{$language_code}' installed." );
 					$successes++;
+				}
+			}
+		}
+
+		\WP_CLI\Utils\report_batch_operation_results( 'language', 'install', $count, $successes, $errors, $skips );
+	}
+
+	/**
+	 * Installs translations for all installed plugin.
+	 *
+	 * @param array $language_codes Language codes to install.
+	 */
+	private function install_for_all( $language_codes ) {
+		$plugins = $this->get_all_plugins();
+
+		if ( empty( $plugins ) ) {
+			WP_CLI::success( 'No plugins installed.' );
+			return;
+		}
+
+		$count = count( $plugins ) * count( $language_codes );
+
+		$successes = $errors = $skips = 0;
+		foreach ( $plugins as $plugin_path => $plugin_details ) {
+			$plugin_name = \WP_CLI\Utils\get_plugin_name( $plugin_path );
+
+			$available = $this->get_installed_languages( $plugin_name );
+
+			foreach ( $language_codes as $language_code ) {
+
+				if ( in_array( $language_code, $available, true ) ) {
+					\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' already installed." );
+					$skips++;
+				} else {
+					$response = $this->download_language_pack( $language_code, $plugin_name );
+
+					if ( is_wp_error( $response ) ) {
+						\WP_CLI::warning( $response );
+						\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' not installed." );
+						$errors++;
+					} else {
+						\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' installed." );
+						$successes++;
+					}
 				}
 			}
 		}
