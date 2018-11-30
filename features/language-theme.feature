@@ -31,7 +31,7 @@ Feature: Manage translation files for a WordPress install
     Then the wp-content/languages/themes/twentyten-en_GB.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 1 of 1 languages.
       """
     And STDERR should be empty
 
@@ -40,7 +40,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/themes/twentyten-de_DE.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 2 of 2 languages.
       """
     And STDERR should be empty
 
@@ -61,11 +61,12 @@ Feature: Manage translation files for a WordPress install
       """
 
     When I try `wp language theme install twentyten en_GB`
-    Then STDERR should be:
+    Then STDERR should be empty
+    And STDOUT should be:
       """
-      Warning: Language 'en_GB' already installed.
+      Language 'en_GB' already installed.
+      Success: Installed 0 of 1 languages (1 skipped).
       """
-    And STDOUT should be empty
     And the return code should be 0
 
     When I run `wp language theme list twentyten --fields=language,english_name,status`
@@ -126,9 +127,13 @@ Feature: Manage translation files for a WordPress install
     When I try `wp language theme install twentyten invalid_lang`
     Then STDERR should be:
       """
-      Error: Language 'invalid_lang' not found.
+      Warning: Language 'invalid_lang' not found.
+      Error: No languages installed (1 failed).
       """
-    And STDOUT should be empty
+    And STDOUT should be:
+      """
+      Language 'invalid_lang' not installed.
+      """
     And the return code should be 1
 
   @require-wp-4.0
@@ -142,7 +147,7 @@ Feature: Manage translation files for a WordPress install
     Then the wp-content/languages/themes/twentyten-en_GB.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 1 of 1 languages.
       """
     And STDERR should be empty
 

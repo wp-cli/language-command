@@ -31,7 +31,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/en_AU.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 1 of 1 languages.
       """
     And STDERR should be empty
 
@@ -48,7 +48,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/ja.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 2 of 2 languages.
       """
     And STDERR should be empty
 
@@ -63,11 +63,12 @@ Feature: Manage translation files for a WordPress install
       """
 
     When I try `wp language core install en_AU`
-    Then STDERR should be:
+    Then STDOUT should be:
       """
-      Warning: Language 'en_AU' already installed.
+      Language 'en_AU' already installed.
+      Success: Installed 0 of 1 languages (1 skipped).
       """
-    And STDOUT should be empty
+    And STDERR should be empty
     And the return code should be 0
 
     When I run `wp language core list --fields=language,english_name,status`
@@ -111,23 +112,25 @@ Feature: Manage translation files for a WordPress install
       | en_GB     | English (UK)     | active        |
 
     When I try `wp language core install en_AU --activate`
-    Then STDERR should contain:
-      """
-      Warning: Language 'en_AU' already installed.
-      """
+    Then STDERR should be empty
     And STDOUT should be:
       """
+      Language 'en_AU' already installed.
       Success: Language activated.
+      Success: Installed 0 of 1 languages (1 skipped).
       """
     And the return code should be 0
 
     When I try `wp language core install en_AU --activate`
     Then STDERR should contain:
       """
-      Warning: Language 'en_AU' already installed.
       Warning: Language 'en_AU' already active.
       """
-    And STDOUT should be empty
+    And STDOUT should contain:
+      """
+      Language 'en_AU' already installed.
+      Success: Installed 0 of 1 languages (1 skipped).
+      """
     And the return code should be 0
 
     When I try `wp language core install en_CA ja --activate`
@@ -191,17 +194,21 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/en_GB.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
       Success: Language activated.
+      Success: Installed 1 of 1 languages.
       """
     And STDERR should be empty
 
     When I try `wp language core install invalid_lang`
     Then STDERR should be:
       """
-      Error: Language 'invalid_lang' not found.
+      Warning: Language 'invalid_lang' not found.
+      Error: No languages installed (1 failed).
       """
-    And STDOUT should be empty
+    And STDOUT should be:
+      """
+      Language 'invalid_lang' not installed.
+      """
     And the return code should be 1
 
   @require-wp-latest @require-php-5.6 @less-than-php-7.0
@@ -228,7 +235,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/ja.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 2 of 2 languages.
       """
     And STDERR should be empty
 
@@ -345,7 +352,7 @@ Feature: Manage translation files for a WordPress install
       And the wp-content/languages/de_DE.po file should exist
       And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 1 of 1 languages.
       """
       And STDERR should be empty
 
@@ -392,7 +399,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/de_DE_formal.po file should exist
     And STDOUT should contain:
       """
-      Success: Language installed.
+      Success: Installed 1 of 1 languages.
       """
     And STDERR should be empty
 

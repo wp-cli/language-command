@@ -201,30 +201,43 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 *     # Install the Japanese language for Twenty Seventeen.
 	 *     $ wp language theme install twentyseventeen ja
-	 *     Success: Language installed.
+	 *     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.3/ja.zip...
+	 *     Unpacking the update...
+	 *     Installing the latest version...
+	 *     Translation updated successfully.
+	 *     Language 'ja' installed.
+	 *     Success: Installed 1 of 1 languages.
 	 *
 	 * @subcommand install
 	 */
 	public function install( $args, $assoc_args ) {
 		$theme          = array_shift( $args );
 		$language_codes = (array) $args;
+		$count          = count( $language_codes );
 
 		$available = $this->get_installed_languages( $theme );
 
+		$successes = $errors = $skips = 0;
 		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
-				\WP_CLI::warning( "Language '{$language_code}' already installed." );
+				\WP_CLI::log( "Language '{$language_code}' already installed." );
+				$skips++;
 			} else {
 				$response = $this->download_language_pack( $language_code, $theme );
 
 				if ( is_wp_error( $response ) ) {
-					\WP_CLI::error( $response );
+					\WP_CLI::warning( $response );
+					\WP_CLI::log( "Language '{$language_code}' not installed." );
+					$errors++;
 				} else {
-					\WP_CLI::success( 'Language installed.' );
+					\WP_CLI::log( "Language '{$language_code}' installed." );
+					$successes++;
 				}
 			}
 		}
+
+		\WP_CLI\Utils\report_batch_operation_results( 'language', 'install', $count, $successes, $errors, $skips );
 	}
 
 	/**

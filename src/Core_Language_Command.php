@@ -168,30 +168,41 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 *     # Install the Japanese language.
 	 *     $ wp language core install ja
-	 *     Success: Language installed.
+	 *     Downloading translation from https://downloads.wordpress.org/translation/core/4.9.8/ja.zip...
+	 *     Unpacking the update...
+	 *     Installing the latest version...
+	 *     Translation updated successfully.
+	 *     Language 'ja' installed.
+	 *     Success: Installed 1 of 1 languages.
 	 *
 	 * @subcommand install
 	 */
 	public function install( $args, $assoc_args ) {
 		$language_codes = (array) $args;
+		$count          = count( $language_codes );
 
-		if(  1 < count( $language_codes )  &&  in_array( true , $assoc_args , true ) ){
+		if ( $count > 1 && in_array( true, $assoc_args, true ) ) {
 			WP_CLI::error( 'Only a single language can be active.' );
 		}
 
 		$available = $this->get_installed_languages();
 
+		$successes = $errors = $skips = 0;
 		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
-				WP_CLI::warning( "Language '{$language_code}' already installed." );
+				\WP_CLI::log( "Language '{$language_code}' already installed." );
+				$skips++;
 			} else {
 				$response = $this->download_language_pack( $language_code );
 
 				if ( is_wp_error( $response ) ) {
-					WP_CLI::error( $response );
+					\WP_CLI::warning( $response );
+					\WP_CLI::log( "Language '{$language_code}' not installed." );
+					$errors++;
 				} else {
-					WP_CLI::success( 'Language installed.' );
+					\WP_CLI::log( "Language '{$language_code}' installed." );
+					$successes++;
 				}
 			}
 
@@ -199,6 +210,8 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 				$this->activate_language( $language_code );
 			}
 		}
+
+		\WP_CLI\Utils\report_batch_operation_results( 'language', 'install', $count, $successes, $errors, $skips );
 	}
 
 	/**
