@@ -229,7 +229,13 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				if ( is_wp_error( $response ) ) {
 					\WP_CLI::warning( $response );
 					\WP_CLI::log( "Language '{$language_code}' not installed." );
-					$errors++;
+
+					// Skip if translation is not yet available.
+					if ( 'not_found' === $response->get_error_code() ) {
+						$skips++;
+					} else {
+						$errors++;
+					}
 				} else {
 					\WP_CLI::log( "Language '{$language_code}' installed." );
 					$successes++;
