@@ -218,7 +218,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		}
 
 		if ( ! $translation_to_load ) {
-			return new \WP_Error( 'not_found', "Language '{$download}' not found." );
+			return new \WP_Error( 'not_found', "Language '{$download}' not available." );
 		}
 		$translation = (object) $translation;
 
