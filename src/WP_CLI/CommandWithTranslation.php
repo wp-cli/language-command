@@ -87,6 +87,10 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 			$obj_type          = rtrim( $this->obj_type, 's' );
 			$available_updates = $updates_per_type[ $obj_type ];
+			
+			if ( ! is_array( $available_updates ) ) {
+				continue;
+			}
 
 			$num_to_update += count( $available_updates );
 
