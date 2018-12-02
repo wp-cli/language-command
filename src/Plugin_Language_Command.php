@@ -198,6 +198,17 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * <language>...
 	 * : Language code to install.
 	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format. Used when installing languages for all plugins.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 *   - summary
+	 * ---
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Install the Japanese language for Akismet.
@@ -214,29 +225,27 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	public function install( $args, $assoc_args ) {
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
-		if ( ! $all && count( $args ) < 2 ) { // TODO
-			WP_CLI::error( 'Please specify a plugin, or use --all.' );
+		if ( ! $all && count( $args ) < 2 ) {
+			\WP_CLI::error( 'Please specify a plugin, or use --all.' );
 		}
 
 		if ( $all ) {
-			$language_codes = (array) $args;
-			$this->install_for_all( $language_codes );
-			return;
+			$this->install_many( $args, $assoc_args );
+		} else {
+			$this->install_one( $args, $assoc_args );
 		}
-
-		$plugin         = array_shift( $args );
-		$language_codes = (array) $args;
-		$this->install_for_single( $plugin, $language_codes );
 	}
 
 	/**
 	 * Installs translations for a plugin.
 	 *
-	 * @param string $plugin Slug of a plugin.
-	 * @param array $language_codes Language codes to install.
+	 * @param array $args       Runtime arguments.
+	 * @param array $assoc_args Runtime arguments.
 	 */
-	private function install_for_single( $plugin, $language_codes ) {
-		$count = count( $language_codes );
+	private function install_one( $args, $assoc_args ) {
+		$plugin         = array_shift( $args );
+		$language_codes = (array) $args;
+		$count          = count( $language_codes );
 
 		$available = $this->get_installed_languages( $plugin );
 
@@ -272,17 +281,26 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	/**
 	 * Installs translations for all installed plugin.
 	 *
-	 * @param array $language_codes Language codes to install.
+	 * @param array $args       Runtime arguments.
+	 * @param array $assoc_args Runtime arguments.
 	 */
-	private function install_for_all( $language_codes ) {
-		$plugins = $this->get_all_plugins();
+	private function install_many( $args, $assoc_args ) {
+		$language_codes = (array) $args;
+		$plugins        = $this->get_all_plugins();
+
+		if ( ! empty( $assoc_args['format'] ) && in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
+			$logger = new \WP_CLI\Loggers\Quiet;
+			\WP_CLI::set_logger( $logger );
+		}
 
 		if ( empty( $plugins ) ) {
-			WP_CLI::success( 'No plugins installed.' );
+			\WP_CLI::success( 'No plugins installed.' );
 			return;
 		}
 
 		$count = count( $plugins ) * count( $language_codes );
+
+		$results = array();
 
 		$successes = $errors = $skips = 0;
 		foreach ( $plugins as $plugin_path => $plugin_details ) {
@@ -291,9 +309,14 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			$available = $this->get_installed_languages( $plugin_name );
 
 			foreach ( $language_codes as $language_code ) {
+				$result = [
+					'name'   => $plugin_name,
+					'locale' => $language_code,
+				];
 
 				if ( in_array( $language_code, $available, true ) ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' already installed." );
+					$result['status'] = 'already installed';
 					$skips++;
 				} else {
 					$response = $this->download_language_pack( $language_code, $plugin_name );
@@ -301,13 +324,27 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 					if ( is_wp_error( $response ) ) {
 						\WP_CLI::warning( $response );
 						\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' not installed." );
-						$errors++;
+
+						if ( 'not_found' === $response->get_error_code() ) {
+							$result['status'] = 'not available';
+							$skips++;
+						} else {
+							$result['status'] = 'not installed';
+							$errors++;
+						}
 					} else {
 						\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' installed." );
+						$result['status'] = 'installed';
 						$successes++;
 					}
 				}
+
+				$results[] = (object) $result;
 			}
+		}
+
+		if ( empty( $assoc_args['format'] ) || 'summary' !== $assoc_args['format'] ) {
+			\WP_CLI\Utils\format_items( $assoc_args['format'], $results, array( 'name', 'locale', 'status' ) );
 		}
 
 		\WP_CLI\Utils\report_batch_operation_results( 'language', 'install', $count, $successes, $errors, $skips );
