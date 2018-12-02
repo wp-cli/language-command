@@ -127,14 +127,14 @@ Feature: Manage translation files for a WordPress install
     When I try `wp language theme install twentyten invalid_lang`
     Then STDERR should be:
       """
-      Warning: Language 'invalid_lang' not found.
-      Error: No languages installed (1 failed).
+      Warning: Language 'invalid_lang' not available.
       """
     And STDOUT should be:
       """
       Language 'invalid_lang' not installed.
+      Success: Installed 0 of 1 languages (1 skipped).
       """
-    And the return code should be 1
+    And the return code should be 0
 
   @require-wp-4.0
   Scenario: Don't allow active language to be uninstalled
