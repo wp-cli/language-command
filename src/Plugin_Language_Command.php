@@ -288,7 +288,11 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		$language_codes = (array) $args;
 		$plugins        = $this->get_all_plugins();
 
-		if ( ! empty( $assoc_args['format'] ) && in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
+		if ( empty( $assoc_args['format'] ) ) {
+			$assoc_args['format'] = 'table';
+		}
+
+		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
 			$logger = new \WP_CLI\Loggers\Quiet;
 			\WP_CLI::set_logger( $logger );
 		}
@@ -343,7 +347,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			}
 		}
 
-		if ( empty( $assoc_args['format'] ) || 'summary' !== $assoc_args['format'] ) {
+		if ( 'summary' !== $assoc_args['format'] ) {
 			\WP_CLI\Utils\format_items( $assoc_args['format'], $results, array( 'name', 'locale', 'status' ) );
 		}
 
