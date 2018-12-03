@@ -222,7 +222,7 @@ Feature: Manage translation files for a WordPress install
     And I run `wp theme install twentyseventeen --version=1.0 --force`
     And I run `wp theme install twentysixteen --version=1.0 --force`
 
-    When I run `wp language theme install de_DE`
+    When I try `wp language theme install de_DE`
     Then the return code should be 1
     And STDERR should be:
       """
