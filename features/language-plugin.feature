@@ -334,7 +334,7 @@ Feature: Manage translation files for a WordPress install
     And I run `wp plugin install akismet --version=4.0 --force`
     And I run `wp plugin install jetpack --version=6.4 --force`
 
-    When I run `wp language plugin install de_DE`
+    When I try `wp language plugin install de_DE`
     Then the return code should be 1
     And STDERR should be:
       """
