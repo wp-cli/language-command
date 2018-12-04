@@ -279,7 +279,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Installs translations for all installed plugin.
+	 * Installs translations for all installed plugins.
 	 *
 	 * @param array $args       Runtime arguments.
 	 * @param array $assoc_args Runtime arguments.
