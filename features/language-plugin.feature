@@ -326,7 +326,7 @@ Feature: Manage translation files for a WordPress install
 
 
   @require-wp-4.0
-  Scenario: Install translations for all installed plugin
+  Scenario: Install translations for all installed plugins
     Given a WP install
     And I run `wp plugin path`
     And save STDOUT as {PLUGIN_DIR}
