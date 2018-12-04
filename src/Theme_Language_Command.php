@@ -191,11 +191,25 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## OPTIONS
 	 *
-	 * <theme>
+	 * [<theme>]
 	 * : Theme to install language for.
+	 *
+	 * [--all]
+	 * : If set, languages for all themes will be installed.
 	 *
 	 * <language>...
 	 * : Language code to install.
+	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format. Used when installing languages for all themes.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 *   - summary
+	 * ---
 	 *
 	 * ## EXAMPLES
 	 *
@@ -211,6 +225,26 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand install
 	 */
 	public function install( $args, $assoc_args ) {
+		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
+
+		if ( ! $all && count( $args ) < 2 ) {
+			\WP_CLI::error( 'Please specify a theme, or use --all.' );
+		}
+
+		if ( $all ) {
+			$this->install_many( $args, $assoc_args );
+		} else {
+			$this->install_one( $args, $assoc_args );
+		}
+	}
+
+	/**
+	 * Installs translations for a theme.
+	 *
+	 * @param array $args       Runtime arguments.
+	 * @param array $assoc_args Runtime arguments.
+	 */
+	private function install_one( $args, $assoc_args ) {
 		$theme          = array_shift( $args );
 		$language_codes = (array) $args;
 		$count          = count( $language_codes );
@@ -241,6 +275,82 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 					$successes++;
 				}
 			}
+		}
+
+		\WP_CLI\Utils\report_batch_operation_results( 'language', 'install', $count, $successes, $errors, $skips );
+	}
+
+	/**
+	 * Installs translations for all installed themes.
+	 *
+	 * @param array $args       Runtime arguments.
+	 * @param array $assoc_args Runtime arguments.
+	 */
+	private function install_many( $args, $assoc_args ) {
+		$language_codes = (array) $args;
+		$themes         = wp_get_themes();
+
+		if ( empty( $assoc_args['format'] ) ) {
+			$assoc_args['format'] = 'table';
+		}
+
+		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
+			$logger = new \WP_CLI\Loggers\Quiet;
+			\WP_CLI::set_logger( $logger );
+		}
+
+		if ( empty( $themes ) ) {
+			\WP_CLI::success( 'No themes installed.' );
+			return;
+		}
+
+		$count = count( $themes ) * count( $language_codes );
+
+		$results = array();
+
+		$successes = $errors = $skips = 0;
+		foreach ( $themes as $theme_path => $theme_details ) {
+			$theme_name = \WP_CLI\Utils\get_theme_name( $theme_path );
+
+			$available = $this->get_installed_languages( $theme_name );
+
+			foreach ( $language_codes as $language_code ) {
+				$result = [
+					'name'   => $theme_name,
+					'locale' => $language_code,
+				];
+
+				if ( in_array( $language_code, $available, true ) ) {
+					\WP_CLI::log( "Language '{$language_code}' for '{$theme_details['Name']}' already installed." );
+					$result['status'] = 'already installed';
+					$skips++;
+				} else {
+					$response = $this->download_language_pack( $language_code, $theme_name );
+
+					if ( is_wp_error( $response ) ) {
+						\WP_CLI::warning( $response );
+						\WP_CLI::log( "Language '{$language_code}' for '{$theme_details['Name']}' not installed." );
+
+						if ( 'not_found' === $response->get_error_code() ) {
+							$result['status'] = 'not available';
+							$skips++;
+						} else {
+							$result['status'] = 'not installed';
+							$errors++;
+						}
+					} else {
+						\WP_CLI::log( "Language '{$language_code}' for '{$theme_details['Name']}' installed." );
+						$result['status'] = 'installed';
+						$successes++;
+					}
+				}
+
+				$results[] = (object) $result;
+			}
+		}
+
+		if ( 'summary' !== $assoc_args['format'] ) {
+			\WP_CLI\Utils\format_items( $assoc_args['format'], $results, array( 'name', 'locale', 'status' ) );
 		}
 
 		\WP_CLI\Utils\report_batch_operation_results( 'language', 'install', $count, $successes, $errors, $skips );

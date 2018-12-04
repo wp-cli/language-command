@@ -323,3 +323,51 @@ Feature: Manage translation files for a WordPress install
       | akismet  | de_DE    | available | installed |
       | jetpack  | de_DE    | none      | installed |
     And STDERR should be empty
+
+
+  @require-wp-4.0
+  Scenario: Install translations for all installed plugins
+    Given a WP install
+    And I run `wp plugin path`
+    And save STDOUT as {PLUGIN_DIR}
+    And an empty {PLUGIN_DIR} directory
+    And I run `wp plugin install akismet --version=4.0 --force`
+    And I run `wp plugin install jetpack --version=6.4 --force`
+
+    When I try `wp language plugin install de_DE`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify a plugin, or use --all.
+      """
+    And STDOUT should be empty
+
+    When I run `wp language plugin install --all de_DE --format=csv`
+    Then the return code should be 0
+    And STDOUT should be:
+      """
+      name,locale,status
+      akismet,de_DE,installed
+      jetpack,de_DE,installed
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin install --all de_DE --format=summary`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      Success: Installed 0 of 2 languages (2 skipped).
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin install --all de_DE invalid_lang --format=csv`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      name,locale,status
+      akismet,de_DE,"already installed"
+      akismet,invalid_lang,"not available"
+      jetpack,de_DE,"already installed"
+      jetpack,invalid_lang,"not available"
+      """
+    And STDERR should be empty

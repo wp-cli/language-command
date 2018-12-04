@@ -212,3 +212,50 @@ Feature: Manage translation files for a WordPress install
       """
       Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.6/de_DE.zip
       """
+
+  @require-wp-4.0
+  Scenario: Install translations for all installed themes
+    Given a WP install
+    And I run `wp theme path`
+    And save STDOUT as {THEME_DIR}
+    And an empty {THEME_DIR} directory
+    And I run `wp theme install twentyseventeen --version=1.0 --force`
+    And I run `wp theme install twentysixteen --version=1.0 --force`
+
+    When I try `wp language theme install de_DE`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify a theme, or use --all.
+      """
+    And STDOUT should be empty
+
+    When I run `wp language theme install --all de_DE --format=csv`
+    Then the return code should be 0
+    And STDOUT should be:
+      """
+      name,locale,status
+      twentyseventeen,de_DE,installed
+      twentysixteen,de_DE,installed
+      """
+    And STDERR should be empty
+
+    When I run `wp language theme install --all de_DE --format=summary`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      Success: Installed 0 of 2 languages (2 skipped).
+      """
+    And STDERR should be empty
+
+    When I run `wp language theme install --all de_DE invalid_lang --format=csv`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      name,locale,status
+      twentyseventeen,de_DE,"already installed"
+      twentyseventeen,invalid_lang,"not available"
+      twentysixteen,de_DE,"already installed"
+      twentysixteen,invalid_lang,"not available"
+      """
+    And STDERR should be empty
