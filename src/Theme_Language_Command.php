@@ -124,11 +124,12 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 					$translation['status'] = 'active';
 				}
 
-				$update = wp_list_filter( $updates, array(
+				$filter_args = array(
 					'language' => $translation['language'],
 					'type'     => 'theme',
 					'slug'     => $theme,
-				) );
+				);
+				$update      = wp_list_filter( $updates, $filter_args );
 
 				$translation['update'] = $update ? 'available' : 'none';
 
