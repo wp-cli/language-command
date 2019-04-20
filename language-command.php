@@ -4,10 +4,10 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 	return;
 }
 
-$autoload = dirname( __FILE__ ) . '/vendor/autoload.php';
+$wpcli_language_autoloader = dirname( __FILE__ ) . '/vendor/autoload.php';
 
-if ( file_exists( $autoload ) ) {
-	require_once $autoload;
+if ( file_exists( $wpcli_language_autoloader ) ) {
+	require_once $wpcli_language_autoloader;
 }
 
 WP_CLI::add_command( 'language core', 'Core_Language_Command', array(
