@@ -93,7 +93,11 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 		$current_locale = get_locale();
 
 		$translations = array_map( function( $translation ) use ( $available, $current_locale, $updates ) {
-			$translation['status'] = ( in_array( $translation['language'], $available ) ) ? 'installed' : 'uninstalled';
+			$translation['status'] = 'uninstalled';
+			if ( in_array( $translation['language'], $available, true ) ) {
+				$translation['status'] = 'installed';
+			}
+
 			if ( $current_locale === $translation['language'] ) {
 				$translation['status'] = 'active';
 			}
