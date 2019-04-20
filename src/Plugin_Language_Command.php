@@ -294,7 +294,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			$assoc_args['format'] = 'table';
 		}
 
-		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
+		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ), true ) ) {
 			$logger = new \WP_CLI\Loggers\Quiet();
 			\WP_CLI::set_logger( $logger );
 		}
