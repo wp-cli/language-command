@@ -27,11 +27,11 @@ class Site_Switch_Language_Command extends WP_CLI\CommandWithTranslation {
 			WP_CLI::error( 'Language not installed.' );
 		}
 
-		if ( $language_code === 'en_US' ) {
+		if ( 'en_US' === $language_code ) {
 			$language_code = '';
 		}
 
-		if ( $language_code === get_locale() ) {
+		if ( get_locale() === $language_code ) {
 			WP_CLI::warning( "Language '{$language_code}' already active." );
 
 			return;

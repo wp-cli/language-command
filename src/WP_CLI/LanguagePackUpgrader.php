@@ -82,8 +82,8 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 
 		$temp = \WP_CLI\Utils\get_temp_dir() . uniqid( 'wp_' ) . '.' . $ext;
 
-		$cache = WP_CLI::get_cache();
-		$cache_key = "translation/{$type}-{$slug}-{$version}-{$language}-{$updated}.{$ext}";
+		$cache      = WP_CLI::get_cache();
+		$cache_key  = "translation/{$type}-{$slug}-{$version}-{$language}-{$updated}.{$ext}";
 		$cache_file = $cache->has( $cache_key );
 
 		if ( $cache_file ) {
