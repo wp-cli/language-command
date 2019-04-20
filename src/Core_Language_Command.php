@@ -311,7 +311,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * @subcommand update
 	 */
-	public function update( $args, $assoc_args ) {
+	public function update( $args, $assoc_args ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found -- Overruling the documentation, so not useless ;-).
 		parent::update( $args, $assoc_args );
 	}
 
