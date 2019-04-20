@@ -131,7 +131,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				$translation['update'] = $update ? 'available' : 'none';
 
 				// Support features like --status=active.
-				foreach( array_keys( $translation ) as $field ) {
+				foreach ( array_keys( $translation ) as $field ) {
 					if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
 						continue 2;
 					}
@@ -249,7 +249,9 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$available = $this->get_installed_languages( $plugin );
 
-		$successes = $errors = $skips = 0;
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
 		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
@@ -293,7 +295,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
-			$logger = new \WP_CLI\Loggers\Quiet;
+			$logger = new \WP_CLI\Loggers\Quiet();
 			\WP_CLI::set_logger( $logger );
 		}
 
@@ -306,7 +308,9 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$results = array();
 
-		$successes = $errors = $skips = 0;
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
 		foreach ( $plugins as $plugin_path => $plugin_details ) {
 			$plugin_name = \WP_CLI\Utils\get_plugin_name( $plugin_path );
 
@@ -373,7 +377,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand uninstall
 	 */
 	public function uninstall( $args, $assoc_args ) {
-		/* @var WP_Filesystem_Base $wp_filesystem */
+		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
 		$plugin         = array_shift( $args );
