@@ -117,7 +117,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			$available_translations = $this->get_all_languages( $theme );
 
 			foreach ( $available_translations as $translation ) {
-				$translation['theme'] = $theme;
+				$translation['theme']  = $theme;
 				$translation['status'] = in_array( $translation['language'], $installed_translations, true ) ? 'installed' : 'uninstalled';
 
 				if ( $current_locale === $translation['language'] ) {
@@ -133,7 +133,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				$translation['update'] = $update ? 'available' : 'none';
 
 				// Support features like --status=active.
-				foreach( array_keys( $translation ) as $field ) {
+				foreach ( array_keys( $translation ) as $field ) {
 					if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
 						continue 2;
 					}
@@ -251,7 +251,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$available = $this->get_installed_languages( $theme );
 
-		$successes = $errors = $skips = 0;
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
 		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
@@ -295,7 +297,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
-			$logger = new \WP_CLI\Loggers\Quiet;
+			$logger = new \WP_CLI\Loggers\Quiet();
 			\WP_CLI::set_logger( $logger );
 		}
 
@@ -308,7 +310,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$results = array();
 
-		$successes = $errors = $skips = 0;
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
 		foreach ( $themes as $theme_path => $theme_details ) {
 			$theme_name = \WP_CLI\Utils\get_theme_name( $theme_path );
 
@@ -375,7 +379,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand uninstall
 	 */
 	public function uninstall( $args, $assoc_args ) {
-		/* @var WP_Filesystem_Base $wp_filesystem */
+		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
 		$theme          = array_shift( $args );
