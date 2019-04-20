@@ -92,25 +92,28 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$current_locale = get_locale();
 
-		$translations = array_map( function( $translation ) use ( $available, $current_locale, $updates ) {
-			$translation['status'] = 'uninstalled';
-			if ( in_array( $translation['language'], $available, true ) ) {
-				$translation['status'] = 'installed';
-			}
+		$translations = array_map(
+			function( $translation ) use ( $available, $current_locale, $updates ) {
+				$translation['status'] = 'uninstalled';
+				if ( in_array( $translation['language'], $available, true ) ) {
+					$translation['status'] = 'installed';
+				}
 
-			if ( $current_locale === $translation['language'] ) {
-				$translation['status'] = 'active';
-			}
+				if ( $current_locale === $translation['language'] ) {
+					$translation['status'] = 'active';
+				}
 
-			$update = wp_list_filter( $updates, array( 'language' => $translation['language'] ) );
-			if ( $update ) {
-				$translation['update'] = 'available';
-			} else {
-				$translation['update'] = 'none';
-			}
+				$update = wp_list_filter( $updates, array( 'language' => $translation['language'] ) );
+				if ( $update ) {
+					$translation['update'] = 'available';
+				} else {
+					$translation['update'] = 'none';
+				}
 
-			return $translation;
-		}, $translations );
+				return $translation;
+			},
+			$translations
+		);
 
 		foreach ( $translations as $key => $translation ) {
 			foreach ( array_keys( $translation ) as $field ) {
