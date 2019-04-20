@@ -102,9 +102,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 				$translation['status'] = 'active';
 			}
 
-			$update = wp_list_filter( $updates, array(
-				'language' => $translation['language']
-			) );
+			$update = wp_list_filter( $updates, array( 'language' => $translation['language'] ) );
 			if ( $update ) {
 				$translation['update'] = 'available';
 			} else {
