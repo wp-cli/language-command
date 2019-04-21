@@ -97,9 +97,12 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$args = array_map( function( $file ){
-				return \WP_CLI\Utils\get_theme_name( $file );
-			}, array_keys( wp_get_themes() ) );
+			$args = array_map(
+				function( $file ) {
+					return \WP_CLI\Utils\get_theme_name( $file );
+				},
+				array_keys( wp_get_themes() )
+			);
 
 			if ( empty( $args ) ) {
 				WP_CLI::success( 'No themes installed.' );
@@ -124,11 +127,12 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 					$translation['status'] = 'active';
 				}
 
-				$update = wp_list_filter( $updates, array(
+				$filter_args = array(
 					'language' => $translation['language'],
 					'type'     => 'theme',
 					'slug'     => $theme,
-				) );
+				);
+				$update      = wp_list_filter( $updates, $filter_args );
 
 				$translation['update'] = $update ? 'available' : 'none';
 

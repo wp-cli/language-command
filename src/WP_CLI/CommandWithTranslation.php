@@ -66,9 +66,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				}
 
 				// Gets the translation data.
-				$translation = wp_list_filter( $all_languages, array(
-					'language' => $update->language
-				) );
+				$translation = wp_list_filter( $all_languages, array( 'language' => $update->language ) );
 				$translation = (object) reset( $translation );
 
 				$update->Type    = ucfirst( $update->type );
