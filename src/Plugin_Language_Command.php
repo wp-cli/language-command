@@ -466,6 +466,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @return array
 	 */
 	private function get_all_plugins() {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Using WP native hook.
 		return apply_filters( 'all_plugins', get_plugins() );
 	}
 }

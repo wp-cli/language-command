@@ -57,8 +57,12 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 		 * @param bool          $reply   Whether to bail without returning the package. Default is false.
 		 * @param string        $package The package file name.
 		 * @param \WP_Upgrader  $this    The WP_Upgrader instance.
+		 *
+		 * @phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Using WP native hook.
 		 */
 		$reply = apply_filters( 'upgrader_pre_download', false, $package, $this );
+		// phpcs:enable
+
 		if ( false !== $reply ) {
 			return $reply;
 		}
