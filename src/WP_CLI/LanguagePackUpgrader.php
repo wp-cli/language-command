@@ -47,7 +47,7 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 	 *                        existing local file, it will be returned untouched.
 	 * @return string|\WP_Error The full path to the downloaded package file, or a WP_Error object.
 	 */
-	public function download_package( $package ) {
+	public function download_package( $package, $check_signatures = false ) {
 
 		/**
 		 * Filter whether to return the package.
