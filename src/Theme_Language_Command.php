@@ -97,9 +97,12 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$args = array_map( function( $file ){
-				return \WP_CLI\Utils\get_theme_name( $file );
-			}, array_keys( wp_get_themes() ) );
+			$args = array_map(
+				function( $file ) {
+					return \WP_CLI\Utils\get_theme_name( $file );
+				},
+				array_keys( wp_get_themes() )
+			);
 
 			if ( empty( $args ) ) {
 				WP_CLI::success( 'No themes installed.' );
@@ -117,23 +120,24 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			$available_translations = $this->get_all_languages( $theme );
 
 			foreach ( $available_translations as $translation ) {
-				$translation['theme'] = $theme;
+				$translation['theme']  = $theme;
 				$translation['status'] = in_array( $translation['language'], $installed_translations, true ) ? 'installed' : 'uninstalled';
 
 				if ( $current_locale === $translation['language'] ) {
 					$translation['status'] = 'active';
 				}
 
-				$update = wp_list_filter( $updates, array(
+				$filter_args = array(
 					'language' => $translation['language'],
 					'type'     => 'theme',
 					'slug'     => $theme,
-				) );
+				);
+				$update      = wp_list_filter( $updates, $filter_args );
 
 				$translation['update'] = $update ? 'available' : 'none';
 
 				// Support features like --status=active.
-				foreach( array_keys( $translation ) as $field ) {
+				foreach ( array_keys( $translation ) as $field ) {
 					if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
 						continue 2;
 					}
@@ -251,7 +255,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$available = $this->get_installed_languages( $theme );
 
-		$successes = $errors = $skips = 0;
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
 		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
@@ -294,8 +300,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			$assoc_args['format'] = 'table';
 		}
 
-		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ) ) ) {
-			$logger = new \WP_CLI\Loggers\Quiet;
+		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ), true ) ) {
+			$logger = new \WP_CLI\Loggers\Quiet();
 			\WP_CLI::set_logger( $logger );
 		}
 
@@ -308,7 +314,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$results = array();
 
-		$successes = $errors = $skips = 0;
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
 		foreach ( $themes as $theme_path => $theme_details ) {
 			$theme_name = \WP_CLI\Utils\get_theme_name( $theme_path );
 
@@ -375,7 +383,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand uninstall
 	 */
 	public function uninstall( $args, $assoc_args ) {
-		/* @var WP_Filesystem_Base $wp_filesystem */
+		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
 		$theme          = array_shift( $args );

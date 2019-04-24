@@ -43,11 +43,12 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 	/**
 	 * Caches the download, and uses cached if available.
 	 *
-	 * @param string $package The URI of the package. If this is the full path to an
-	 *                        existing local file, it will be returned untouched.
+	 * @param string $package          The URI of the package. If this is the full path to an
+	 *                                 existing local file, it will be returned untouched.
+	 * @param bool   $check_signatures Whether to validate file signatures. Default false.
 	 * @return string|\WP_Error The full path to the downloaded package file, or a WP_Error object.
 	 */
-	public function download_package( $package ) {
+	public function download_package( $package, $check_signatures = false ) {
 
 		/**
 		 * Filter whether to return the package.
@@ -57,8 +58,12 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 		 * @param bool          $reply   Whether to bail without returning the package. Default is false.
 		 * @param string        $package The package file name.
 		 * @param \WP_Upgrader  $this    The WP_Upgrader instance.
+		 *
+		 * @phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Using WP native hook.
 		 */
 		$reply = apply_filters( 'upgrader_pre_download', false, $package, $this );
+		// phpcs:enable
+
 		if ( false !== $reply ) {
 			return $reply;
 		}
@@ -82,8 +87,8 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 
 		$temp = \WP_CLI\Utils\get_temp_dir() . uniqid( 'wp_' ) . '.' . $ext;
 
-		$cache = WP_CLI::get_cache();
-		$cache_key = "translation/{$type}-{$slug}-{$version}-{$language}-{$updated}.{$ext}";
+		$cache      = WP_CLI::get_cache();
+		$cache_key  = "translation/{$type}-{$slug}-{$version}-{$language}-{$updated}.{$ext}";
 		$cache_file = $cache->has( $cache_key );
 
 		if ( $cache_file ) {

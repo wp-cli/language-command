@@ -38,8 +38,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			$args = array( null ); // Used for core.
 		}
 
-		$upgrader = 'WP_CLI\\LanguagePackUpgrader';
-		$results = array();
+		$upgrader      = 'WP_CLI\\LanguagePackUpgrader';
+		$results       = array();
 		$num_to_update = 0;
 
 		foreach ( $args as $slug ) {
@@ -57,18 +57,16 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				$name = 'WordPress'; // Core.
 
 				if ( 'plugin' === $update->type ) {
-					$plugins	 = get_plugins( '/' . $update->slug );
+					$plugins     = get_plugins( '/' . $update->slug );
 					$plugin_data = array_shift( $plugins );
-					$name		 = $plugin_data['Name'];
+					$name        = $plugin_data['Name'];
 				} elseif ( 'theme' === $update->type ) {
-					$theme_data	 = wp_get_theme( $update->slug );
-					$name		 = $theme_data['Name'];
+					$theme_data = wp_get_theme( $update->slug );
+					$name       = $theme_data['Name'];
 				}
 
 				// Gets the translation data.
-				$translation = wp_list_filter( $all_languages, array(
-					'language' => $update->language
-				) );
+				$translation = wp_list_filter( $all_languages, array( 'language' => $update->language ) );
 				$translation = (object) reset( $translation );
 
 				$update->Type    = ucfirst( $update->type );
@@ -129,7 +127,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 		if ( $num_to_update === $num_updated ) {
 			WP_CLI::success( $line );
-		} else if ( $num_updated > 0 ) {
+		} elseif ( $num_updated > 0 ) {
 			WP_CLI::warning( $line );
 		} else {
 			WP_CLI::error( $line );
@@ -150,7 +148,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			return $available;
 		};
 
-		switch( $this->obj_type ) {
+		switch ( $this->obj_type ) {
 			case 'plugins':
 				add_filter( 'plugins_update_check_locales', $func );
 
@@ -207,7 +205,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 * @return string|\WP_Error Returns the language code if successfully downloaded, or a WP_Error object on failure.
 	 */
 	protected function download_language_pack( $download, $slug = null ) {
-		$translations = $this->get_all_languages( $slug );
+		$translations        = $this->get_all_languages( $slug );
 		$translation_to_load = null;
 
 		foreach ( $translations as $translation ) {
@@ -230,7 +228,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		}
 
 		$upgrader = 'WP_CLI\\LanguagePackUpgrader';
-		$result = Utils\get_upgrader( $upgrader )->upgrade( $translation, array( 'clear_update_cache' => false ) );
+		$result   = Utils\get_upgrader( $upgrader )->upgrade( $translation, array( 'clear_update_cache' => false ) );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -251,8 +249,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 * @return array
 	 */
 	protected function get_installed_languages( $slug = 'default' ) {
-		$available = wp_get_installed_translations( $this->obj_type );
-		$available = ! empty( $available[ $slug ] ) ? array_keys( $available[ $slug ] ) : array();
+		$available   = wp_get_installed_translations( $this->obj_type );
+		$available   = ! empty( $available[ $slug ] ) ? array_keys( $available[ $slug ] ) : array();
 		$available[] = 'en_US';
 
 		return $available;
@@ -295,10 +293,10 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		$translations = ! empty( $response['translations'] ) ? $response['translations'] : array();
 
 		$en_us = array(
-			'language' => 'en_US',
+			'language'     => 'en_US',
 			'english_name' => 'English (United States)',
-			'native_name' => 'English (United States)',
-			'updated' => '',
+			'native_name'  => 'English (United States)',
+			'updated'      => '',
 		);
 
 		$translations[] = $en_us;

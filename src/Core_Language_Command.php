@@ -92,26 +92,31 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$current_locale = get_locale();
 
-		$translations = array_map( function( $translation ) use ( $available, $current_locale, $updates ) {
-			$translation['status'] = ( in_array( $translation['language'], $available ) ) ? 'installed' : 'uninstalled';
-			if ( $current_locale === $translation['language'] ) {
-				$translation['status'] = 'active';
-			}
+		$translations = array_map(
+			function( $translation ) use ( $available, $current_locale, $updates ) {
+				$translation['status'] = 'uninstalled';
+				if ( in_array( $translation['language'], $available, true ) ) {
+					$translation['status'] = 'installed';
+				}
 
-			$update = wp_list_filter( $updates, array(
-				'language' => $translation['language']
-			) );
-			if ( $update ) {
-				$translation['update'] = 'available';
-			} else {
-				$translation['update'] = 'none';
-			}
+				if ( $current_locale === $translation['language'] ) {
+					$translation['status'] = 'active';
+				}
 
-			return $translation;
-		}, $translations );
+				$update = wp_list_filter( $updates, array( 'language' => $translation['language'] ) );
+				if ( $update ) {
+					$translation['update'] = 'available';
+				} else {
+					$translation['update'] = 'none';
+				}
 
-		foreach( $translations as $key => $translation ) {
-			foreach( array_keys( $translation ) as $field ) {
+				return $translation;
+			},
+			$translations
+		);
+
+		foreach ( $translations as $key => $translation ) {
+			foreach ( array_keys( $translation ) as $field ) {
 				if ( isset( $assoc_args[ $field ] ) && $assoc_args[ $field ] !== $translation[ $field ] ) {
 					unset( $translations[ $key ] );
 				}
@@ -143,7 +148,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 */
 	public function is_installed( $args, $assoc_args = array() ) {
 		list( $language_code ) = $args;
-		$available = $this->get_installed_languages();
+		$available             = $this->get_installed_languages();
 		if ( in_array( $language_code, $available, true ) ) {
 			\WP_CLI::halt( 0 );
 		} else {
@@ -187,7 +192,9 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$available = $this->get_installed_languages();
 
-		$successes = $errors = $skips = 0;
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
 		foreach ( $language_codes as $language_code ) {
 
 			if ( in_array( $language_code, $available, true ) ) {
@@ -243,13 +250,13 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		$available = $this->get_installed_languages();
 
-		foreach ($language_codes as $language_code) {
+		foreach ( $language_codes as $language_code ) {
 
 			if ( ! in_array( $language_code, $available, true ) ) {
 				WP_CLI::error( 'Language not installed.' );
 			}
 
-			$dir = 'core' === $this->obj_type ? '' : "/$this->obj_type";
+			$dir   = 'core' === $this->obj_type ? '' : "/$this->obj_type";
 			$files = scandir( WP_LANG_DIR . $dir );
 			if ( ! $files ) {
 				WP_CLI::error( 'No files found in language directory.' );
@@ -269,12 +276,12 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 					continue;
 				}
 				$extension_length = strlen( $language_code ) + 4;
-				$ending = substr( $file, -$extension_length );
+				$ending           = substr( $file, -$extension_length );
 				if ( ! in_array( $file, array( $language_code . '.po', $language_code . '.mo' ), true ) && ! in_array( $ending, array( '-' . $language_code . '.po', '-' . $language_code . '.mo' ), true ) ) {
 					continue;
 				}
 
-				/* @var WP_Filesystem_Base $wp_filesystem */
+				/** @var WP_Filesystem_Base $wp_filesystem */
 				$deleted = $wp_filesystem->delete( WP_LANG_DIR . $dir . '/' . $file );
 			}
 
@@ -304,7 +311,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * @subcommand update
 	 */
-	public function update( $args, $assoc_args ) {
+	public function update( $args, $assoc_args ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found -- Overruling the documentation, so not useless ;-).
 		parent::update( $args, $assoc_args );
 	}
 
@@ -339,11 +346,11 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 			WP_CLI::error( 'Language not installed.' );
 		}
 
-		if ( $language_code === 'en_US' ) {
+		if ( 'en_US' === $language_code ) {
 			$language_code = '';
 		}
 
-		if ( $language_code === get_locale() ) {
+		if ( get_locale() === $language_code ) {
 			WP_CLI::warning( "Language '{$language_code}' already active." );
 
 			return;
