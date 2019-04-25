@@ -137,7 +137,12 @@ Downloads the language pack from WordPress.org.
 
     # Install the Japanese language.
     $ wp language core install ja
-    Success: Language installed.
+    Downloading translation from https://downloads.wordpress.org/translation/core/4.9.8/ja.zip...
+    Unpacking the update...
+    Installing the latest version...
+    Translation updated successfully.
+    Language 'ja' installed.
+    Success: Installed 1 of 1 languages.
 
 
 
@@ -297,24 +302,43 @@ Returns exit code 0 when installed, 1 when uninstalled.
 Installs a given language for a plugin.
 
 ~~~
-wp language plugin install <plugin> <language>...
+wp language plugin install [<plugin>] [--all] <language>... [--format=<format>]
 ~~~
 
 Downloads the language pack from WordPress.org.
 
 **OPTIONS**
 
-	<plugin>
+	[<plugin>]
 		Plugin to install language for.
+
+	[--all]
+		If set, languages for all plugins will be installed.
 
 	<language>...
 		Language code to install.
+
+	[--format=<format>]
+		Render output in a particular format. Used when installing languages for all plugins.
+		---
+		default: table
+		options:
+		  - table
+		  - csv
+		  - json
+		  - summary
+		---
 
 **EXAMPLES**
 
     # Install the Japanese language for Akismet.
     $ wp language plugin install akismet ja
-    Success: Language installed.
+    Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/4.0.3/ja.zip...
+    Unpacking the update...
+    Installing the latest version...
+    Translation updated successfully.
+    Language 'ja' installed.
+    Success: Installed 1 of 1 languages.
 
 
 
@@ -490,24 +514,43 @@ Returns exit code 0 when installed, 1 when uninstalled.
 Installs a given language for a theme.
 
 ~~~
-wp language theme install <theme> <language>...
+wp language theme install [<theme>] [--all] <language>... [--format=<format>]
 ~~~
 
 Downloads the language pack from WordPress.org.
 
 **OPTIONS**
 
-	<theme>
+	[<theme>]
 		Theme to install language for.
+
+	[--all]
+		If set, languages for all themes will be installed.
 
 	<language>...
 		Language code to install.
+
+	[--format=<format>]
+		Render output in a particular format. Used when installing languages for all themes.
+		---
+		default: table
+		options:
+		  - table
+		  - csv
+		  - json
+		  - summary
+		---
 
 **EXAMPLES**
 
     # Install the Japanese language for Twenty Seventeen.
     $ wp language theme install twentyseventeen ja
-    Success: Language installed.
+    Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.3/ja.zip...
+    Unpacking the update...
+    Installing the latest version...
+    Translation updated successfully.
+    Language 'ja' installed.
+    Success: Installed 1 of 1 languages.
 
 
 
