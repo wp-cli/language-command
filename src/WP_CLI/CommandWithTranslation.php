@@ -275,13 +275,13 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			$args['slug'] = $slug;
 
 			if ( 'plugins' === $this->obj_type ) {
-				$plugins         = get_plugins( '/' . $slug );
-				$plugin_data     = array_shift( $plugins );
+				$plugins     = get_plugins( '/' . $slug );
+				$plugin_data = array_shift( $plugins );
 				if ( isset( $plugin_data['Version'] ) ) {
 					$args['version'] = $plugin_data['Version'];
 				}
 			} elseif ( 'themes' === $this->obj_type ) {
-				$theme_data      = wp_get_theme( $slug );
+				$theme_data = wp_get_theme( $slug );
 				if ( isset( $theme_data['Version'] ) ) {
 					$args['version'] = $theme_data['Version'];
 				}
