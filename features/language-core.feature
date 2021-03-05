@@ -313,18 +313,18 @@ Feature: Manage translation files for a WordPress install
   Scenario: Ensure upgrader output is in English
     Given a WP install
     And an empty cache
-    And I run `wp core download --version=4.7.1 --force`
+    And I run `wp core download --version=5.4.1 --force`
 
     When I run `wp language core install de_DE --activate`
     Then STDOUT should contain:
       """
-      Downloading translation from https://downloads.wordpress.org/translation/core/4.7.1/de_DE.zip
+      Downloading translation from https://downloads.wordpress.org/translation/core/5.4.1/de_DE.zip
       """
 
     When I run `wp language core install nl_NL`
     Then STDOUT should contain:
       """
-      Downloading translation from https://downloads.wordpress.org/translation/core/4.7.1/nl_NL.zip
+      Downloading translation from https://downloads.wordpress.org/translation/core/5.4.1/nl_NL.zip
       """
     And STDOUT should contain:
       """
@@ -332,7 +332,7 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should not contain:
       """
-      Lädt Übersetzung von https://downloads.wordpress.org/translation/core/4.7.1./nl_NL.zip
+      Lädt Übersetzung von https://downloads.wordpress.org/translation/core/5.4.1./nl_NL.zip
       """
     And STDOUT should not contain:
       """
