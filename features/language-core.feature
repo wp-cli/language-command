@@ -316,8 +316,15 @@ Feature: Manage translation files for a WordPress install
     And I run `wp theme activate twentytwenty`
     And an empty cache
     And I run `wp core download --version=5.4.1 --force`
+    And a disable_sidebar_check.php file:
+      """
+      <?php
+      WP_CLI::add_wp_hook( 'init', static function () {
+        remove_action( 'after_switch_theme', '_wp_sidebars_changed' );
+      } );
+      """
 
-    When I run `wp language core install de_DE --activate`
+    When I run `wp language core install de_DE --activate --require=disable_sidebar_check.php`
     Then STDOUT should contain:
       """
       Downloading translation from https://downloads.wordpress.org/translation/core/5.4.1/de_DE.zip
