@@ -109,8 +109,14 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		$current_locale = get_locale();
 
 		$translations = array();
+		$plugins      = new \WP_CLI\Fetchers\Plugin();
 
 		foreach ( $args as $plugin ) {
+			if ( ! $plugins->get( $plugin ) ) {
+				WP_CLI::warning( "Plugin '{$plugin}' not found." );
+				continue;
+			}
+
 			$installed_translations = $this->get_installed_languages( $plugin );
 			$available_translations = $this->get_all_languages( $plugin );
 
@@ -318,10 +324,10 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			$available = $this->get_installed_languages( $plugin_name );
 
 			foreach ( $language_codes as $language_code ) {
-				$result = [
+				$result = array(
 					'name'   => $plugin_name,
 					'locale' => $language_code,
-				];
+				);
 
 				if ( in_array( $language_code, $available, true ) ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' already installed." );
