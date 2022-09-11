@@ -114,8 +114,15 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		$current_locale = get_locale();
 
 		$translations = array();
+		$themes       = new \WP_CLI\Fetchers\Theme();
 
 		foreach ( $args as $theme ) {
+
+			if ( ! $themes->get( $theme ) ) {
+				WP_CLI::warning( "Theme '{$theme}' not found." );
+				continue;
+			}
+
 			$installed_translations = $this->get_installed_languages( $theme );
 			$available_translations = $this->get_all_languages( $theme );
 

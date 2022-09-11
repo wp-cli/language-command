@@ -19,6 +19,16 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | active        |
       | en_GB     | English (UK)            | uninstalled   |
 
+    When I try `wp language theme list not-a-theme --format=json`
+    Then STDOUT should be:
+      """
+      []
+      """
+    And STDERR should contain:
+      """
+      Warning: Theme 'not-a-theme' not found.
+      """
+
     When I try `wp language theme is-installed twentyten en_GB`
     Then the return code should be 1
     And STDERR should be empty

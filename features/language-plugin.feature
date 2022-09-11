@@ -20,6 +20,16 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | active        |
       | en_GB     | English (UK)            | uninstalled   |
 
+    When I try `wp language plugin list not-a-plugin --format=json`
+    Then STDOUT should be:
+      """
+      []
+      """
+    And STDERR should contain:
+      """
+      Warning: Plugin 'not-a-plugin' not found.
+      """
+
     When I try `wp language plugin is-installed hello-dolly en_GB`
     Then the return code should be 1
     And STDERR should be empty
