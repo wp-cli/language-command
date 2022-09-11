@@ -324,10 +324,10 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 			$available = $this->get_installed_languages( $plugin_name );
 
 			foreach ( $language_codes as $language_code ) {
-				$result = array(
+				$result = [
 					'name'   => $plugin_name,
 					'locale' => $language_code,
-				);
+				];
 
 				if ( in_array( $language_code, $available, true ) ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' already installed." );
