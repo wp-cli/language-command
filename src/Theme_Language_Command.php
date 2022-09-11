@@ -114,7 +114,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		$current_locale = get_locale();
 
 		$translations = array();
-		$themes      = new \WP_CLI\Fetchers\Theme();
+		$themes       = new \WP_CLI\Fetchers\Theme();
 
 		foreach ( $args as $theme ) {
 
