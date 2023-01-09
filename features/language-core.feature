@@ -300,7 +300,7 @@ Feature: Manage translation files for a WordPress install
   @require-wp-4.0
   Scenario: Ensure correct language is installed for WP version
     Given a WP install
-    And I run `wp theme activate twentytwenty`
+    And I run `wp theme activate twentytwentyone`
     And an empty cache
     And I run `wp core download --version=4.5.3 --force`
 
@@ -313,7 +313,7 @@ Feature: Manage translation files for a WordPress install
   @require-wp-4.0
   Scenario: Ensure upgrader output is in English
     Given a WP install
-    And I run `wp theme activate twentytwenty`
+    And I run `wp theme activate twentytwentyone`
     And an empty cache
     And I run `wp core download --version=5.4.1 --force`
     And a disable_sidebar_check.php file:
