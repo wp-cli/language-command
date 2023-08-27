@@ -73,11 +73,13 @@ wp language core
 
 ### wp language core activate
 
-Activates a given language. (Deprecated: use wp site switch-language instead)
+Activates a given language.
 
 ~~~
 wp language core activate <language>
 ~~~
+
+**Warning: `wp language core activate` is deprecated. Use `wp site switch-language` instead.**
 
 **OPTIONS**
 
