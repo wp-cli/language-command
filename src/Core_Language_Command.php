@@ -316,7 +316,9 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	}
 
 	/**
-	 * Activates a given language. (Deprecated: use wp site switch-language instead)
+	 * Activates a given language.
+	 *
+	 * **Warning: `wp language core activate` is deprecated.**
 	 *
 	 * ## OPTIONS
 	 *
