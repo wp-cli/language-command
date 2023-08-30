@@ -4,13 +4,13 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 	return;
 }
 
-$wpcli_language_autoloader = dirname( __FILE__ ) . '/vendor/autoload.php';
+$wpcli_language_autoloader = __DIR__ . '/vendor/autoload.php';
 
 if ( file_exists( $wpcli_language_autoloader ) ) {
 	require_once $wpcli_language_autoloader;
 }
 
-$wpcli_language_check_requirements = function() {
+$wpcli_language_check_requirements = function () {
 	if ( \WP_CLI\Utils\wp_version_compare( '4.0', '<' ) ) {
 		WP_CLI::error( 'Requires WordPress 4.0 or greater.' );
 	}

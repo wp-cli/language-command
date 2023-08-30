@@ -144,7 +144,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	protected function get_translation_updates() {
 		$available = $this->get_installed_languages();
 
-		$func = function() use ( $available ) {
+		$func = function () use ( $available ) {
 			return $available;
 		};
 
