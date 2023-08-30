@@ -93,7 +93,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 		$current_locale = get_locale();
 
 		$translations = array_map(
-			function( $translation ) use ( $available, $current_locale, $updates ) {
+			function ( $translation ) use ( $available, $current_locale, $updates ) {
 				$translation['status'] = 'uninstalled';
 				if ( in_array( $translation['language'], $available, true ) ) {
 					$translation['status'] = 'installed';
@@ -199,7 +199,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 			if ( in_array( $language_code, $available, true ) ) {
 				\WP_CLI::log( "Language '{$language_code}' already installed." );
-				$skips++;
+				++$skips;
 			} else {
 				$response = $this->download_language_pack( $language_code );
 
@@ -209,13 +209,13 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 					// Skip if translation is not yet available.
 					if ( 'not_found' === $response->get_error_code() ) {
-						$skips++;
+						++$skips;
 					} else {
-						$errors++;
+						++$errors;
 					}
 				} else {
 					\WP_CLI::log( "Language '{$language_code}' installed." );
-					$successes++;
+					++$successes;
 				}
 			}
 

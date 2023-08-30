@@ -263,7 +263,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 			if ( in_array( $language_code, $available, true ) ) {
 				\WP_CLI::log( "Language '{$language_code}' already installed." );
-				$skips++;
+				++$skips;
 			} else {
 				$response = $this->download_language_pack( $language_code, $plugin );
 
@@ -273,13 +273,13 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 					// Skip if translation is not yet available.
 					if ( 'not_found' === $response->get_error_code() ) {
-						$skips++;
+						++$skips;
 					} else {
-						$errors++;
+						++$errors;
 					}
 				} else {
 					\WP_CLI::log( "Language '{$language_code}' installed." );
-					$successes++;
+					++$successes;
 				}
 			}
 		}
@@ -332,7 +332,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				if ( in_array( $language_code, $available, true ) ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' already installed." );
 					$result['status'] = 'already installed';
-					$skips++;
+					++$skips;
 				} else {
 					$response = $this->download_language_pack( $language_code, $plugin_name );
 
@@ -342,15 +342,15 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 						if ( 'not_found' === $response->get_error_code() ) {
 							$result['status'] = 'not available';
-							$skips++;
+							++$skips;
 						} else {
 							$result['status'] = 'not installed';
-							$errors++;
+							++$errors;
 						}
 					} else {
 						\WP_CLI::log( "Language '{$language_code}' for '{$plugin_details['Name']}' installed." );
 						$result['status'] = 'installed';
-						$successes++;
+						++$successes;
 					}
 				}
 
