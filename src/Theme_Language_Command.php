@@ -456,9 +456,10 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		$errors    = 0;
 		$skips     = 0;
 
+		// As of WP 4.0, no API for deleting a language pack
+		WP_Filesystem();
+
 		foreach ( $process_themes as $theme ) {
-			// As of WP 4.0, no API for deleting a language pack
-			WP_Filesystem();
 			$available_languages = $this->get_installed_languages( $theme );
 
 			foreach ( $language_codes as $language_code ) {
