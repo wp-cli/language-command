@@ -415,7 +415,6 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			\WP_CLI::set_logger( $logger );
 		}
 
-		/* process all themes */
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
 		if ( ! $all && count( $args ) < 2 ) {
