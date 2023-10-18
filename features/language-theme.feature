@@ -195,7 +195,7 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
 
-    When I try `wp language theme uninstall`
+    When I try `wp language theme uninstall de_DE`
     Then the return code should be 1
     And STDERR should be:
       """
