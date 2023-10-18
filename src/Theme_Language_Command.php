@@ -415,15 +415,20 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 			\WP_CLI::set_logger( $logger );
 		}
 
-		/* process all themes */
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
 		if ( ! $all && count( $args ) < 2 ) {
-			\WP_CLI::error( 'Please specify a theme, or use --all.' );
+			\WP_CLI::error( 'Please specify one or more themes, or use --all.' );
 		}
 
 		if ( $all ) {
-			$themes         = wp_get_themes();
+			$themes = wp_get_themes();
+
+			if ( empty( $themes ) ) {
+				\WP_CLI::success( 'No themes installed.' );
+				return;
+			}
+
 			$process_themes = array();
 			foreach ( $themes as $theme_path => $theme_details ) {
 				$theme_name = \WP_CLI\Utils\get_theme_name( $theme_path );
@@ -451,9 +456,10 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		$errors    = 0;
 		$skips     = 0;
 
+		// As of WP 4.0, no API for deleting a language pack
+		WP_Filesystem();
+
 		foreach ( $process_themes as $theme ) {
-			// As of WP 4.0, no API for deleting a language pack
-			WP_Filesystem();
 			$available_languages = $this->get_installed_languages( $theme );
 
 			foreach ( $language_codes as $language_code ) {
@@ -505,17 +511,15 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				} elseif ( $count_files_removed ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$theme}' partially uninstalled." );
 					$result['status'] = 'partial uninstall';
-					++$error;
-				} else { /* $count_files_removed == 0 */
-					if ( $had_one_file ) {
+					++$errors;
+				} elseif ( $had_one_file ) { /* $count_files_removed == 0 */
 						\WP_CLI::log( "Couldn't uninstall language '{$language_code}' from theme {$theme}." );
 						$result['status'] = 'failed to uninstall';
-						++$error;
-					} else {
-						\WP_CLI::log( "Language '{$language_code}' for '{$theme}' already uninstalled." );
-						$result['status'] = 'already uninstalled';
-						++$skips;
-					}
+						++$errors;
+				} else {
+					\WP_CLI::log( "Language '{$language_code}' for '{$theme}' already uninstalled." );
+					$result['status'] = 'already uninstalled';
+					++$skips;
 				}
 
 				$results[] = (object) $result;

@@ -127,18 +127,21 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/plugins/hello-dolly-cs_CZ.mo file should not exist
     And the wp-content/languages/plugins/hello-dolly-de_DE.po file should not exist
     And the wp-content/languages/plugins/hello-dolly-de_DE.mo file should not exist
-    And STDOUT should be:
+    And STDOUT should contain:
       """
-      Success: Language uninstalled.
-      Success: Language uninstalled.
+      Language 'cs_CZ' for 'hello-dolly' uninstalled.
+      Language 'de_DE' for 'hello-dolly' uninstalled.
       """
 
     When I try `wp language plugin uninstall hello-dolly fr_FR`
-    Then STDERR should be:
+    Then STDERR should contain:
       """
-      Error: Language not installed.
+      Warning: Language 'fr_FR' not installed.
       """
-    And STDOUT should be empty
+    And STDERR should contain:
+      """
+      Error: No languages uninstalled (1 failed).
+      """
     And the return code should be 1
 
     When I try `wp language plugin uninstall hello-dolly en_GB`
@@ -149,17 +152,50 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 0
 
-    When I try `wp language plugin install hello-dolly invalid_lang`
+    When I try `wp language plugin install hello-dolly en_GB de_DE invalid_lang`
     Then STDERR should be:
       """
       Warning: Language 'invalid_lang' not available.
       """
-    And STDOUT should be:
+    And STDOUT should contain:
       """
+      Language 'de_DE' installed.
       Language 'invalid_lang' not installed.
-      Success: Installed 0 of 1 languages (1 skipped).
+      Success: Installed 1 of 3 languages (2 skipped).
       """
     And the return code should be 0
+
+    When I run `wp language plugin uninstall --all de_DE --format=csv`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      akismet,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
+      hello,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
+      hello-dolly,de_DE,uninstalled
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin uninstall --all de_DE --format=csv`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      akismet,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
+      hello,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
+      hello-dolly,de_DE,"not installed"
+      """
+    And STDERR should be empty
 
   @require-wp-4.0
   Scenario: Don't allow active language to be uninstalled
@@ -206,6 +242,14 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
 
+    When I try `wp language plugin uninstall de_DE`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify one or more plugins, or use --all.
+      """
+    And STDOUT should be empty
+
     Given an empty {PLUGIN_DIR} directory
     When I run `wp language plugin list --all`
     Then STDOUT should be:
@@ -214,6 +258,12 @@ Feature: Manage translation files for a WordPress install
       """
 
     When I run `wp language plugin update --all`
+    Then STDOUT should be:
+      """
+      Success: No plugins installed.
+      """
+
+    When I run `wp language plugin uninstall de_DE --all`
     Then STDOUT should be:
       """
       Success: No plugins installed.

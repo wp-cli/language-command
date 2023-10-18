@@ -370,11 +370,25 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## OPTIONS
 	 *
-	 * <plugin>
+	 * [<plugin>]
 	 * : Plugin to uninstall language for.
+	 *
+	 * [--all]
+	 * : If set, languages for all plugins will be uninstalled.
 	 *
 	 * <language>...
 	 * : Language code to uninstall.
+	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format. Used when installing languages for all plugins.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 *   - summary
+	 * ---
 	 *
 	 * ## EXAMPLES
 	 *
@@ -387,7 +401,32 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
-		$plugin         = array_shift( $args );
+		if ( empty( $assoc_args['format'] ) ) {
+			$assoc_args['format'] = 'table';
+		}
+
+		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ), true ) ) {
+			$logger = new \WP_CLI\Loggers\Quiet();
+			\WP_CLI::set_logger( $logger );
+		}
+
+		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
+
+		if ( ! $all && count( $args ) < 2 ) {
+			\WP_CLI::error( 'Please specify one or more plugins, or use --all.' );
+		}
+
+		if ( $all ) {
+			$plugins = array_map( '\WP_CLI\Utils\get_plugin_name', array_keys( $this->get_all_plugins() ) );
+
+			if ( empty( $plugins ) ) {
+				WP_CLI::success( 'No plugins installed.' );
+				return;
+			}
+		} else {
+				$plugins = array( array_shift( $args ) );
+		}
+
 		$language_codes = (array) $args;
 		$current_locale = get_locale();
 
@@ -400,24 +439,87 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		// As of WP 4.0, no API for deleting a language pack
 		WP_Filesystem();
-		$available = $this->get_installed_languages( $plugin );
 
-		foreach ( $language_codes as $language_code ) {
-			if ( ! in_array( $language_code, $available, true ) ) {
-				\WP_CLI::error( 'Language not installed.' );
-			}
+		$count = count( $plugins ) * count( $language_codes );
 
-			if ( $language_code === $current_locale ) {
-				\WP_CLI::warning( "The '{$language_code}' language is active." );
-				exit;
-			}
+		$results = array();
 
-			if ( $wp_filesystem->delete( "{$dir}/{$plugin}-{$language_code}.po" ) && $wp_filesystem->delete( "{$dir}/{$plugin}-{$language_code}.mo" ) ) {
-				\WP_CLI::success( 'Language uninstalled.' );
-			} else {
-				\WP_CLI::error( "Couldn't uninstall language." );
+		$successes = 0;
+		$errors    = 0;
+		$skips     = 0;
+
+		foreach ( $plugins as $plugin ) {
+			$available = $this->get_installed_languages( $plugin );
+
+			foreach ( $language_codes as $language_code ) {
+				$result = [
+					'name'   => $plugin,
+					'locale' => $language_code,
+					'status' => 'not available',
+				];
+
+				if ( ! in_array( $language_code, $available, true ) ) {
+					$result['status'] = 'not installed';
+					\WP_CLI::warning( "Language '{$language_code}' not installed." );
+					if ( $all ) {
+						++$skips;
+					} else {
+						++$errors;
+					}
+					$results[] = (object) $result;
+					continue;
+				}
+
+				if ( $language_code === $current_locale ) {
+					\WP_CLI::warning( "The '{$language_code}' language is active." );
+					exit;
+				}
+
+				$po_file = "{$dir}/{$plugin}-{$language_code}.po";
+				$mo_file = "{$dir}/{$plugin}-{$language_code}.mo";
+
+				$files_to_remove = array( $po_file, $mo_file );
+
+				$count_files_removed = 0;
+				$had_one_file        = 0;
+				foreach ( $files_to_remove as $file ) {
+					if ( $wp_filesystem->exists( $file ) ) {
+						$had_one_file = 1;
+						if ( $wp_filesystem->delete( $file ) ) {
+							++$count_files_removed;
+						} else {
+							\WP_CLI::error( "Couldn't uninstall language: $language_code from plugin $plugin." );
+						}
+					}
+				}
+
+				if ( count( $files_to_remove ) === $count_files_removed ) {
+					$result['status'] = 'uninstalled';
+					++$successes;
+					\WP_CLI::log( "Language '{$language_code}' for '{$plugin}' uninstalled." );
+				} elseif ( $count_files_removed ) {
+					\WP_CLI::log( "Language '{$language_code}' for '{$plugin}' partially uninstalled." );
+					$result['status'] = 'partial uninstall';
+					++$errors;
+				} elseif ( $had_one_file ) { /* $count_files_removed == 0 */
+						\WP_CLI::log( "Couldn't uninstall language '{$language_code}' from plugin {$plugin}." );
+						$result['status'] = 'failed to uninstall';
+						++$errors;
+				} else {
+					\WP_CLI::log( "Language '{$language_code}' for '{$plugin}' already uninstalled." );
+					$result['status'] = 'already uninstalled';
+					++$skips;
+				}
+
+				$results[] = (object) $result;
 			}
 		}
+
+		if ( 'summary' !== $assoc_args['format'] ) {
+			\WP_CLI\Utils\format_items( $assoc_args['format'], $results, array( 'name', 'locale', 'status' ) );
+		}
+
+		\WP_CLI\Utils\report_batch_operation_results( 'language', 'uninstall', $count, $successes, $errors, $skips );
 	}
 
 	/**
