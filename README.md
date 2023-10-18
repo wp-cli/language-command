@@ -621,16 +621,30 @@ These fields will be displayed by default for each translation:
 Uninstalls a given language for a theme.
 
 ~~~
-wp language theme uninstall <theme> <language>...
+wp language theme uninstall [<theme>] [--all] <language>... [--format=<format>]
 ~~~
 
 **OPTIONS**
 
-	<theme>
+	[<theme>]
 		Theme to uninstall language for.
+
+	[--all]
+		If set, languages for all themes will be uninstalled.
 
 	<language>...
 		Language code to uninstall.
+
+	[--format=<format>]
+		Render output in a particular format. Used when installing languages for all themes.
+		---
+		default: table
+		options:
+		  - table
+		  - csv
+		  - json
+		  - summary
+		---
 
 **EXAMPLES**
 
