@@ -380,7 +380,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * : Language code to uninstall.
 	 *
 	 * [--format=<format>]
-	 * : Render output in a particular format. Used when installing languages for all themes.
+	 * : Render output in a particular format. Used when installing languages for all plugins.
 	 * ---
 	 * default: table
 	 * options:

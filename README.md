@@ -424,7 +424,7 @@ wp language plugin uninstall [<plugin>] [--all] <language>... [--format=<format>
 		Language code to uninstall.
 
 	[--format=<format>]
-		Render output in a particular format. Used when installing languages for all themes.
+		Render output in a particular format. Used when installing languages for all plugins.
 		---
 		default: table
 		options:
