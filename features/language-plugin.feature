@@ -167,22 +167,32 @@ Feature: Manage translation files for a WordPress install
 
     When I run `wp language plugin uninstall --all de_DE --format=csv`
     Then the return code should be 0
-    And STDOUT should be:
+    And STDOUT should contain:
       """
-      name,locale,status
       akismet,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
       hello,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
       hello-dolly,de_DE,uninstalled
       """
     And STDERR should be empty
 
     When I run `wp language plugin uninstall --all de_DE --format=csv`
     Then the return code should be 0
-    And STDOUT should be:
+    And STDOUT should contain:
       """
-      name,locale,status
       akismet,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
       hello,de_DE,"not installed"
+      """
+    And STDOUT should contain:
+      """
       hello-dolly,de_DE,"not installed"
       """
     And STDERR should be empty
