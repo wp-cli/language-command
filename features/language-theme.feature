@@ -122,16 +122,19 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/themes/twentyten-de_DE.po file should not exist
     And the wp-content/languages/themes/twentyten-de_DE.mo file should not exist
       """
-      Success: Language uninstalled.
-      Success: Language uninstalled.
+      Success: Language 'cs_CZ' for 'twentyten' uninstalled.
+      Success: Language 'de_DE' for 'twentyten' uninstalled.
       """
 
     When I try `wp language theme uninstall twentyten de_DE`
-    Then STDERR should be:
+    Then STDERR should contain:
       """
-      Error: Language not installed.
+      Language 'de_DE' not installed.
       """
-    And STDOUT should be empty
+    And STDERR should contain:
+      """
+      Error: No languages uninstalled (1 failed).
+      """
     And the return code should be 1
 
     When I try `wp language theme install twentyten invalid_lang`
@@ -269,3 +272,23 @@ Feature: Manage translation files for a WordPress install
       twentysixteen,invalid_lang,"not available"
       """
     And STDERR should be empty
+
+    When I run `wp language theme uninstall --all de_DE --format=csv`
+    Then the return code should be 0
+    And STDOUT should be:
+      """
+      name,locale,status
+      twentyseventeen,de_DE,uninstalled
+      twentysixteen,de_DE,uninstalled
+      """
+    And STDERR should be empty    
+
+    When I run `wp language theme uninstall --all de_DE --format=csv`
+    Then the return code should be 0
+    And STDOUT should be:
+      """
+      name,locale,status
+      twentyseventeen,de_DE,"not installed"
+      twentysixteen,de_DE,"not installed"
+      """
+    And STDERR should be empty    
