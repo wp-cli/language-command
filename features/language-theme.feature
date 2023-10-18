@@ -121,6 +121,7 @@ Feature: Manage translation files for a WordPress install
     And the wp-content/languages/themes/twentyten-cs_CZ.mo file should not exist
     And the wp-content/languages/themes/twentyten-de_DE.po file should not exist
     And the wp-content/languages/themes/twentyten-de_DE.mo file should not exist
+    And STDOUT should contain:
       """
       Success: Language 'cs_CZ' for 'twentyten' uninstalled.
       Success: Language 'de_DE' for 'twentyten' uninstalled.
