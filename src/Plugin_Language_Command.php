@@ -419,7 +419,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		if ( $all ) {
 			$plugins = array_map( '\WP_CLI\Utils\get_plugin_name', array_keys( $this->get_all_plugins() ) );
 
-			if ( empty( $args ) ) {
+			if ( empty( $plugins ) ) {
 				WP_CLI::success( 'No plugins installed.' );
 				return;
 			}
