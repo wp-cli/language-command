@@ -488,7 +488,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 						if ( $wp_filesystem->delete( $file ) ) {
 							++$count_files_removed;
 						} else {
-							\WP_CLI::error( "Couldn't uninstall language: $language_code from theme $plugin." );
+							\WP_CLI::error( "Couldn't uninstall language: $language_code from plugin $plugin." );
 						}
 					}
 				}
@@ -502,7 +502,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 					$result['status'] = 'partial uninstall';
 					++$errors;
 				} elseif ( $had_one_file ) { /* $count_files_removed == 0 */
-						\WP_CLI::log( "Couldn't uninstall language '{$language_code}' from theme {$plugin}." );
+						\WP_CLI::log( "Couldn't uninstall language '{$language_code}' from plugin {$plugin}." );
 						$result['status'] = 'failed to uninstall';
 						++$errors;
 				} else {
