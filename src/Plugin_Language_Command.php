@@ -413,7 +413,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
 		if ( ! $all && count( $args ) < 2 ) {
-			\WP_CLI::error( 'Please specify a plugin, or use --all.' );
+			\WP_CLI::error( 'Please specify one or more plugins, or use --all.' );
 		}
 
 		if ( $all ) {
