@@ -216,7 +216,7 @@ Feature: Manage translation files for a WordPress install
       Success: No themes installed.
       """
 
-    When I run `wp language theme uninstall --all`
+    When I run `wp language theme uninstall de_DE --all`
     Then STDOUT should be:
       """
       Success: No themes installed.

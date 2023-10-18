@@ -253,7 +253,7 @@ Feature: Manage translation files for a WordPress install
       Success: No plugins installed.
       """
 
-    When I run `wp language plugin uninstall --all`
+    When I run `wp language plugin uninstall de_DE --all`
     Then STDOUT should be:
       """
       Success: No plugins installed.
