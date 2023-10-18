@@ -511,12 +511,12 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				} elseif ( $count_files_removed ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$theme}' partially uninstalled." );
 					$result['status'] = 'partial uninstall';
-					++$error;
+					++$errors;
 				} else { /* $count_files_removed == 0 */
 					if ( $had_one_file ) {
 						\WP_CLI::log( "Couldn't uninstall language '{$language_code}' from theme {$theme}." );
 						$result['status'] = 'failed to uninstall';
-						++$error;
+						++$errors;
 					} else {
 						\WP_CLI::log( "Language '{$language_code}' for '{$theme}' already uninstalled." );
 						$result['status'] = 'already uninstalled';
