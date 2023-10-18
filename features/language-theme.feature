@@ -194,6 +194,14 @@ Feature: Manage translation files for a WordPress install
       """
     And STDOUT should be empty
 
+    When I try `wp language theme uninstall`
+    Then the return code should be 1
+    And STDERR should be:
+      """
+      Error: Please specify one or more themes, or use --all.
+      """
+    And STDOUT should be empty
+
     Given an empty {THEME_DIR} directory
     When I run `wp language theme list --all`
     Then STDOUT should be:
@@ -202,6 +210,12 @@ Feature: Manage translation files for a WordPress install
       """
 
     When I run `wp language theme update --all`
+    Then STDOUT should be:
+      """
+      Success: No themes installed.
+      """
+
+    When I run `wp language theme uninstall --all`
     Then STDOUT should be:
       """
       Success: No themes installed.
@@ -281,7 +295,7 @@ Feature: Manage translation files for a WordPress install
       twentyseventeen,de_DE,uninstalled
       twentysixteen,de_DE,uninstalled
       """
-    And STDERR should be empty    
+    And STDERR should be empty
 
     When I run `wp language theme uninstall --all de_DE --format=csv`
     Then the return code should be 0
@@ -291,4 +305,4 @@ Feature: Manage translation files for a WordPress install
       twentyseventeen,de_DE,"not installed"
       twentysixteen,de_DE,"not installed"
       """
-    And STDERR should be empty    
+    And STDERR should be empty

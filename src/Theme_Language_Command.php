@@ -422,7 +422,13 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $all ) {
-			$themes         = wp_get_themes();
+			$themes = wp_get_themes();
+
+			if ( empty( $themes ) ) {
+				\WP_CLI::success( 'No themes installed.' );
+				return;
+			}
+
 			$process_themes = array();
 			foreach ( $themes as $theme_path => $theme_details ) {
 				$theme_name = \WP_CLI\Utils\get_theme_name( $theme_path );
