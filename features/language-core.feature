@@ -316,7 +316,8 @@ Feature: Manage translation files for a WordPress install
       """
     And the return code should be 0
 
-  @require-wp-4.0
+  # This test downgrades to WordPress 5.4.1, but the SQLite plugin requires 6.0+
+  @require-wp-4.0 @require-mysql
   Scenario: Ensure upgrader output is in English
     Given a WP install
     And I run `wp theme activate twentytwentyone`
