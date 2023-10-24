@@ -220,7 +220,8 @@ Feature: Manage translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 0
 
-  @require-wp-4.0
+  # An empty plugin directory breaks SQLite integration, which uses a plugin.
+  @require-wp-4.0 @require-mysql
   Scenario: Not providing plugin slugs should throw an error unless --all given
     Given a WP install
     And I run `wp plugin path`
@@ -385,7 +386,8 @@ Feature: Manage translation files for a WordPress install
     And STDERR should be empty
 
 
-  @require-wp-4.0
+  # An empty plugin directory breaks SQLite integration, which uses a plugin.
+  @require-wp-4.0 @require-mysql
   Scenario: Install translations for all installed plugins
     Given a WP install
     And I run `wp plugin path`
