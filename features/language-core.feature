@@ -211,7 +211,7 @@ Feature: Manage translation files for a WordPress install
       """
     And the return code should be 0
 
-  @require-wp-latest @require-php-5.6 @less-than-php-7.0
+  @require-php-5.6 @less-than-php-7.0
   Scenario Outline: Core translation update
     Given an empty directory
     And WP files
