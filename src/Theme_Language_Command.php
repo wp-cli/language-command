@@ -512,7 +512,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 					++$count_files_to_remove;
 
-					if ( $wp_filesystem->delete( WP_LANG_DIR . $dir . '/' . $file ) ) {
+					if ( $wp_filesystem->delete( $dir . '/' . $file ) ) {
 						++$count_files_removed;
 					} else {
 						\WP_CLI::error( "Couldn't uninstall language: $language_code from theme $theme." );
