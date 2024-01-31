@@ -472,7 +472,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 				if ( $language_code === $current_locale ) {
 					\WP_CLI::warning( "The '{$language_code}' language is active." );
-					continue;
+					exit;
 				}
 
 				$files_to_remove = array(

@@ -260,16 +260,12 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		foreach ( $language_codes as $language_code ) {
 			if ( ! in_array( $language_code, $available, true ) ) {
-				if ( count( $language_codes ) === 1 ) {
-					WP_CLI::error( 'Language not installed.' );
-				} else {
-					WP_CLI::warning( 'Language not installed.' );
-				}
+				WP_CLI::warning( 'Language not installed.' );
 			}
 
 			if ( $language_code === $current_locale ) {
 				WP_CLI::warning( "The '{$language_code}' language is active." );
-				continue;
+				exit;
 			}
 
 			$files_to_remove = array(
