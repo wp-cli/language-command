@@ -491,7 +491,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 
 					if (
 						! in_array( $file, $files_to_remove, true ) &&
-						! preg_match( "$plugin-$language_code-\w{32}\.json", $file )
+						! preg_match( "/$plugin-$language_code-\w{32}\.json/", $file )
 					) {
 						continue;
 					}
