@@ -260,7 +260,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 		foreach ( $language_codes as $language_code ) {
 			if ( ! in_array( $language_code, $available, true ) ) {
-				WP_CLI::warning( 'Language not installed.' );
+				WP_CLI::error( 'Language not installed.' );
 			}
 
 			if ( $language_code === $current_locale ) {
