@@ -492,8 +492,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 					"$theme-$language_code.l10n.php",
 				);
 
-				$count_files_removed = 0;
-				$had_one_file        = false;
+				$count_files_to_remove = 0;
+				$count_files_removed   = 0;
+				$had_one_file          = false;
 
 				foreach ( $files as $file ) {
 					if ( '.' === $file[0] || is_dir( $file ) ) {
@@ -509,6 +510,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 					$had_one_file = true;
 
+					++$count_files_to_remove;
+
 					if ( $wp_filesystem->delete( WP_LANG_DIR . $dir . '/' . $file ) ) {
 						++$count_files_removed;
 					} else {
@@ -516,7 +519,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 					}
 				}
 
-				if ( count( $files_to_remove ) === $count_files_removed ) {
+				if ( $count_files_to_remove === $count_files_removed ) {
 					$result['status'] = 'uninstalled';
 					++$successes;
 					\WP_CLI::log( "Language '{$language_code}' for '{$theme}' uninstalled." );
