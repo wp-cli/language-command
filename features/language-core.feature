@@ -165,6 +165,7 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language core uninstall en_GB`
     Then the wp-content/languages/admin-en_GB.po file should not exist
     And the wp-content/languages/en_GB.po file should not exist
+    And the wp-content/languages/en_GB.l10n.php file should not exist
     And STDOUT should be:
       """
       Success: Language uninstalled.
@@ -173,8 +174,10 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language core uninstall en_CA ja`
      Then the wp-content/languages/admin-en_CA.po file should not exist
      And the wp-content/languages/en_CA.po file should not exist
+     And the wp-content/languages/en_CA.l10n.php file should not exist
      And the wp-content/languages/admin-ja.po file should not exist
      And the wp-content/languages/ja.po file should not exist
+     And the wp-content/languages/ja.l10n.php file should not exist
      And STDOUT should be:
        """
       Success: Language uninstalled.
