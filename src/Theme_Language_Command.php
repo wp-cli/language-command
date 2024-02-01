@@ -486,25 +486,40 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 					exit;
 				}
 
-				$po_file = "{$dir}/{$theme}-{$language_code}.po";
-				$mo_file = "{$dir}/{$theme}-{$language_code}.mo";
+				$files_to_remove = array(
+					"$theme-$language_code.po",
+					"$theme-$language_code.mo",
+					"$theme-$language_code.l10n.php",
+				);
 
-				$files_to_remove = array( $po_file, $mo_file );
+				$count_files_to_remove = 0;
+				$count_files_removed   = 0;
+				$had_one_file          = false;
 
-				$count_files_removed = 0;
-				$had_one_file        = 0;
-				foreach ( $files_to_remove as $file ) {
-					if ( $wp_filesystem->exists( $file ) ) {
-						$had_one_file = 1;
-						if ( $wp_filesystem->delete( $file ) ) {
-							++$count_files_removed;
-						} else {
-							\WP_CLI::error( "Couldn't uninstall language: $language_code from theme $theme." );
-						}
+				foreach ( $files as $file ) {
+					if ( '.' === $file[0] || is_dir( $file ) ) {
+						continue;
+					}
+
+					if (
+						! in_array( $file, $files_to_remove, true ) &&
+						! preg_match( "/$theme-$language_code-\w{32}\.json/", $file )
+					) {
+						continue;
+					}
+
+					$had_one_file = true;
+
+					++$count_files_to_remove;
+
+					if ( $wp_filesystem->delete( $dir . '/' . $file ) ) {
+						++$count_files_removed;
+					} else {
+						\WP_CLI::error( "Couldn't uninstall language: $language_code from theme $theme." );
 					}
 				}
 
-				if ( count( $files_to_remove ) === $count_files_removed ) {
+				if ( $count_files_to_remove === $count_files_removed ) {
 					$result['status'] = 'uninstalled';
 					++$successes;
 					\WP_CLI::log( "Language '{$language_code}' for '{$theme}' uninstalled." );

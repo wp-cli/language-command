@@ -125,8 +125,10 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language plugin uninstall hello-dolly cs_CZ de_DE`
     Then the wp-content/languages/plugins/hello-dolly-cs_CZ.po file should not exist
     And the wp-content/languages/plugins/hello-dolly-cs_CZ.mo file should not exist
+    And the wp-content/languages/plugins/hello-dolly-cs_CZ.l10n.php file should not exist
     And the wp-content/languages/plugins/hello-dolly-de_DE.po file should not exist
     And the wp-content/languages/plugins/hello-dolly-de_DE.mo file should not exist
+    And the wp-content/languages/plugins/hello-dolly-de_DE.l10n.php file should not exist
     And STDOUT should contain:
       """
       Language 'cs_CZ' for 'hello-dolly' uninstalled.

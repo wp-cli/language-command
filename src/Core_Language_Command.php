@@ -246,27 +246,42 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	public function uninstall( $args, $assoc_args ) {
 		global $wp_filesystem;
 
+		$dir   = 'core' === $this->obj_type ? '' : "/$this->obj_type";
+		$files = scandir( WP_LANG_DIR . $dir );
+		if ( ! $files ) {
+			WP_CLI::error( 'No files found in language directory.' );
+		}
+
 		$language_codes = (array) $args;
 
 		$available = $this->get_installed_languages();
 
-		foreach ( $language_codes as $language_code ) {
+		$current_locale = get_locale();
 
+		foreach ( $language_codes as $language_code ) {
 			if ( ! in_array( $language_code, $available, true ) ) {
 				WP_CLI::error( 'Language not installed.' );
 			}
 
-			$dir   = 'core' === $this->obj_type ? '' : "/$this->obj_type";
-			$files = scandir( WP_LANG_DIR . $dir );
-			if ( ! $files ) {
-				WP_CLI::error( 'No files found in language directory.' );
-			}
-
-			$current_locale = get_locale();
 			if ( $language_code === $current_locale ) {
 				WP_CLI::warning( "The '{$language_code}' language is active." );
 				exit;
 			}
+
+			$files_to_remove = array(
+				"$language_code.po",
+				"$language_code.mo",
+				"$language_code.l10n.php",
+				"admin-$language_code.po",
+				"admin-$language_code.mo",
+				"admin-$language_code.l10n.php",
+				"admin-network-$language_code.po",
+				"admin-network-$language_code.mo",
+				"admin-network-$language_code.l10n.php",
+				"continents-cities-$language_code.po",
+				"continents-cities-$language_code.mo",
+				"continents-cities-$language_code.l10n.php",
+			);
 
 			// As of WP 4.0, no API for deleting a language pack
 			WP_Filesystem();
@@ -275,9 +290,11 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 				if ( '.' === $file[0] || is_dir( $file ) ) {
 					continue;
 				}
-				$extension_length = strlen( $language_code ) + 4;
-				$ending           = substr( $file, -$extension_length );
-				if ( ! in_array( $file, array( $language_code . '.po', $language_code . '.mo' ), true ) && ! in_array( $ending, array( '-' . $language_code . '.po', '-' . $language_code . '.mo' ), true ) ) {
+
+				if (
+					! in_array( $file, $files_to_remove, true ) &&
+					! preg_match( "/$language_code-\w{32}\.json/", $file )
+				) {
 					continue;
 				}
 

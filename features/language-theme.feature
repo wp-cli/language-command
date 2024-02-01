@@ -119,8 +119,10 @@ Feature: Manage translation files for a WordPress install
     When I run `wp language theme uninstall twentyten cs_CZ de_DE`
     Then the wp-content/languages/themes/twentyten-cs_CZ.po file should not exist
     And the wp-content/languages/themes/twentyten-cs_CZ.mo file should not exist
+    And the wp-content/languages/themes/twentyten-cs_CZ.l10n.php file should not exist
     And the wp-content/languages/themes/twentyten-de_DE.po file should not exist
     And the wp-content/languages/themes/twentyten-de_DE.mo file should not exist
+    And the wp-content/languages/themes/twentyten-de_DE.l10n.php file should not exist
       """
       Success: Language 'cs_CZ' for 'twentyten' uninstalled.
       Success: Language 'de_DE' for 'twentyten' uninstalled.
