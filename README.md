@@ -264,21 +264,33 @@ wp language plugin
 
 **EXAMPLES**
 
-    # Install the Dutch plugin language pack.
+    # Install the Dutch plugin language pack for Hello Dolly.
     $ wp language plugin install hello-dolly nl_NL
-    Success: Language installed.
+    Downloading translation from https://downloads.wordpress.org/translation/plugin/hello-dolly/1.7.2/nl_NL.zip...
+    Unpacking the update...
+    Installing the latest version...
+    Removing the old version of the translation...
+    Translation updated successfully.
+    Language 'nl_NL' installed.
+    Success: Installed 1 of 1 languages.
 
-    # Uninstall the Dutch plugin language pack.
+    # Uninstall the Dutch plugin language pack for Hello Dolly.
     $ wp language plugin uninstall hello-dolly nl_NL
-    Success: Language uninstalled.
+    Language 'nl_NL' for 'hello-dolly' uninstalled.
+    +-------------+--------+-------------+
+    | name        | locale | status      |
+    +-------------+--------+-------------+
+    | hello-dolly | nl_NL  | uninstalled |
+    +-------------+--------+-------------+
+    Success: Uninstalled 1 of 1 languages.
 
-    # List installed plugin language packages.
-    $ wp language plugin list --status=installed
-    +----------+--------------+-------------+-----------+-----------+---------------------+
-    | language | english_name | native_name | status    | update    | updated             |
-    +----------+--------------+-------------+-----------+-----------+---------------------+
-    | nl_NL    | Dutch        | Nederlands  | installed | available | 2016-05-13 08:12:50 |
-    +----------+--------------+-------------+-----------+-----------+---------------------+
+    # List installed plugin language packs for Hello Dolly.
+    $ wp language plugin list hello-dolly --status=installed
+    +-------------+----------+--------------+-------------+-----------+--------+---------------------+
+    | plugin      | language | english_name | native_name | status    | update | updated             |
+    +-------------+----------+--------------+-------------+-----------+--------+---------------------+
+    | hello-dolly | nl_NL    | Dutch        | Nederlands  | installed | none   | 2023-11-13 12:34:15 |
+    +-------------+----------+--------------+-------------+-----------+--------+---------------------+
 
 
 
@@ -348,6 +360,7 @@ Downloads the language pack from WordPress.org.
     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/4.0.3/ja.zip...
     Unpacking the update...
     Installing the latest version...
+    Removing the old version of the translation...
     Translation updated successfully.
     Language 'ja' installed.
     Success: Installed 1 of 1 languages.
@@ -403,8 +416,8 @@ These fields will be displayed by default for each translation:
 
 **EXAMPLES**
 
-    # List language,english_name,status fields of available languages.
-    $ wp language plugin list --fields=language,english_name,status
+    # List available language packs for the plugin.
+    $ wp language plugin list hello-dolly --fields=language,english_name,status
     +----------------+-------------------------+-------------+
     | language       | english_name            | status      |
     +----------------+-------------------------+-------------+
@@ -446,8 +459,15 @@ wp language plugin uninstall [<plugin>] [--all] <language>... [--format=<format>
 
 **EXAMPLES**
 
+    # Uninstall the Japanese plugin language pack for Hello Dolly.
     $ wp language plugin uninstall hello-dolly ja
-    Success: Language uninstalled.
+    Language 'ja' for 'hello-dolly' uninstalled.
+    +-------------+--------+-------------+
+    | name        | locale | status      |
+    +-------------+--------+-------------+
+    | hello-dolly | ja     | uninstalled |
+    +-------------+--------+-------------+
+    Success: Uninstalled 1 of 1 languages.
 
 
 
@@ -472,6 +492,7 @@ wp language plugin update [<plugin>...] [--all] [--dry-run]
 
 **EXAMPLES**
 
+    # Update all installed language packs for all plugins.
     $ wp language plugin update --all
     Updating 'Japanese' translation for Akismet 3.1.11...
     Downloading translation from https://downloads.wordpress.org/translation/plugin/akismet/3.1.11/ja.zip...
@@ -490,21 +511,33 @@ wp language theme
 
 **EXAMPLES**
 
-    # Install the Dutch theme language pack.
+    # Install the Dutch theme language pack for Twenty Ten.
     $ wp language theme install twentyten nl_NL
-    Success: Language installed.
+    Downloading translation from https://downloads.wordpress.org/translation/theme/twentyten/4.0/nl_NL.zip...
+    Unpacking the update...
+    Installing the latest version...
+    Removing the old version of the translation...
+    Translation updated successfully.
+    Language 'nl_NL' installed.
+    Success: Installed 1 of 1 languages.
 
-    # Uninstall the Dutch theme language pack.
+    # Uninstall the Dutch theme language pack for Twenty Ten.
     $ wp language theme uninstall twentyten nl_NL
-    Success: Language uninstalled.
+    Language 'nl_NL' for 'twentyten' uninstalled.
+    +-----------+--------+-------------+
+    | name      | locale | status      |
+    +-----------+--------+-------------+
+    | twentyten | nl_NL  | uninstalled |
+    +-----------+--------+-------------+
+    Success: Uninstalled 1 of 1 languages.
 
-    # List installed theme language packages.
-    $ wp language theme list --status=installed
-    +----------+--------------+-------------+-----------+-----------+---------------------+
-    | language | english_name | native_name | status    | update    | updated             |
-    +----------+--------------+-------------+-----------+-----------+---------------------+
-    | nl_NL    | Dutch        | Nederlands  | installed | available | 2016-05-13 08:12:50 |
-    +----------+--------------+-------------+-----------+-----------+---------------------+
+    # List installed theme language packs for Twenty Ten.
+    $ wp language theme list twentyten --status=installed
+    +-----------+----------+--------------+-------------+-----------+--------+---------------------+
+    | theme     | language | english_name | native_name | status    | update | updated             |
+    +-----------+----------+--------------+-------------+-----------+--------+---------------------+
+    | twentyten | nl_NL    | Dutch        | Nederlands  | installed | none   | 2023-12-29 21:21:39 |
+    +-----------+----------+--------------+-------------+-----------+--------+---------------------+
 
 
 
@@ -629,8 +662,8 @@ These fields will be displayed by default for each translation:
 
 **EXAMPLES**
 
-    # List language,english_name,status fields of available languages.
-    $ wp language theme list --fields=language,english_name,status
+    # List available language packs for the theme.
+    $ wp language theme list twentyten --fields=language,english_name,status
     +----------------+-------------------------+-------------+
     | language       | english_name            | status      |
     +----------------+-------------------------+-------------+
@@ -672,8 +705,15 @@ wp language theme uninstall [<theme>] [--all] <language>... [--format=<format>]
 
 **EXAMPLES**
 
+    # Uninstall the Japanese theme language pack for Twenty Ten.
     $ wp language theme uninstall twentyten ja
-    Success: Language uninstalled.
+    Language 'ja' for 'twentyten' uninstalled.
+    +-----------+--------+-------------+
+    | name      | locale | status      |
+    +-----------+--------+-------------+
+    | twentyten | ja     | uninstalled |
+    +-----------+--------+-------------+
+    Success: Uninstalled 1 of 1 languages.
 
 
 
@@ -698,6 +738,7 @@ wp language theme update [<theme>...] [--all] [--dry-run]
 
 **EXAMPLES**
 
+    # Update all installed language packs for all themes.
     $ wp language theme update --all
     Updating 'Japanese' translation for Twenty Fifteen 1.5...
     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
