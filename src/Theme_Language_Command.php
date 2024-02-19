@@ -5,21 +5,35 @@
  *
  * ## EXAMPLES
  *
- *     # Install the Dutch theme language pack.
+ *     # Install the Dutch theme language pack for Twenty Ten.
  *     $ wp language theme install twentyten nl_NL
- *     Success: Language installed.
+ *     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyten/4.0/nl_NL.zip...
+ *     Unpacking the update...
+ *     Installing the latest version...
+ *     Removing the old version of the translation...
+ *     Translation updated successfully.
+ *     Language 'nl_NL' installed.
+ *     Success: Installed 1 of 1 languages.
  *
- *     # Uninstall the Dutch theme language pack.
+ *     # Uninstall the Dutch theme language pack for Twenty Ten.
  *     $ wp language theme uninstall twentyten nl_NL
- *     Success: Language uninstalled.
+ *     Language 'nl_NL' for 'twentyten' uninstalled.
+ *     +-----------+--------+-------------+
+ *     | name      | locale | status      |
+ *     +-----------+--------+-------------+
+ *     | twentyten | nl_NL  | uninstalled |
+ *     +-----------+--------+-------------+
+ *     Success: Uninstalled 1 of 1 languages.
  *
- *     # List installed theme language packages.
- *     $ wp language theme list --status=installed
- *     +----------+--------------+-------------+-----------+-----------+---------------------+
- *     | language | english_name | native_name | status    | update    | updated             |
- *     +----------+--------------+-------------+-----------+-----------+---------------------+
- *     | nl_NL    | Dutch        | Nederlands  | installed | available | 2016-05-13 08:12:50 |
- *     +----------+--------------+-------------+-----------+-----------+---------------------+
+ *     # List installed theme language packs for Twenty Ten.
+ *     $ wp language theme list twentyten --status=installed
+ *     +-----------+----------+--------------+-------------+-----------+--------+---------------------+
+ *     | theme     | language | english_name | native_name | status    | update | updated             |
+ *     +-----------+----------+--------------+-------------+-----------+--------+---------------------+
+ *     | twentyten | nl_NL    | Dutch        | Nederlands  | installed | none   | 2023-12-29 21:21:39 |
+ *     +-----------+----------+--------------+-------------+-----------+--------+---------------------+
+ *
+ * @package wp-cli
  */
 class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	protected $obj_type = 'themes';
@@ -78,8 +92,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # List language,english_name,status fields of available languages.
-	 *     $ wp language theme list --fields=language,english_name,status
+	 *     # List available language packs for the theme.
+	 *     $ wp language theme list twentyten --fields=language,english_name,status
 	 *     +----------------+-------------------------+-------------+
 	 *     | language       | english_name            | status      |
 	 *     +----------------+-------------------------+-------------+
@@ -397,8 +411,15 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## EXAMPLES
 	 *
+	 *     # Uninstall the Japanese theme language pack for Twenty Ten.
 	 *     $ wp language theme uninstall twentyten ja
-	 *     Success: Language uninstalled.
+	 *     Language 'ja' for 'twentyten' uninstalled.
+	 *     +-----------+--------+-------------+
+	 *     | name      | locale | status      |
+	 *     +-----------+--------+-------------+
+	 *     | twentyten | ja     | uninstalled |
+	 *     +-----------+--------+-------------+
+	 *     Success: Uninstalled 1 of 1 languages.
 	 *
 	 * @subcommand uninstall
 	 */
@@ -564,6 +585,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## EXAMPLES
 	 *
+	 *     # Update all installed language packs for all themes.
 	 *     $ wp language theme update --all
 	 *     Updating 'Japanese' translation for Twenty Fifteen 1.5...
 	 *     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
