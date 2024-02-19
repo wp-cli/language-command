@@ -157,7 +157,7 @@ Feature: Manage translation files for a WordPress install
     When I try `wp language plugin install hello-dolly en_GB de_DE invalid_lang`
     Then STDERR should be:
       """
-      Warning: Language 'invalid_lang' not available.
+      Warning: Language 'invalid_lang' for 'hello-dolly' not available.
       """
     And STDOUT should contain:
       """
