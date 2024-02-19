@@ -7,23 +7,31 @@
  *
  *     # Install the Dutch core language pack.
  *     $ wp language core install nl_NL
- *     Success: Language installed.
+ *     Downloading translation from https://downloads.wordpress.org/translation/core/6.4.3/nl_NL.zip...
+ *     Unpacking the update...
+ *     Installing the latest version...
+ *     Removing the old version of the translation...
+ *     Translation updated successfully.
+ *     Language 'nl_NL' installed.
+ *     Success: Installed 1 of 1 languages.
  *
  *     # Activate the Dutch core language pack.
- *     $ wp language core activate nl_NL
+ *     $ wp site switch-language nl_NL
  *     Success: Language activated.
  *
  *     # Uninstall the Dutch core language pack.
  *     $ wp language core uninstall nl_NL
  *     Success: Language uninstalled.
  *
- *     # List installed core language packages.
+ *     # List installed core language packs.
  *     $ wp language core list --status=installed
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
  *     | language | english_name | native_name | status    | update    | updated             |
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
- *     | nl_NL    | Dutch        | Nederlands  | installed | available | 2016-05-13 08:12:50 |
+ *     | nl_NL    | Dutch        | Nederlands  | installed | available | 2024-01-31 10:24:06 |
  *     +----------+--------------+-------------+-----------+-----------+---------------------+
+ *
+ * @package wp-cli
  */
 class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	protected $obj_type = 'core';
@@ -173,9 +181,10 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 *     # Install the Japanese language.
 	 *     $ wp language core install ja
-	 *     Downloading translation from https://downloads.wordpress.org/translation/core/4.9.8/ja.zip...
+	 *     Downloading translation from https://downloads.wordpress.org/translation/core/6.4.3/ja.zip...
 	 *     Unpacking the update...
 	 *     Installing the latest version...
+	 *     Removing the old version of the translation...
 	 *     Translation updated successfully.
 	 *     Language 'ja' installed.
 	 *     Success: Installed 1 of 1 languages.
@@ -237,6 +246,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## EXAMPLES
 	 *
+	 *     # Uninstall the Japanese core language pack.
 	 *     $ wp language core uninstall ja
 	 *     Success: Language uninstalled.
 	 *
@@ -320,9 +330,10 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## EXAMPLES
 	 *
+	 *     # Update installed core languages packs.
 	 *     $ wp language core update
-	 *     Updating 'Japanese' translation for WordPress 4.9.2...
-	 *     Downloading translation from https://downloads.wordpress.org/translation/core/4.9.2/ja.zip...
+	 *     Updating 'Japanese' translation for WordPress 6.4.3...
+	 *     Downloading translation from https://downloads.wordpress.org/translation/core/6.4.3/ja.zip...
 	 *     Translation updated successfully.
 	 *     Success: Updated 1/1 translation.
 	 *
@@ -344,6 +355,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * ## EXAMPLES
 	 *
+	 *     # Activate the given language.
 	 *     $ wp language core activate ja
 	 *     Success: Language activated.
 	 *
