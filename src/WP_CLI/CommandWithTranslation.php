@@ -216,7 +216,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		}
 
 		if ( ! $translation_to_load ) {
-			return new \WP_Error( 'not_found', "Language '{$download}' not available." );
+			return new \WP_Error( 'not_found', $slug ? "Language '{$download}' for '{$slug}' not available." : "Language '{$download}' not available." );
 		}
 		$translation = (object) $translation;
 
@@ -235,7 +235,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		}
 
 		if ( ! $result ) {
-			return new \WP_Error( 'not_installed', "Could not install language '{$download}'." );
+			return new \WP_Error( 'not_installed', $slug ? "Could not install language '{$download}' for '{$slug}'." : "Could not install language '{$download}'." );
 		}
 
 		return $translation->language;
