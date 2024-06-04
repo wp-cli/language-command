@@ -214,6 +214,7 @@ Feature: Manage translation files for a WordPress install
       """
     And the return code should be 0
 
+  # This test downgrades to older WP version. PHP restriction is added to avoid warnings in latest versions.
   @require-wp-4.0 @less-than-php-7.0
   Scenario Outline: Core translation update
     Given an empty directory
