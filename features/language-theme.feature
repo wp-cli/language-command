@@ -95,6 +95,12 @@ Feature: Manage translation files for a WordPress install
       | en_GB     | English (UK)            | none     |
       | en_US     | English (United States) | none     |
 
+    When I run `wp language theme list twentyten --status=installed --format=count`
+    Then STDOUT should be:
+      """
+      3
+      """
+
     When I run `wp language theme update --all`
     Then STDOUT should contain:
       """

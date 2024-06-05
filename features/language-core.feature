@@ -77,6 +77,12 @@ Feature: Manage translation files for a WordPress install
       | ar        | Arabic           | uninstalled   |
       | en_GB     | English (UK)     | installed     |
 
+    When I run `wp language core list --status=installed --format=count`
+    Then STDOUT should be:
+      """
+      4
+      """
+
     When I run `wp site switch-language en_GB`
     Then STDOUT should be:
       """

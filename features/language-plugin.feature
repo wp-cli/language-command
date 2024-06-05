@@ -96,6 +96,12 @@ Feature: Manage translation files for a WordPress install
       | en_US     | English (United States) | none     |
       | en_GB     | English (UK)            | none     |
 
+    When I run `wp language plugin list hello-dolly --status=installed --format=count`
+    Then STDOUT should be:
+      """
+      3
+      """
+
     When I run `wp language plugin update --all`
     Then STDOUT should contain:
       """
