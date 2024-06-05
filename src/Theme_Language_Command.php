@@ -76,6 +76,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *   - table
 	 *   - csv
 	 *   - json
+	 *   - count
 	 * ---
 	 *
 	 * ## AVAILABLE FIELDS
