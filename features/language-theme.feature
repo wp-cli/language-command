@@ -119,7 +119,7 @@ Feature: Manage translation files for a WordPress install
       | language  | english_name            | status        |
       | cs_CZ     | Czech                   | installed     |
       | de_DE     | German                  | installed     |
-      | en_US     | English (United States) | installed     |
+      | en_US     | English (United States) | uninstalled   |
       | en_GB     | English (UK)            | active        |
 
     When I run `wp language theme uninstall twentyten cs_CZ de_DE`
