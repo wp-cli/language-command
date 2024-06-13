@@ -172,7 +172,7 @@ Downloads the language pack from WordPress.org. Find your language code at: http
     Language 'ja' installed.
     Success: Installed 1 of 1 languages.
 
-	# Install the Portuguese (Portugal) language.
+    # Install the Portuguese (Portugal) language.
     $ wp language core install pt_PT
     Downloading translation from https://downloads.wordpress.org/translation/core/6.5/pt_PT.zip...
     Unpacking the update...
