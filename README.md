@@ -150,7 +150,7 @@ Installs a given language.
 wp language core install <language>... [--activate]
 ~~~
 
-Downloads the language pack from WordPress.org. Find your language code at: https://translate.wordpress.org/
+Downloads the language pack from WordPress.org.
 
 **OPTIONS**
 
@@ -170,16 +170,6 @@ Downloads the language pack from WordPress.org. Find your language code at: http
     Removing the old version of the translation...
     Translation updated successfully.
     Language 'ja' installed.
-    Success: Installed 1 of 1 languages.
-
-    # Install the Portuguese (Portugal) language.
-    $ wp language core install pt_PT
-    Downloading translation from https://downloads.wordpress.org/translation/core/6.5/pt_PT.zip...
-    Unpacking the update...
-    Installing the latest version...
-    Removing the old version of the translation...
-    Translation updated successfully.
-    Language 'pt_PT' installed.
     Success: Installed 1 of 1 languages.
 
 
