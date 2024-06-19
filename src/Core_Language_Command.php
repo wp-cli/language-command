@@ -173,7 +173,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * ## OPTIONS
 	 *
 	 * <language>...
-	 * : Language code to install, it is based on the ISO-639 language code (e.g. pt for Portuguese) followed by the ISO-3166 country code (e.g. PT for Portugal or BR for Brazil). So, the Brazilian Portuguese file would be called pt_BR
+	 * : Language code to install.
 	 *
 	 * [--activate]
 	 * : If set, the language will be activated immediately after install.
