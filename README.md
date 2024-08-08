@@ -766,6 +766,26 @@ wp language theme update [<theme>...] [--all] [--dry-run]
     Translation updated successfully.
     Success: Updated 1/1 translation.
 
+
+
+### wp site switch-language
+
+Activates a given language.
+
+~~~
+wp site switch-language <language>
+~~~
+
+**OPTIONS**
+
+	<language>
+		Language code to activate.
+
+**EXAMPLES**
+
+    $ wp site switch-language ja
+    Success: Language activated.
+
 ## Installing
 
 This package is included with WP-CLI itself, no additional installation necessary.

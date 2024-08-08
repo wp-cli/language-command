@@ -53,7 +53,8 @@
             "language theme install",
             "language theme list",
             "language theme uninstall",
-            "language theme update"
+            "language theme update",
+            "site switch-language"
         ]
     },
     "autoload": {
