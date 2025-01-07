@@ -319,7 +319,7 @@ Feature: Manage translation files for a WordPress install
   Scenario: List languages by multiple statuses
     Given a WP install
     And an empty cache
-    And I run `wp theme install twentyten`
+    And I run `wp theme install twentyten --force`
     And I run `wp language theme install twentyten nl_NL`
 
     When I run `wp language theme list twentyten --fields=language,status --status=active,installed`
