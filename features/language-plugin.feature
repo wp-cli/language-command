@@ -439,3 +439,16 @@ Feature: Manage translation files for a WordPress install
       jetpack,invalid_lang,"not available"
       """
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: List languages by multiple statuses
+    Given a WP install
+    And an empty cache
+    And I run `wp language plugin install akismet nl_NL`
+
+    When I run `wp language plugin list --all --fields=plugin,language,status --status=active,installed`
+    Then STDOUT should be a table containing rows:
+      | plugin   | language | status    |
+      | akismet  | en_US    | active    |
+      | akismet  | nl_NL    | installed |
+    And STDERR should be empty

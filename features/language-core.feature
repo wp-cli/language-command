@@ -547,3 +547,4 @@ Feature: Manage translation files for a WordPress install
         | language  | status     |
         | en_US     | active     |
         | nl_NL     | installed  |
+      And STDERR should be empty

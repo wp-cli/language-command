@@ -314,3 +314,17 @@ Feature: Manage translation files for a WordPress install
       twentysixteen,de_DE,"not installed"
       """
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: List languages by multiple statuses
+    Given a WP install
+    And an empty cache
+    And I run `wp theme install twentyten`
+    And I run `wp language theme install twentyten nl_NL`
+
+    When I run `wp language theme list twentyten --fields=language,status --status=active,installed`
+    Then STDOUT should be a table containing rows:
+      | language | status    |
+      | en_US    | active    |
+      | nl_NL    | installed |
+    And STDERR should be empty
