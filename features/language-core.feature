@@ -540,8 +540,8 @@ Feature: Manage translation files for a WordPress install
     Scenario: List languages by multiple statuses
       Given a WP install
       And an empty cache
+      And I run `wp language core install nl_NL`
 
-      When I run `wp language core install nl_NL`
       When I run `wp language core list --fields=language,status --status=active,installed`
       Then STDOUT should be a table containing rows:
         | language  | status     |
