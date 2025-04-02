@@ -1,4 +1,4 @@
-Feature: Manage translation files for a WordPress install
+Feature: Manage theme translation files for a WordPress install
 
   @require-wp-4.0
   Scenario: Theme translation CRUD
