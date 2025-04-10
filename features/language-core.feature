@@ -185,7 +185,7 @@ Feature: Manage core translation files for a WordPress install
     And the wp-content/languages/ja.po file should not exist
     And the wp-content/languages/ja.l10n.php file should not exist
     And STDOUT should be:
-       """
+      """
       Success: Language uninstalled.
       Success: Language uninstalled.
       """
