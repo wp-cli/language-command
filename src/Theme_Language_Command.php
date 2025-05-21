@@ -315,7 +315,11 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 */
 	private function install_many( $args, $assoc_args ) {
 		$language_codes = (array) $args;
-		$themes         = wp_get_themes();
+
+		/**
+		 * @var \WP_Theme[] $themes
+		 */
+		$themes = wp_get_themes();
 
 		if ( empty( $assoc_args['format'] ) ) {
 			$assoc_args['format'] = 'table';
@@ -343,6 +347,11 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 			$available = $this->get_installed_languages( $theme_name );
 
+			/**
+			 * @var string $display_name
+			 */
+			$display_name = $theme_details['Name'];
+
 			foreach ( $language_codes as $language_code ) {
 				$result = [
 					'name'   => $theme_name,
@@ -350,7 +359,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 				];
 
 				if ( in_array( $language_code, $available, true ) ) {
-					\WP_CLI::log( "Language '{$language_code}' for '{$theme_details['Name']}' already installed." );
+					\WP_CLI::log( "Language '{$language_code}' for '{$display_name}' already installed." );
 					$result['status'] = 'already installed';
 					++$skips;
 				} else {
@@ -358,7 +367,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 
 					if ( is_wp_error( $response ) ) {
 						\WP_CLI::warning( $response );
-						\WP_CLI::log( "Language '{$language_code}' for '{$theme_details['Name']}' not installed." );
+						\WP_CLI::log( "Language '{$language_code}' for '{$display_name}' not installed." );
 
 						if ( 'not_found' === $response->get_error_code() ) {
 							$result['status'] = 'not available';
@@ -368,7 +377,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 							++$errors;
 						}
 					} else {
-						\WP_CLI::log( "Language '{$language_code}' for '{$theme_details['Name']}' installed." );
+						\WP_CLI::log( "Language '{$language_code}' for '{$display_name}' installed." );
 						$result['status'] = 'installed';
 						++$successes;
 					}

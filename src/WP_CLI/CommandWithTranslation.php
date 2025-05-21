@@ -57,12 +57,22 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				$name = 'WordPress'; // Core.
 
 				if ( 'plugin' === $update->type ) {
-					$plugins     = get_plugins( '/' . $update->slug );
+					/**
+					 * @var array<array{Name: string}> $plugins
+					 */
+					$plugins = get_plugins( '/' . $update->slug );
+
+					/**
+					 * @var array{Name: string}> $plugin_data
+					 */
 					$plugin_data = array_shift( $plugins );
 					$name        = $plugin_data['Name'];
 				} elseif ( 'theme' === $update->type ) {
 					$theme_data = wp_get_theme( $update->slug );
-					$name       = $theme_data['Name'];
+					/**
+					 * @var string $name
+					 */
+					$name = $theme_data['Name'];
 				}
 
 				// Gets the translation data.
@@ -97,7 +107,12 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				foreach ( $available_updates as $update ) {
 					WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
 
-					$result = Utils\get_upgrader( $upgrader )->upgrade( $update );
+					/**
+					 * @var \WP_CLI\LanguagePackUpgrader $upgrader_instance
+					 */
+					$upgrader_instance = Utils\get_upgrader( $upgrader );
+
+					$result = $upgrader_instance->upgrade( $update );
 
 					$results[] = $result;
 				}
@@ -181,7 +196,11 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				break;
 		}
 
-		$updates   = array();
+		$updates = array();
+
+		/**
+		 * @var object{translations: array} $transient
+		 */
 		$transient = get_site_transient( $transient );
 
 		if ( empty( $transient->translations ) ) {
@@ -218,7 +237,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		if ( ! $translation_to_load ) {
 			return new \WP_Error( 'not_found', $slug ? "Language '{$download}' for '{$slug}' not available." : "Language '{$download}' not available." );
 		}
-		$translation = (object) $translation;
+
+		$translation = (object) $translation_to_load;
 
 		$translation->type = rtrim( $this->obj_type, 's' );
 
@@ -228,7 +248,15 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		}
 
 		$upgrader = 'WP_CLI\\LanguagePackUpgrader';
-		$result   = Utils\get_upgrader( $upgrader )->upgrade( $translation, array( 'clear_update_cache' => false ) );
+
+		/**
+		 * @var \WP_CLI\LanguagePackUpgrader $upgrader_instance
+		 */
+		$upgrader_instance = Utils\get_upgrader( $upgrader );
+
+		// Incorrect docblock in WordPress core.
+		// @phpstan-ignore argument.type
+		$result = $upgrader_instance->upgrade( $translation, array( 'clear_update_cache' => false ) );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -268,6 +296,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		require ABSPATH . WPINC . '/version.php'; // Include an unmodified $wp_version
 
 		$args = array(
+			// False positive, because it's defined in version.php
+			// @phpstan-ignore variable.undefined
 			'version' => $wp_version,
 		);
 
