@@ -14,6 +14,8 @@ class LanguagePackUpgrader extends \Language_Pack_Upgrader {
 	 * The upgrader skin being used.
 	 *
 	 * @var \Language_Pack_Upgrader_Skin $skin
+	 *
+	 * @phpstan-ignore property.phpDocType
 	 */
 	public $skin = null;
 

@@ -103,6 +103,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     | az             | Azerbaijani             | uninstalled |
 	 *
 	 * @subcommand list
+	 *
+	 * @param string[] $args Positional arguments.
+	 * @param array{all?: bool, field?: string, format: string, theme?: string, language?: string, english_name?: string, native_name?: string, status?: string, update?: string, updated?: string} $assoc_args Associative arguments.
 	 */
 	public function list_( $args, $assoc_args ) {
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
@@ -194,8 +197,10 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     1
 	 *
 	 * @subcommand is-installed
+	 *
+	 * @param non-empty-array<string> $args Positional arguments.
 	 */
-	public function is_installed( $args, $assoc_args = array() ) {
+	public function is_installed( $args ) {
 		$theme          = array_shift( $args );
 		$language_codes = (array) $args;
 
@@ -249,6 +254,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Success: Installed 1 of 1 languages.
 	 *
 	 * @subcommand install
+	 *
+	 * @param string[] $args Positional arguments.
+	 * @param array{all?: bool, format: string} $assoc_args Associative arguments.
 	 */
 	public function install( $args, $assoc_args ) {
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
@@ -272,7 +280,7 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 */
 	private function install_one( $args, $assoc_args ) {
 		$theme          = array_shift( $args );
-		$language_codes = (array) $args;
+		$language_codes = $args;
 		$count          = count( $language_codes );
 
 		$available = $this->get_installed_languages( $theme );
@@ -432,6 +440,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Success: Uninstalled 1 of 1 languages.
 	 *
 	 * @subcommand uninstall
+	 *
+	 * @param string[] $args Positional arguments.
+	 * @param array{all?: bool, format: string} $assoc_args Associative arguments.
 	 */
 	public function uninstall( $args, $assoc_args ) {
 		/** @var WP_Filesystem_Base $wp_filesystem */
@@ -490,6 +501,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		// As of WP 4.0, no API for deleting a language pack
 		WP_Filesystem();
 
+		/**
+		 * @var string $theme
+		 */
 		foreach ( $process_themes as $theme ) {
 			$available_languages = $this->get_installed_languages( $theme );
 
@@ -603,6 +617,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Success: Updated 1/1 translation.
 	 *
 	 * @subcommand update
+	 *
+	 *  @param string[] $args Positional arguments.
+	 * @param array{'dry-run'?: bool, all?: bool} $assoc_args Associative arguments.
 	 */
 	public function update( $args, $assoc_args ) {
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
