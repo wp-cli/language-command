@@ -306,20 +306,20 @@ Feature: Manage core translation files for a WordPress install
     And STDOUT should be empty
     And the return code should be 0
 
-  # This test downgrades to WordPress 5.4.1, but the SQLite plugin requires 6.0+
-  @require-wp-4.0 @require-mysql
+  # This test downgrades to WordPress 5.6.14, but the SQLite plugin requires 6.0+
+  @require-wp-5.7 @require-mysql
   Scenario: Ensure correct language is installed for WP version
     Given a WP install
     And I try `wp theme install twentytwentyone`
     And I run `wp theme activate twentytwentyone`
     And an empty cache
-    And I run `wp core download --version=5.4.1 --force`
+    And I run `wp core download --version=5.6.14 --force`
 
     # PHP 8.2+ will show a warning for old WordPress core version.
     When I try `wp language core install nl_NL`
     Then STDOUT should contain:
       """
-      Downloading translation from https://downloads.wordpress.org/translation/core/5.4.1
+      Downloading translation from https://downloads.wordpress.org/translation/core/5.6.14
       """
     And STDOUT should contain:
       """
