@@ -288,8 +288,8 @@ Feature: Manage core translation files for a WordPress install
 
     Examples:
       | original | update |
-      | 6.0      | 6.1    |
-      | 6.1.1    | 6.2    |
+      | 6.5      | 6.6    |
+      | 6.6.1    | 6.7    |
 
   @require-wp-4.0
   Scenario: Don't allow active language to be uninstalled
