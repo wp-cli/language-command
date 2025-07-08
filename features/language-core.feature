@@ -313,13 +313,13 @@ Feature: Manage core translation files for a WordPress install
     And I try `wp theme install twentytwentyone`
     And I run `wp theme activate twentytwentyone`
     And an empty cache
-    And I run `wp core download --version=4.5.3 --force`
+    And I run `wp core download --version=5.4.1 --force`
 
     # PHP 8.2+ will show a warning for old WordPress core version.
     When I try `wp language core install nl_NL`
     Then STDOUT should contain:
       """
-      Downloading translation from https://downloads.wordpress.org/translation/core/4.5.3
+      Downloading translation from https://downloads.wordpress.org/translation/core/5.4.1
       """
     And STDOUT should contain:
       """
