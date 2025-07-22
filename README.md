@@ -175,7 +175,10 @@ Downloads the language pack from WordPress.org. Find your language code at: http
 
 
 ### wp language core list
+#### Example with --format flag:
 
+```bash
+$ wp language core list --status=installed --format=json
 Lists all available languages.
 
 ~~~
