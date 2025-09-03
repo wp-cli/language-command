@@ -5,10 +5,12 @@ Feature: Manage plugin translation files for a WordPress install
     Given a WP install
     And an empty cache
 
-    When I run `wp plugin install hello-dolly`
+    # Hello Dolly was moved from a single file to a directory in WordPress 6.9,
+    # hence forcing (re-)installation here.
+    When I run `wp plugin install hello-dolly --force`
     Then STDOUT should contain:
       """
-      Plugin installed successfully.
+      Installed 1 of 1 plugins.
       """
     And STDERR should be empty
 
