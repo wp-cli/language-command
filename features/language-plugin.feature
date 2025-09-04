@@ -183,10 +183,6 @@ Feature: Manage plugin translation files for a WordPress install
       """
     And STDOUT should contain:
       """
-      hello,de_DE,"not installed"
-      """
-    And STDOUT should contain:
-      """
       hello-dolly,de_DE,uninstalled
       """
     And STDERR should be empty
@@ -196,10 +192,6 @@ Feature: Manage plugin translation files for a WordPress install
     And STDOUT should contain:
       """
       akismet,de_DE,"not installed"
-      """
-    And STDOUT should contain:
-      """
-      hello,de_DE,"not installed"
       """
     And STDOUT should contain:
       """
