@@ -30,8 +30,12 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 */
 	public function update( $args, $assoc_args ) {
 		$updates = $this->get_translation_updates();
+		$format  = Utils\get_flag_value( $assoc_args, 'format' );
 
 		if ( empty( $updates ) ) {
+			if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
+				Utils\format_items( $format, array(), array() );
+			}
 			WP_CLI::success( 'Translations are up to date.' );
 
 			return;
@@ -40,8 +44,6 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		if ( empty( $args ) ) {
 			$args = array( null ); // Used for core.
 		}
-
-		$format = Utils\get_flag_value( $assoc_args, 'format' );
 
 		if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
 			$logger = new \WP_CLI\Loggers\Quiet();
