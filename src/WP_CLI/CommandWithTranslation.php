@@ -54,6 +54,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		$results        = array();
 		$results_data   = array();
 		$num_to_update  = 0;
+		$obj_type       = rtrim( $this->obj_type, 's' );
+		$slug_key       = 'core' === $obj_type ? 'version' : 'slug';
 
 		foreach ( $args as $slug ) {
 			// Gets a list of all languages.
@@ -106,7 +108,6 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				$updates_per_type[ $update->type ][] = $update;
 			}
 
-			$obj_type          = rtrim( $this->obj_type, 's' );
 			$available_updates = isset( $updates_per_type[ $obj_type ] ) ? $updates_per_type[ $obj_type ] : null;
 
 			if ( ! is_array( $available_updates ) ) {
@@ -131,9 +132,9 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 					// Capture data for formatted output.
 					if ( $format ) {
-						$slug_key = 'core' === $obj_type ? 'version' : 'slug';
+						$slug_value = 'core' === $obj_type ? $update->Version : $update->slug;
 						$results_data[] = array(
-							$slug_key  => isset( $update->slug ) ? $update->slug : $update->Version,
+							$slug_key  => $slug_value,
 							'language' => $update->language,
 							'status'   => $result ? 'updated' : 'failed',
 						);
@@ -167,8 +168,6 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 		// Format output if --format is specified.
 		if ( $format && 'summary' !== $format ) {
-			$obj_type = rtrim( $this->obj_type, 's' );
-			$slug_key = 'core' === $obj_type ? 'version' : 'slug';
 			Utils\format_items( $format, $results_data, array( $slug_key, 'language', 'status' ) );
 		}
 
