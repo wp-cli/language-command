@@ -444,3 +444,42 @@ Feature: Manage plugin translation files for a WordPress install
       | akismet  | en_US    | active    |
       | akismet  | nl_NL    | installed |
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Plugin translation update with format flag
+    Given a WP install
+    And a wp-content/plugins/test-plugin/test-plugin.php file:
+      """
+      <?php
+      /*
+      Plugin Name: Test Plugin
+      Version: 1.0.0
+      */
+      """
+
+    When I run `wp plugin activate test-plugin`
+    Then STDERR should be empty
+
+    When I run `wp language plugin update test-plugin --format=json`
+    Then STDOUT should be:
+      """
+      []
+      """
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
+
+    When I run `wp language plugin update --all --format=csv`
+    Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
+
+    When I run `wp language plugin update --all --format=summary`
+    Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """

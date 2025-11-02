@@ -328,3 +328,41 @@ Feature: Manage theme translation files for a WordPress install
       | en_US    | active    |
       | nl_NL    | installed |
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Theme translation update with format flag
+    Given a WP install
+    And a wp-content/themes/test-theme/style.css file:
+      """
+      /*
+      Theme Name: Test Theme
+      Version: 1.0.0
+      */
+      """
+
+    When I run `wp theme activate test-theme`
+    Then STDERR should be empty
+
+    When I run `wp language theme update test-theme --format=json`
+    Then STDOUT should be:
+      """
+      []
+      """
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
+
+    When I run `wp language theme update --all --format=csv`
+    Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
+
+    When I run `wp language theme update --all --format=summary`
+    Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """

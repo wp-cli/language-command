@@ -476,3 +476,32 @@ Feature: Manage core translation files for a WordPress install
         | en_US     | active     |
         | nl_NL     | installed  |
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Core translation update with format flag
+    Given a WP install
+    And an empty cache
+
+    When I run `wp language core update --format=json`
+    Then STDOUT should be:
+      """
+      []
+      """
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
+
+    When I run `wp language core update --format=csv`
+    Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
+
+    When I run `wp language core update --format=summary`
+    Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
