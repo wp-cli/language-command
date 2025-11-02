@@ -26,7 +26,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 * Updates installed languages for the current object type.
 	 *
 	 * @param string[] $args Positional arguments.
-	 * @param array{'dry-run'?: bool, all?: bool} $assoc_args Associative arguments.
+	 * @param array{'dry-run'?: bool, all?: bool, format?: string} $assoc_args Associative arguments.
 	 */
 	public function update( $args, $assoc_args ) {
 		$updates = $this->get_translation_updates();
@@ -41,9 +41,17 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			$args = array( null ); // Used for core.
 		}
 
-		$upgrader      = 'WP_CLI\\LanguagePackUpgrader';
-		$results       = array();
-		$num_to_update = 0;
+		$format = Utils\get_flag_value( $assoc_args, 'format' );
+
+		if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
+			$logger = new \WP_CLI\Loggers\Quiet();
+			WP_CLI::set_logger( $logger );
+		}
+
+		$upgrader       = 'WP_CLI\\LanguagePackUpgrader';
+		$results        = array();
+		$results_data   = array();
+		$num_to_update  = 0;
 
 		foreach ( $args as $slug ) {
 			// Gets a list of all languages.
@@ -118,6 +126,16 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 					$result = $upgrader_instance->upgrade( $update );
 
 					$results[] = $result;
+
+					// Capture data for formatted output.
+					if ( $format ) {
+						$slug_key = 'core' === $obj_type ? 'version' : 'slug';
+						$results_data[] = array(
+							$slug_key  => isset( $update->slug ) ? $update->slug : $update->Version,
+							'language' => $update->language,
+							'status'   => $result ? 'updated' : 'failed',
+						);
+					}
 				}
 			}
 		}
@@ -126,20 +144,31 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
 			$update_count = count( $updates );
 
-			WP_CLI::line(
-				sprintf(
-					'Found %d translation %s that would be processed:',
-					$update_count,
-					WP_CLI\Utils\pluralize( 'update', $update_count )
-				)
-			);
+			if ( $format ) {
+				Utils\format_items( $format, $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+			} else {
+				WP_CLI::line(
+					sprintf(
+						'Found %d translation %s that would be processed:',
+						$update_count,
+						WP_CLI\Utils\pluralize( 'update', $update_count )
+					)
+				);
 
-			Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+				Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+			}
 
 			return;
 		}
 
 		$num_updated = count( array_filter( $results ) );
+
+		// Format output if --format is specified.
+		if ( $format && 'summary' !== $format ) {
+			$obj_type = rtrim( $this->obj_type, 's' );
+			$slug_key = 'core' === $obj_type ? 'version' : 'slug';
+			Utils\format_items( $format, $results_data, array( $slug_key, 'language', 'status' ) );
+		}
 
 		$line = sprintf( "Updated $num_updated/$num_to_update %s.", WP_CLI\Utils\pluralize( 'translation', $num_updated ) );
 
