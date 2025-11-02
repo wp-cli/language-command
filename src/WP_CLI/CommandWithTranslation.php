@@ -130,8 +130,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 					$results[] = $result;
 
-					// Capture data for formatted output.
-					if ( $format ) {
+					// Capture data for formatted output (skip for summary format).
+					if ( $format && 'summary' !== $format ) {
 						$slug_value = 'core' === $obj_type ? $update->Version : $update->slug;
 						$results_data[] = array(
 							$slug_key  => $slug_value,
