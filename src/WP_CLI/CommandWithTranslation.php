@@ -119,7 +119,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			if ( ! Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
 				// Update translations.
 				foreach ( $available_updates as $update ) {
-					WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
+					WP_CLI::log( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
 
 					/**
 					 * @var \WP_CLI\LanguagePackUpgrader $upgrader_instance
