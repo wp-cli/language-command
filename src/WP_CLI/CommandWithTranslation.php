@@ -37,7 +37,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				Utils\format_items( $format, array(), array() );
 			}
 			
-			if ( ! $format || 'summary' === $format ) {
+			if ( ! $format || in_array( $format, array( 'table', 'summary' ), true ) ) {
 				WP_CLI::success( 'Translations are up to date.' );
 			}
 
@@ -174,7 +174,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			Utils\format_items( $format, $results_data, array( $slug_key, 'language', 'status' ) );
 		}
 
-		if ( ! $format || 'summary' === $format ) {
+		if ( ! $format || in_array( $format, array( 'table', 'summary' ), true ) ) {
 			$line = sprintf( "Updated $num_updated/$num_to_update %s.", WP_CLI\Utils\pluralize( 'translation', $num_updated ) );
 
 			if ( $num_to_update === $num_updated ) {
