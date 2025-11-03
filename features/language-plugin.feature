@@ -494,7 +494,8 @@ Feature: Manage plugin translation files for a WordPress install
       """
     And STDERR should be empty
 
-    When I run `wp plugin install akismet --version=3.2 --force`
+    When I run `wp language plugin uninstall akismet de_DE`
+    And I run `wp plugin install akismet --version=3.2 --force`
     And I run `wp language plugin install akismet de_DE`
     And I run `wp plugin install akismet --version=4.0 --force`
     And I run `wp language plugin update akismet --format=csv`
@@ -508,7 +509,8 @@ Feature: Manage plugin translation files for a WordPress install
       """
     And STDERR should be empty
 
-    When I run `wp plugin install akismet --version=3.2 --force`
+    When I run `wp language plugin uninstall akismet de_DE`
+    And I run `wp plugin install akismet --version=3.2 --force`
     And I run `wp language plugin install akismet de_DE`
     And I run `wp plugin install akismet --version=4.0 --force`
     And I run `wp language plugin update akismet --format=summary`

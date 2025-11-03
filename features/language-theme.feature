@@ -378,7 +378,8 @@ Feature: Manage theme translation files for a WordPress install
       """
     And STDERR should be empty
 
-    When I run `wp theme install twentyfifteen --version=2.0 --force`
+    When I run `wp language theme uninstall twentyfifteen de_DE`
+    And I run `wp theme install twentyfifteen --version=2.0 --force`
     And I run `wp language theme install twentyfifteen de_DE`
     And I run `wp theme install twentyfifteen --version=2.5 --force`
     And I run `wp language theme update twentyfifteen --format=csv`
@@ -392,7 +393,8 @@ Feature: Manage theme translation files for a WordPress install
       """
     And STDERR should be empty
 
-    When I run `wp theme install twentyfifteen --version=2.0 --force`
+    When I run `wp language theme uninstall twentyfifteen de_DE`
+    And I run `wp theme install twentyfifteen --version=2.0 --force`
     And I run `wp language theme install twentyfifteen de_DE`
     And I run `wp theme install twentyfifteen --version=2.5 --force`
     And I run `wp language theme update twentyfifteen --format=summary`
