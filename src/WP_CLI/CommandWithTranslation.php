@@ -33,10 +33,13 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		$format  = Utils\get_flag_value( $assoc_args, 'format' );
 
 		if ( empty( $updates ) ) {
-			if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
-				Utils\format_items( $format, array(), array() );
+			if ( $format ) {
+				if ( in_array( $format, array( 'json', 'csv' ), true ) ) {
+					Utils\format_items( $format, array(), array() );
+				}
+			} else {
+				WP_CLI::success( 'Translations are up to date.' );
 			}
-			WP_CLI::success( 'Translations are up to date.' );
 
 			return;
 		}
