@@ -349,4 +349,57 @@ Feature: Manage theme translation files for a WordPress install
 
     When I run `wp language theme update --all --format=summary`
     Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
+
+  @require-wp-4.0
+  Scenario: Theme translation update with format flag and actual updates
+    Given a WP install
+    And an empty cache
+
+    When I run `wp theme install twentyfifteen --version=2.0 --force`
+    Then STDERR should be empty
+
+    When I run `wp language theme install twentyfifteen de_DE`
+    Then STDERR should be empty
+
+    When I run `wp theme install twentyfifteen --version=2.5 --force`
+    And I run `wp language theme list twentyfifteen --fields=theme,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | theme          | language | update    | status    |
+      | twentyfifteen  | de_DE    | available | installed |
+
+    When I run `wp language theme update twentyfifteen --format=json`
+    Then STDOUT should be JSON containing:
+      """
+      [{"slug":"twentyfifteen","language":"de_DE","status":"updated"}]
+      """
     And STDERR should be empty
+
+    When I run `wp theme install twentyfifteen --version=2.0 --force`
+    And I run `wp language theme install twentyfifteen de_DE --force`
+    And I run `wp theme install twentyfifteen --version=2.5 --force`
+
+    When I run `wp language theme update twentyfifteen --format=csv`
+    Then STDOUT should contain:
+      """
+      slug,language,status
+      """
+    And STDOUT should contain:
+      """
+      twentyfifteen,de_DE,updated
+      """
+    And STDERR should be empty
+
+    When I run `wp theme install twentyfifteen --version=2.0 --force`
+    And I run `wp language theme install twentyfifteen de_DE --force`
+    And I run `wp theme install twentyfifteen --version=2.5 --force`
+
+    When I run `wp language theme update twentyfifteen --format=summary`
+    Then STDOUT should be empty
+    And STDERR should contain:
+      """
+      Success: Updated 1/1 translation.
+      """

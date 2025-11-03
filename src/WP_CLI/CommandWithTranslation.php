@@ -33,11 +33,11 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		$format  = Utils\get_flag_value( $assoc_args, 'format' );
 
 		if ( empty( $updates ) ) {
-			if ( $format ) {
-				if ( in_array( $format, array( 'json', 'csv' ), true ) ) {
-					Utils\format_items( $format, array(), array() );
-				}
-			} else {
+			if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
+				Utils\format_items( $format, array(), array() );
+			}
+			
+			if ( ! $format || 'summary' === $format ) {
 				WP_CLI::success( 'Translations are up to date.' );
 			}
 
@@ -174,14 +174,16 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			Utils\format_items( $format, $results_data, array( $slug_key, 'language', 'status' ) );
 		}
 
-		$line = sprintf( "Updated $num_updated/$num_to_update %s.", WP_CLI\Utils\pluralize( 'translation', $num_updated ) );
+		if ( ! $format || 'summary' === $format ) {
+			$line = sprintf( "Updated $num_updated/$num_to_update %s.", WP_CLI\Utils\pluralize( 'translation', $num_updated ) );
 
-		if ( $num_to_update === $num_updated ) {
-			WP_CLI::success( $line );
-		} elseif ( $num_updated > 0 ) {
-			WP_CLI::warning( $line );
-		} else {
-			WP_CLI::error( $line );
+			if ( $num_to_update === $num_updated ) {
+				WP_CLI::success( $line );
+			} elseif ( $num_updated > 0 ) {
+				WP_CLI::warning( $line );
+			} else {
+				WP_CLI::error( $line );
+			}
 		}
 	}
 

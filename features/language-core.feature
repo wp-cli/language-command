@@ -495,4 +495,7 @@ Feature: Manage core translation files for a WordPress install
 
     When I run `wp language core update --format=summary`
     Then STDOUT should be empty
-    And STDERR should be empty
+    And STDERR should contain:
+      """
+      Success: Translations are up to date.
+      """
