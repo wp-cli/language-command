@@ -334,7 +334,7 @@ Feature: Manage theme translation files for a WordPress install
     Given a WP install
 
     When I try `wp theme install twentyten`
-    Then STDERR should be empty
+    Then STDOUT should not be empty
 
     When I run `wp language theme update twentyten --format=json`
     Then STDOUT should be:

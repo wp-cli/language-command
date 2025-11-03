@@ -150,9 +150,11 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
 			$update_count = count( $updates );
 
-			if ( $format ) {
+			if ( $format && ! in_array( $format, array( 'table', 'summary' ), true ) ) {
+				// For json/csv formats, just output the formatted data without the message
 				Utils\format_items( $format, $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
 			} else {
+				// For table/summary/no format, show the message and table
 				WP_CLI::line(
 					sprintf(
 						'Found %d translation %s that would be processed:',
