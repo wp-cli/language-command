@@ -464,11 +464,11 @@ Feature: Manage plugin translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp language plugin update --all --format=summary`
-    Then STDOUT should be empty
-    And STDERR should contain:
+    Then STDOUT should contain:
       """
       Success: Translations are up to date.
       """
+    And STDERR should be empty
 
   @require-wp-4.0
   Scenario: Plugin translation update with format flag and actual updates
@@ -484,8 +484,8 @@ Feature: Manage plugin translation files for a WordPress install
     When I run `wp plugin install akismet --version=4.0 --force`
     And I run `wp language plugin list akismet --fields=plugin,language,update,status`
     Then STDOUT should be a table containing rows:
-      | plugin   | language | update    | status    |
-      | akismet  | de_DE    | available | installed |
+      | plugin  | language | update    | status    |
+      | akismet | de_DE    | available | installed |
 
     When I run `wp language plugin update akismet --format=json`
     Then STDOUT should be JSON containing:
@@ -495,10 +495,9 @@ Feature: Manage plugin translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp plugin install akismet --version=3.2 --force`
-    And I run `wp language plugin install akismet de_DE --force`
+    And I run `wp language plugin install akismet de_DE`
     And I run `wp plugin install akismet --version=4.0 --force`
-
-    When I run `wp language plugin update akismet --format=csv`
+    And I run `wp language plugin update akismet --format=csv`
     Then STDOUT should contain:
       """
       slug,language,status
@@ -510,12 +509,11 @@ Feature: Manage plugin translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp plugin install akismet --version=3.2 --force`
-    And I run `wp language plugin install akismet de_DE --force`
+    And I run `wp language plugin install akismet de_DE`
     And I run `wp plugin install akismet --version=4.0 --force`
-
-    When I run `wp language plugin update akismet --format=summary`
-    Then STDOUT should be empty
-    And STDERR should contain:
+    And I run `wp language plugin update akismet --format=summary`
+    Then STDOUT should contain:
       """
       Success: Updated 1/1 translation.
       """
+    And STDERR should be empty

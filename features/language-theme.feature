@@ -348,11 +348,11 @@ Feature: Manage theme translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp language theme update --all --format=summary`
-    Then STDOUT should be empty
-    And STDERR should contain:
+    Then STDOUT should contain:
       """
       Success: Translations are up to date.
       """
+    And STDERR should be empty
 
   @require-wp-4.0
   Scenario: Theme translation update with format flag and actual updates
@@ -368,8 +368,8 @@ Feature: Manage theme translation files for a WordPress install
     When I run `wp theme install twentyfifteen --version=2.5 --force`
     And I run `wp language theme list twentyfifteen --fields=theme,language,update,status`
     Then STDOUT should be a table containing rows:
-      | theme          | language | update    | status    |
-      | twentyfifteen  | de_DE    | available | installed |
+      | theme         | language | update    | status    |
+      | twentyfifteen | de_DE    | available | installed |
 
     When I run `wp language theme update twentyfifteen --format=json`
     Then STDOUT should be JSON containing:
@@ -379,10 +379,9 @@ Feature: Manage theme translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp theme install twentyfifteen --version=2.0 --force`
-    And I run `wp language theme install twentyfifteen de_DE --force`
+    And I run `wp language theme install twentyfifteen de_DE`
     And I run `wp theme install twentyfifteen --version=2.5 --force`
-
-    When I run `wp language theme update twentyfifteen --format=csv`
+    And I run `wp language theme update twentyfifteen --format=csv`
     Then STDOUT should contain:
       """
       slug,language,status
@@ -394,12 +393,11 @@ Feature: Manage theme translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp theme install twentyfifteen --version=2.0 --force`
-    And I run `wp language theme install twentyfifteen de_DE --force`
+    And I run `wp language theme install twentyfifteen de_DE`
     And I run `wp theme install twentyfifteen --version=2.5 --force`
-
-    When I run `wp language theme update twentyfifteen --format=summary`
-    Then STDOUT should be empty
-    And STDERR should contain:
+    And I run `wp language theme update twentyfifteen --format=summary`
+    Then STDOUT should contain:
       """
       Success: Updated 1/1 translation.
       """
+    And STDERR should be empty
