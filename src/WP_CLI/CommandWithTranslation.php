@@ -36,7 +36,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
 				Utils\format_items( $format, array(), array() );
 			}
-			
+
 			if ( ! $format || in_array( $format, array( 'table', 'summary' ), true ) ) {
 				WP_CLI::success( 'Translations are up to date.' );
 			}
@@ -53,12 +53,12 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			WP_CLI::set_logger( $logger );
 		}
 
-		$upgrader       = 'WP_CLI\\LanguagePackUpgrader';
-		$results        = array();
-		$results_data   = array();
-		$num_to_update  = 0;
-		$obj_type       = rtrim( $this->obj_type, 's' );
-		$slug_key       = 'core' === $obj_type ? 'version' : 'slug';
+		$upgrader      = 'WP_CLI\\LanguagePackUpgrader';
+		$results       = array();
+		$results_data  = array();
+		$num_to_update = 0;
+		$obj_type      = rtrim( $this->obj_type, 's' );
+		$slug_key      = 'core' === $obj_type ? 'version' : 'slug';
 
 		foreach ( $args as $slug ) {
 			// Gets a list of all languages.
@@ -135,7 +135,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 
 					// Capture data for formatted output (skip for summary format).
 					if ( $format && 'summary' !== $format ) {
-						$slug_value = 'version' === $slug_key ? $update->Version : $update->slug;
+						$slug_value     = 'version' === $slug_key ? $update->Version : $update->slug;
 						$results_data[] = array(
 							$slug_key  => $slug_value,
 							'language' => $update->language,
