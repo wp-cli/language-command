@@ -150,7 +150,7 @@ Installs a given language.
 wp language core install <language>... [--activate]
 ~~~
 
-Downloads the language pack from WordPress.org.
+Downloads the language pack from WordPress.org. Find your language code at: https://translate.wordpress.org/
 
 **OPTIONS**
 
@@ -162,14 +162,14 @@ Downloads the language pack from WordPress.org.
 
 **EXAMPLES**
 
-    # Install the Japanese language.
-    $ wp language core install ja
-    Downloading translation from https://downloads.wordpress.org/translation/core/6.4.3/ja.zip...
+    # Install the Brazilian Portuguese language.
+    $ wp language core install pt_BR
+    Downloading translation from https://downloads.wordpress.org/translation/core/6.5/pt_BR.zip...
     Unpacking the update...
     Installing the latest version...
     Removing the old version of the translation...
     Translation updated successfully.
-    Language 'ja' installed.
+    Language 'pt_BR' installed.
     Success: Installed 1 of 1 languages.
 
 
@@ -201,6 +201,7 @@ wp language core list [--field=<field>] [--<field>=<value>] [--fields=<fields>] 
 		  - table
 		  - csv
 		  - json
+		  - count
 		---
 
 **AVAILABLE FIELDS**
@@ -418,6 +419,7 @@ wp language plugin list [<plugin>...] [--all] [--field=<field>] [--<field>=<valu
 		  - table
 		  - csv
 		  - json
+		  - count
 		---
 
 **AVAILABLE FIELDS**
@@ -664,6 +666,7 @@ wp language theme list [<theme>...] [--all] [--field=<field>] [--<field>=<value>
 		  - table
 		  - csv
 		  - json
+		  - count
 		---
 
 **AVAILABLE FIELDS**
@@ -762,6 +765,26 @@ wp language theme update [<theme>...] [--all] [--dry-run]
     Downloading translation from https://downloads.wordpress.org/translation/theme/twentyfifteen/1.5/ja.zip...
     Translation updated successfully.
     Success: Updated 1/1 translation.
+
+
+
+### wp site switch-language
+
+Activates a given language.
+
+~~~
+wp site switch-language <language>
+~~~
+
+**OPTIONS**
+
+	<language>
+		Language code to activate.
+
+**EXAMPLES**
+
+    $ wp site switch-language ja
+    Success: Language activated.
 
 ## Installing
 
