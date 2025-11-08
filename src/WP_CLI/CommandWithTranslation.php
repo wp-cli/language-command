@@ -299,9 +299,12 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				}
 			} elseif ( 'themes' === $this->obj_type ) {
 				$theme_data = wp_get_theme( $slug );
-				// Use the TextDomain property if available, otherwise fall back to slug.
-				if ( ! empty( $theme_data->get( 'TextDomain' ) ) ) {
-					$text_domain = $theme_data->get( 'TextDomain' );
+				if ( $theme_data->exists() ) {
+					// Use the TextDomain property if available, otherwise fall back to slug.
+					$theme_text_domain = $theme_data->get( 'TextDomain' );
+					if ( ! empty( $theme_text_domain ) ) {
+						$text_domain = $theme_text_domain;
+					}
 				}
 			}
 		}
