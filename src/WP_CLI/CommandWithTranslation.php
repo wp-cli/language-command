@@ -283,8 +283,30 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		/**
 		 * @var array<string, array<string, array<string, mixed>>> $available
 		 */
-		$available   = wp_get_installed_translations( $this->obj_type );
-		$available   = ! empty( $available[ $slug ] ) ? array_keys( $available[ $slug ] ) : array();
+		$available = wp_get_installed_translations( $this->obj_type );
+		
+		// For plugins and themes, check if the text domain differs from the slug.
+		$text_domain = $slug;
+		if ( 'default' !== $slug ) {
+			if ( 'plugins' === $this->obj_type ) {
+				$plugins = get_plugins( '/' . $slug );
+				if ( ! empty( $plugins ) ) {
+					$plugin_data = array_shift( $plugins );
+					// Use the TextDomain header if available, otherwise fall back to slug.
+					if ( ! empty( $plugin_data['TextDomain'] ) ) {
+						$text_domain = $plugin_data['TextDomain'];
+					}
+				}
+			} elseif ( 'themes' === $this->obj_type ) {
+				$theme_data = wp_get_theme( $slug );
+				// Use the TextDomain property if available, otherwise fall back to slug.
+				if ( ! empty( $theme_data->get( 'TextDomain' ) ) ) {
+					$text_domain = $theme_data->get( 'TextDomain' );
+				}
+			}
+		}
+		
+		$available   = ! empty( $available[ $text_domain ] ) ? array_keys( $available[ $text_domain ] ) : array();
 		$available[] = 'en_US';
 
 		return $available;
