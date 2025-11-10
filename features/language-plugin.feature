@@ -462,10 +462,8 @@ Feature: Manage plugin translation files for a WordPress install
       """
 
     # Manually create a translation file using the text domain (not the plugin slug)
-    And a wp-content/languages/plugins/different-text-domain-de_DE.po file:
+    And a wp-content/languages/plugins/different-text-domain-de_DE.l10n.php file:
       """
-      msgid ""
-      msgstr ""
       """
 
     When I run `wp language plugin list test-plugin --fields=language,status --format=csv`
