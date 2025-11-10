@@ -284,7 +284,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		 * @var array<string, array<string, array<string, mixed>>> $available
 		 */
 		$available = wp_get_installed_translations( $this->obj_type );
-		
+
 		// For plugins and themes, check if the text domain differs from the slug.
 		$text_domain = $slug;
 		if ( 'default' !== $slug ) {
@@ -308,7 +308,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				}
 			}
 		}
-		
+
 		$available   = ! empty( $available[ $text_domain ] ) ? array_keys( $available[ $text_domain ] ) : array();
 		$available[] = 'en_US';
 
