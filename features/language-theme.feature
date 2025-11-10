@@ -335,7 +335,7 @@ Feature: Manage theme translation files for a WordPress install
     And an empty cache
 
     # Create a test theme with a different text domain
-    Given a wp-content/themes/test-theme/style.css file:
+    And a wp-content/themes/test-theme/style.css file:
       """
       /*
       Theme Name: Test Theme

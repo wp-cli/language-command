@@ -451,7 +451,7 @@ Feature: Manage plugin translation files for a WordPress install
     And an empty cache
 
     # Create a test plugin with a different text domain
-    Given a wp-content/plugins/test-plugin/test-plugin.php file:
+    And a wp-content/plugins/test-plugin/test-plugin.php file:
       """
       <?php
       /**
