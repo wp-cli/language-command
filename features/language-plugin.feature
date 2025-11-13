@@ -444,3 +444,78 @@ Feature: Manage plugin translation files for a WordPress install
       | akismet  | en_US    | active    |
       | akismet  | nl_NL    | installed |
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Plugin translation update with format flag
+    Given a WP install
+
+    When I run `wp plugin install hello-dolly --force`
+    Then STDERR should be empty
+
+    When I run `wp language plugin update hello-dolly --format=json`
+    Then STDOUT should be:
+      """
+      []
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin update --all --format=csv`
+    Then STDOUT should be empty
+    And STDERR should be empty
+
+    When I run `wp language plugin update --all --format=summary`
+    Then STDOUT should contain:
+      """
+      Success: Translations are up to date.
+      """
+    And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Plugin translation update with format flag and actual updates
+    Given a WP install
+    And an empty cache
+
+    When I run `wp plugin install akismet --version=3.2 --force`
+    Then STDERR should be empty
+
+    When I run `wp language plugin install akismet de_DE`
+    Then STDERR should be empty
+
+    When I run `wp plugin install akismet --version=4.0 --force`
+    And I run `wp language plugin list akismet --fields=plugin,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | plugin  | language | update    | status    |
+      | akismet | de_DE    | available | installed |
+
+    When I run `wp language plugin update akismet --format=json`
+    Then STDOUT should be JSON containing:
+      """
+      [{"slug":"akismet","language":"de_DE","status":"updated"}]
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin uninstall akismet de_DE`
+    And I run `wp plugin install akismet --version=3.2 --force`
+    And I run `wp language plugin install akismet de_DE`
+    And I run `wp plugin install akismet --version=4.0 --force`
+    And I run `wp language plugin update akismet --format=csv`
+    Then STDOUT should contain:
+      """
+      slug,language,status
+      """
+    And STDOUT should contain:
+      """
+      akismet,de_DE,updated
+      """
+    And STDERR should be empty
+
+    When I run `wp language plugin uninstall akismet de_DE`
+    And I run `wp plugin install akismet --version=3.2 --force`
+    And I run `wp language plugin install akismet de_DE`
+    And I run `wp plugin install akismet --version=4.0 --force`
+    And I run `wp language plugin update akismet --format=summary`
+    Then STDOUT should contain:
+      """
+      Success: Updated 1/1 translation.
+      """
+    And STDERR should be empty
