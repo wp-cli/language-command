@@ -19,7 +19,6 @@ Feature: Manage plugin translation files for a WordPress install
       | language  | english_name            | status        |
       | cs_CZ     | Czech                   | uninstalled   |
       | de_DE     | German                  | uninstalled   |
-      | en_US     | English (United States) | active        |
       | en_GB     | English (UK)            | uninstalled   |
 
     When I try `wp language plugin list not-a-plugin --format=json`
@@ -87,7 +86,6 @@ Feature: Manage plugin translation files for a WordPress install
       | language  | english_name            | status      |
       | cs_CZ     | Czech                   | installed   |
       | de_DE     | German                  | installed   |
-      | en_US     | English (United States) | active      |
       | en_GB     | English (UK)            | installed   |
 
     When I run `wp language plugin list hello-dolly --fields=language,english_name,update`
@@ -95,7 +93,6 @@ Feature: Manage plugin translation files for a WordPress install
       | language  | english_name            | update   |
       | cs_CZ     | Czech                   | none     |
       | de_DE     | German                  | none     |
-      | en_US     | English (United States) | none     |
       | en_GB     | English (UK)            | none     |
 
     When I run `wp language plugin list hello-dolly --status=installed --format=count`
