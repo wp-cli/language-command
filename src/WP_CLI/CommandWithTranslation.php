@@ -280,12 +280,14 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 * @return string[]
 	 */
 	protected function get_installed_languages( $slug = 'default' ) {
-		/**
+    /**
 		 * @var array<string, array<string, array<string, mixed>>> $available
 		 */
-		$available   = wp_get_installed_translations( $this->obj_type );
-		$available   = ! empty( $available[ $slug ] ) ? array_keys( $available[ $slug ] ) : array();
-		$available[] = 'en_US';
+		$available = wp_get_installed_translations( $this->obj_type );
+		$available = ! empty( $available[ $slug ] ) ? array_keys( $available[ $slug ] ) : array();
+		if ( 'core' === $this->obj_type ) {
+			$available[] = 'en_US';
+		}
 
 		return $available;
 	}
