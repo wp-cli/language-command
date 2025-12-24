@@ -209,7 +209,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand install
 	 *
 	 * @param string[] $args Positional arguments.
-	 * @param array{activate?: bool, format: string} $assoc_args Associative arguments.
+	 * @param array{activate?: bool, format?: string} $assoc_args Associative arguments.
 	 */
 	public function install( $args, $assoc_args ) {
 		$language_codes = (array) $args;
