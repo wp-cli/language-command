@@ -186,7 +186,6 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * [--format=<format>]
 	 * : Render output in a particular format. Used when installing multiple languages.
 	 * ---
-	 * default: table
 	 * options:
 	 *   - table
 	 *   - csv
