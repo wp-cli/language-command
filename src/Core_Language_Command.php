@@ -283,10 +283,6 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 		}
 
 		if ( $has_format_flag ) {
-			if ( empty( $assoc_args['format'] ) ) {
-				$assoc_args['format'] = 'table';
-			}
-
 			if ( 'summary' !== $assoc_args['format'] ) {
 				\WP_CLI\Utils\format_items( $assoc_args['format'], $results, array( 'locale', 'status' ) );
 			}
