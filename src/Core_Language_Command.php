@@ -219,13 +219,13 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 			WP_CLI::error( 'Only a single language can be active.' );
 		}
 
-		if ( empty( $assoc_args['format'] ) ) {
-			$assoc_args['format'] = 'table';
-		}
+		$has_format_flag = isset( $assoc_args['format'] );
 
-		if ( in_array( $assoc_args['format'], array( 'json', 'csv' ), true ) ) {
-			$logger = new \WP_CLI\Loggers\Quiet();
-			\WP_CLI::set_logger( $logger );
+		if ( $has_format_flag ) {
+			if ( in_array( $assoc_args['format'], array( 'json', 'csv' ), true ) ) {
+				$logger = new \WP_CLI\Loggers\Quiet();
+				\WP_CLI::set_logger( $logger );
+			}
 		}
 
 		$available = $this->get_installed_languages();
@@ -242,7 +242,9 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 			if ( in_array( $language_code, $available, true ) ) {
 				\WP_CLI::log( "Language '{$language_code}' already installed." );
-				$result['status'] = 'already installed';
+				if ( $has_format_flag ) {
+					$result['status'] = 'already installed';
+				}
 				++$skips;
 			} else {
 				$response = $this->download_language_pack( $language_code );
@@ -253,15 +255,21 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 
 					// Skip if translation is not yet available.
 					if ( 'not_found' === $response->get_error_code() ) {
-						$result['status'] = 'not available';
+						if ( $has_format_flag ) {
+							$result['status'] = 'not available';
+						}
 						++$skips;
 					} else {
-						$result['status'] = 'not installed';
+						if ( $has_format_flag ) {
+							$result['status'] = 'not installed';
+						}
 						++$errors;
 					}
 				} else {
 					\WP_CLI::log( "Language '{$language_code}' installed." );
-					$result['status'] = 'installed';
+					if ( $has_format_flag ) {
+						$result['status'] = 'installed';
+					}
 					++$successes;
 				}
 			}
@@ -270,11 +278,19 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 				$this->activate_language( $language_code );
 			}
 
-			$results[] = (object) $result;
+			if ( $has_format_flag ) {
+				$results[] = (object) $result;
+			}
 		}
 
-		if ( 'summary' !== $assoc_args['format'] ) {
-			\WP_CLI\Utils\format_items( $assoc_args['format'], $results, array( 'locale', 'status' ) );
+		if ( $has_format_flag ) {
+			if ( empty( $assoc_args['format'] ) ) {
+				$assoc_args['format'] = 'table';
+			}
+
+			if ( 'summary' !== $assoc_args['format'] ) {
+				\WP_CLI\Utils\format_items( $assoc_args['format'], $results, array( 'locale', 'status' ) );
+			}
 		}
 
 		\WP_CLI\Utils\report_batch_operation_results( 'language', 'install', $count, $successes, $errors, $skips );
