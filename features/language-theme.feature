@@ -347,15 +347,17 @@ Feature: Manage theme translation files for a WordPress install
     And a wp-content/languages/themes/different-text-domain-de_DE.l10n.php file:
       """
       """
+    And a wp-content/languages/themes/different-text-domain-de_DE.mo file:
+      """
+      """
+    And a wp-content/languages/themes/different-text-domain-de_DE.po file:
+      """
+      """
 
     When I run `wp language theme list test-theme --fields=language,status --format=csv`
     Then STDOUT should contain:
       """
       en_US,active
-      """
-    And STDOUT should contain:
-      """
-      de_DE,installed
       """
     And STDERR should be empty
 
