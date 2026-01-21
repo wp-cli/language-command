@@ -558,3 +558,40 @@ Feature: Manage plugin translation files for a WordPress install
     When I run `wp language plugin update akismet --dry-run --format=summary`
     Then STDOUT should be empty
     And STDERR should be empty
+
+  Scenario: Handle plugins with text domain different from slug
+    Given a WP install
+    And an empty cache
+
+    # Create a test plugin with a different text domain
+    And a wp-content/plugins/test-plugin/test-plugin.php file:
+      """
+      <?php
+      /**
+       * Plugin Name: Test Plugin
+       * Text Domain: different-text-domain
+       * Domain Path: /languages
+       */
+      """
+
+    # Manually create a translation file using the text domain (not the plugin slug)
+    And a wp-content/languages/plugins/different-text-domain-de_DE.l10n.php file:
+      """
+      """
+    And a wp-content/languages/plugins/different-text-domain-de_DE.mo file:
+      """
+      """
+    And a wp-content/languages/plugins/different-text-domain-de_DE.po file:
+      """
+      """
+
+    When I run `wp language plugin list test-plugin --fields=language,status --format=csv`
+    Then STDOUT should contain:
+      """
+      en_US,active
+      """
+    And STDERR should be empty
+
+    # If the fix is working, installed languages should be detected via text domain
+    When I run `wp language plugin is-installed test-plugin de_DE`
+    Then the return code should be 0

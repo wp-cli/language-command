@@ -442,3 +442,38 @@ Feature: Manage theme translation files for a WordPress install
     When I run `wp language theme update twentyfifteen --dry-run --format=summary`
     Then STDOUT should be empty
     And STDERR should be empty
+
+  Scenario: Handle themes with text domain different from slug
+    Given a WP install
+    And an empty cache
+
+    # Create a test theme with a different text domain
+    And a wp-content/themes/test-theme/style.css file:
+      """
+      /*
+      Theme Name: Test Theme
+      Text Domain: different-text-domain
+      */
+      """
+
+    # Manually create a translation file using the text domain (not the theme slug)
+    And a wp-content/languages/themes/different-text-domain-de_DE.l10n.php file:
+      """
+      """
+    And a wp-content/languages/themes/different-text-domain-de_DE.mo file:
+      """
+      """
+    And a wp-content/languages/themes/different-text-domain-de_DE.po file:
+      """
+      """
+
+    When I run `wp language theme list test-theme --fields=language,status --format=csv`
+    Then STDOUT should contain:
+      """
+      en_US,active
+      """
+    And STDERR should be empty
+
+    # If the fix is working, installed languages should be detected via text domain
+    When I run `wp language theme is-installed test-theme de_DE`
+    Then the return code should be 0
