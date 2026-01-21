@@ -589,9 +589,10 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * : Preview which translations would be updated.
 	 *
 	 * [--format=<format>]
-	 * : Render output in a particular format.
+	 * : Render output in a particular format. When not specified, updates show
+	 * : progress messages and success/warning/error messages. When specified,
+	 * : the output format changes based on the selected format.
 	 * ---
-	 * default: table
 	 * options:
 	 *   - table
 	 *   - csv

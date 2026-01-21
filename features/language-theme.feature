@@ -403,3 +403,42 @@ Feature: Manage theme translation files for a WordPress install
       Success: Updated 1/1 translation.
       """
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Theme translation update with dry-run and format flag
+    Given a WP install
+    And an empty cache
+
+    When I run `wp theme install twentyfifteen --version=2.0 --force`
+    Then STDERR should be empty
+
+    When I run `wp language theme install twentyfifteen de_DE`
+    Then STDERR should be empty
+
+    When I run `wp theme install twentyfifteen --version=2.5 --force`
+    And I run `wp language theme list twentyfifteen --fields=theme,language,update,status`
+    Then STDOUT should be a table containing rows:
+      | theme         | language | update    | status    |
+      | twentyfifteen | de_DE    | available | installed |
+
+    When I run `wp language theme update twentyfifteen --dry-run --format=json`
+    Then STDOUT should be JSON containing:
+      """
+      [{"Type":"Theme","Name":"Twenty Fifteen"}]
+      """
+    And STDERR should be empty
+
+    When I run `wp language theme update twentyfifteen --dry-run --format=csv`
+    Then STDOUT should contain:
+      """
+      Type,Name,Version,Language
+      """
+    And STDOUT should contain:
+      """
+      Theme,Twenty Fifteen
+      """
+    And STDERR should be empty
+
+    When I run `wp language theme update twentyfifteen --dry-run --format=summary`
+    Then STDOUT should be empty
+    And STDERR should be empty
