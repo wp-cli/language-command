@@ -341,8 +341,8 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *
 	 * [--format=<format>]
 	 * : Render output in a particular format. When not specified, updates show
-	 * : progress messages and success/warning/error messages. When specified,
-	 * : the output format changes based on the selected format.
+	 *   progress messages and success/warning/error messages. When specified,
+	 *   the output format changes based on the selected format.
 	 * ---
 	 * options:
 	 *   - table
