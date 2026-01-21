@@ -471,6 +471,10 @@ Feature: Manage plugin translation files for a WordPress install
       """
       en_US,active
       """
+    And STDOUT should contain:
+      """
+      de_DE,installed
+      """
     And STDERR should be empty
 
     # If the fix is working, installed languages should be detected via text domain
