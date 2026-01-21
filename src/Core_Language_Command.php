@@ -184,7 +184,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * : If set, the language will be activated immediately after install.
 	 *
 	 * [--format=<format>]
-	 * : Render output in a particular format. Used when installing multiple languages.
+	 * : Render output in a particular format (for one or more languages).
 	 * ---
 	 * options:
 	 *   - table
