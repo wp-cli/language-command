@@ -11,12 +11,21 @@ use WP_CLI_Command;
  * @package wp-cli
  */
 abstract class CommandWithTranslation extends WP_CLI_Command {
+	/**
+	 * @var string
+	 */
 	protected $obj_type;
 
+	/**
+	 * @var string[]
+	 */
 	protected $obj_fields;
 
 	/**
 	 * Callback to sort array by a 'language' key.
+	 *
+	 * @param array{language: string, english_name: string, native_name: string, updated: string} $a
+	 * @param array{language: string, english_name: string, native_name: string, updated: string} $b
 	 */
 	protected function sort_translations_callback( $a, $b ) {
 		return strnatcasecmp( $a['language'], $b['language'] );
@@ -66,7 +75,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 					$plugins = get_plugins( '/' . $update->slug );
 
 					/**
-					 * @var array{Name: string}> $plugin_data
+					 * @var array{Name: string} $plugin_data
 					 */
 					$plugin_data = array_shift( $plugins );
 					$name        = $plugin_data['Name'];
@@ -115,6 +124,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 					 */
 					$upgrader_instance = Utils\get_upgrader( $upgrader );
 
+					// Wrong docblock in core.
+					// @phpstan-ignore argument.type
 					$result = $upgrader_instance->upgrade( $update );
 
 					$results[] = $result;
@@ -157,7 +168,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 *
 	 * @see wp_get_translation_updates()
 	 *
-	 * @return array
+	 * @return array<object{type: string, slug: string, language: string}&\stdClass>
 	 */
 	protected function get_translation_updates() {
 		$available = $this->get_installed_languages();
@@ -202,7 +213,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		$updates = array();
 
 		/**
-		 * @var object{translations: array} $transient
+		 * @var object{translations: array{type: string, slug: string, language: string}} $transient
 		 */
 		$transient = get_site_transient( $transient );
 
@@ -213,6 +224,10 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		foreach ( $transient->translations as $translation ) {
 			$updates[] = (object) $translation;
 		}
+
+		/**
+		 * @var array<object{type: string, slug: string, language: string}&\stdClass> $updates
+		 */
 
 		return $updates;
 	}
@@ -376,6 +391,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 *
 	 * @param array $assoc_args Parameters passed to command. Determines formatting.
 	 * @return Formatter
+	 *
+	 * @phpstan-ignore missingType.iterableValue
 	 */
 	protected function get_formatter( &$assoc_args ) {
 		return new Formatter( $assoc_args, $this->obj_fields, $this->obj_type );

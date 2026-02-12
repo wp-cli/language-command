@@ -17,6 +17,9 @@ class Site_Switch_Language_Command extends WP_CLI\CommandWithTranslation {
 	 *     Success: Language activated.
 	 *
 	 * @throws WP_CLI\ExitException
+	 *
+	 * @param array{0: string} $args Positional arguments.
+	 * @param array<mixed> $assoc_args Associative arguments.
 	 */
 	public function __invoke( $args, $assoc_args ) {
 		list( $language_code ) = $args;
