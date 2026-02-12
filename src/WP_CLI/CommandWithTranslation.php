@@ -213,7 +213,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		$updates = array();
 
 		/**
-		 * @var object{translations: array{type: string, slug: string, language: string}} $transient
+		 * @var object{translations: list<array{type: string, slug: string, language: string}>} $transient
 		 */
 		$transient = get_site_transient( $transient );
 
