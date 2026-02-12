@@ -540,7 +540,7 @@ Feature: Manage plugin translation files for a WordPress install
     When I run `wp language plugin update akismet --dry-run --format=json`
     Then STDOUT should contain:
       """
-      "Type": "Plugin"
+      "Type":"Plugin"
       """
     And STDERR should be empty
 
