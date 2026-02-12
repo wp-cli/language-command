@@ -81,7 +81,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 					$plugins = get_plugins( '/' . $update->slug );
 
 					/**
-					 * @var array{Name: string}> $plugin_data
+					 * @var array{Name: string} $plugin_data
 					 */
 					$plugin_data = array_shift( $plugins );
 					$name        = $plugin_data['Name'];
