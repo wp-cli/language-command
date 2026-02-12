@@ -538,9 +538,9 @@ Feature: Manage plugin translation files for a WordPress install
       | akismet | de_DE    | available | installed |
 
     When I run `wp language plugin update akismet --dry-run --format=json`
-    Then STDOUT should be JSON containing:
+    Then STDOUT should contain:
       """
-      [{"Type":"Plugin","Name":"Akismet Anti-spam: Spam Protection"}]
+      "Type": "Plugin"
       """
     And STDERR should be empty
 

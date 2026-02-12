@@ -435,7 +435,7 @@ Feature: Manage theme translation files for a WordPress install
       """
     And STDOUT should contain:
       """
-      Theme,Twenty Fifteen
+      Theme,"Twenty Fifteen"
       """
     And STDERR should be empty
 
