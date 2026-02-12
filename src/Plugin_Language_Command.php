@@ -591,6 +591,18 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * [--dry-run]
 	 * : Preview which translations would be updated.
 	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format. When not specified, updates show
+	 *   progress messages and success/warning/error messages. When specified,
+	 *   the output format changes based on the selected format.
+	 * ---
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 *   - summary
+	 * ---
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Update all installed language packs for all plugins.
@@ -603,7 +615,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand update
 	 *
 	 * @param string[] $args Positional arguments.
-	 * @param array{'dry-run'?: bool, all?: bool} $assoc_args Associative arguments.
+	 * @param array{'dry-run'?: bool, all?: bool, format?: string} $assoc_args Associative arguments.
 	 */
 	public function update( $args, $assoc_args ) {
 		$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
