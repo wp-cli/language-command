@@ -235,6 +235,8 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 		$errors    = 0;
 		$skips     = 0;
 		foreach ( $language_codes as $language_code ) {
+			$result = [];
+
 			if ( $has_format_flag ) {
 				$result = [
 					'locale' => $language_code,
