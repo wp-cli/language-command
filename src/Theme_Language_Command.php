@@ -268,6 +268,9 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 		if ( $all ) {
 			$this->install_many( $args, $assoc_args );
 		} else {
+			/**
+			 * @var non-empty-list<string> $args
+			 */
 			$this->install_one( $args, $assoc_args );
 		}
 	}
@@ -275,8 +278,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	/**
 	 * Installs translations for a theme.
 	 *
-	 * @param array $args       Runtime arguments.
-	 * @param array $assoc_args Runtime arguments.
+	 * @param non-empty-list<string> $args Positional arguments.
+	 * @param array{all?: bool, format: string} $assoc_args Associative arguments.
 	 */
 	private function install_one( $args, $assoc_args ) {
 		$theme          = array_shift( $args );
@@ -318,8 +321,8 @@ class Theme_Language_Command extends WP_CLI\CommandWithTranslation {
 	/**
 	 * Installs translations for all installed themes.
 	 *
-	 * @param array $args       Runtime arguments.
-	 * @param array $assoc_args Runtime arguments.
+	 * @param string[] $args Positional arguments.
+	 * @param array{all?: bool, format: string} $assoc_args Associative arguments.
 	 */
 	private function install_many( $args, $assoc_args ) {
 		$language_codes = (array) $args;

@@ -263,6 +263,9 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 		if ( $all ) {
 			$this->install_many( $args, $assoc_args );
 		} else {
+			/**
+			 * @var non-empty-list<string> $args
+			 */
 			$this->install_one( $args, $assoc_args );
 		}
 	}
@@ -270,8 +273,8 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	/**
 	 * Installs translations for a plugin.
 	 *
-	 * @param array $args       Runtime arguments.
-	 * @param array $assoc_args Runtime arguments.
+	 * @param non-empty-list<string> $args Positional arguments.
+	 * @param array{all?: bool, format: string} $assoc_args Associative arguments.
 	 */
 	private function install_one( $args, $assoc_args ) {
 		$plugin         = array_shift( $args );
@@ -314,8 +317,8 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	/**
 	 * Installs translations for all installed plugins.
 	 *
-	 * @param array $args       Runtime arguments.
-	 * @param array $assoc_args Runtime arguments.
+	 * @param string[] $args Positional arguments.
+	 * @param array{all?: bool, format: string} $assoc_args Associative arguments.
 	 */
 	private function install_many( $args, $assoc_args ) {
 		$language_codes = (array) $args;
@@ -639,7 +642,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * Uses the same filter core uses in plugins.php to determine which plugins
 	 * should be available to manage through the WP_Plugins_List_Table class.
 	 *
-	 * @return array
+	 * @return array<string, array{Name: string}>
 	 */
 	private function get_all_plugins() {
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Using WP native hook.

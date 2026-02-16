@@ -398,6 +398,9 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 		$this->activate_language( $language_code );
 	}
 
+	/**
+	 * @param string $language_code
+	 */
 	private function activate_language( $language_code ) {
 		$available = $this->get_installed_languages();
 
