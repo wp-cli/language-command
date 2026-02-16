@@ -478,6 +478,77 @@ Feature: Manage core translation files for a WordPress install
     And STDERR should be empty
 
   @require-wp-4.0
+  Scenario: Core translation update with format flag
+    Given a WP install
+    And an empty cache
+
+    When I run `wp language core update --format=json`
+    Then STDOUT should be:
+      """
+      []
+      """
+    And STDERR should be empty
+
+    When I run `wp language core update --format=csv`
+    Then STDOUT should be empty
+    And STDERR should be empty
+
+    When I run `wp language core update --format=summary`
+    Then STDOUT should contain:
+      """
+      Success: Translations are up to date.
+      """
+    And STDERR should be empty
+
+  @require-wp-6.0 @require-php-7.2
+  Scenario Outline: Core translation update with dry-run and format flag
+    Given an empty directory
+    And WP files
+    And a database
+    And I run `wp core download --version=<original> --force`
+    And wp-config.php
+    And I run `wp core install --url='localhost:8001' --title='Test' --admin_user=wpcli --admin_email=admin@example.com --admin_password=1`
+
+    When I run `wp language core install en_CA ja`
+    Then STDERR should be empty
+
+    Given I try `wp core download --version=<update> --force`
+    Then the return code should be 0
+    And I run `wp core update-db`
+
+    When I run `wp language core list --fields=language,status,update`
+    Then STDOUT should be a table containing rows:
+      | language | status    | update    |
+      | en_CA    | installed | available |
+      | ja       | installed | available |
+
+    When I run `wp language core update --dry-run --format=json`
+    Then STDOUT should be JSON containing:
+      """
+      [{"Type":"Core","Name":"WordPress","Version":"<update>"}]
+      """
+    And STDERR should be empty
+
+    When I run `wp language core update --dry-run --format=csv`
+    Then STDOUT should contain:
+      """
+      Type,Name,Version,Language
+      """
+    And STDOUT should contain:
+      """
+      Core,WordPress,<update>
+      """
+    And STDERR should be empty
+
+    When I run `wp language core update --dry-run --format=summary`
+    Then STDOUT should be empty
+    And STDERR should be empty
+
+    Examples:
+      | original | update |
+      | 6.5      | 6.6    |
+
+  @require-wp-4.0
   Scenario: Install languages with different output formats
     Given a WP install
     And an empty cache

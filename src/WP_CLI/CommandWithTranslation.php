@@ -35,13 +35,20 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	 * Updates installed languages for the current object type.
 	 *
 	 * @param string[] $args Positional arguments.
-	 * @param array{'dry-run'?: bool, all?: bool} $assoc_args Associative arguments.
+	 * @param array{'dry-run'?: bool, all?: bool, format?: string} $assoc_args Associative arguments.
 	 */
 	public function update( $args, $assoc_args ) {
 		$updates = $this->get_translation_updates();
+		$format  = Utils\get_flag_value( $assoc_args, 'format' );
 
 		if ( empty( $updates ) ) {
-			WP_CLI::success( 'Translations are up to date.' );
+			if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
+				Utils\format_items( $format, array(), array() );
+			}
+
+			if ( ! $format || in_array( $format, array( 'table', 'summary' ), true ) ) {
+				WP_CLI::success( 'Translations are up to date.' );
+			}
 
 			return;
 		}
@@ -50,9 +57,17 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			$args = array( null ); // Used for core.
 		}
 
+		if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
+			$logger = new \WP_CLI\Loggers\Quiet();
+			WP_CLI::set_logger( $logger );
+		}
+
 		$upgrader      = 'WP_CLI\\LanguagePackUpgrader';
 		$results       = array();
+		$results_data  = array();
 		$num_to_update = 0;
+		$obj_type      = rtrim( $this->obj_type, 's' );
+		$slug_key      = 'core' === $obj_type ? 'version' : 'slug';
 
 		foreach ( $args as $slug ) {
 			// Gets a list of all languages.
@@ -105,7 +120,6 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				$updates_per_type[ $update->type ][] = $update;
 			}
 
-			$obj_type          = rtrim( $this->obj_type, 's' );
 			$available_updates = isset( $updates_per_type[ $obj_type ] ) ? $updates_per_type[ $obj_type ] : null;
 
 			if ( ! is_array( $available_updates ) ) {
@@ -117,7 +131,7 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 			if ( ! Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
 				// Update translations.
 				foreach ( $available_updates as $update ) {
-					WP_CLI::line( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
+					WP_CLI::log( "Updating '{$update->Language}' translation for {$update->Name} {$update->Version}..." );
 
 					/**
 					 * @var \WP_CLI\LanguagePackUpgrader $upgrader_instance
@@ -129,6 +143,16 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 					$result = $upgrader_instance->upgrade( $update );
 
 					$results[] = $result;
+
+					// Capture data for formatted output (skip for summary format).
+					if ( $format && 'summary' !== $format ) {
+						$slug_value     = 'version' === $slug_key ? $update->Version : $update->slug;
+						$results_data[] = array(
+							$slug_key  => $slug_value,
+							'language' => $update->language,
+							'status'   => $result ? 'updated' : 'failed',
+						);
+					}
 				}
 			}
 		}
@@ -137,29 +161,43 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		if ( Utils\get_flag_value( $assoc_args, 'dry-run' ) ) {
 			$update_count = count( $updates );
 
-			WP_CLI::line(
-				sprintf(
-					'Found %d translation %s that would be processed:',
-					$update_count,
-					WP_CLI\Utils\pluralize( 'update', $update_count )
-				)
-			);
+			if ( $format && in_array( $format, array( 'json', 'csv' ), true ) ) {
+				// For json/csv formats, just output the formatted data without the message
+				Utils\format_items( $format, $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+			} elseif ( ! $format || 'table' === $format ) {
+				// For table or no format, show the message and table
+				WP_CLI::line(
+					sprintf(
+						'Found %d translation %s that would be processed:',
+						$update_count,
+						WP_CLI\Utils\pluralize( 'update', $update_count )
+					)
+				);
 
-			Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+				Utils\format_items( 'table', $updates, array( 'Type', 'Name', 'Version', 'Language' ) );
+			}
+			// For 'summary' format, do nothing (no output for dry-run mode)
 
 			return;
 		}
 
 		$num_updated = count( array_filter( $results ) );
 
-		$line = sprintf( "Updated $num_updated/$num_to_update %s.", WP_CLI\Utils\pluralize( 'translation', $num_updated ) );
+		// Format output if --format is specified.
+		if ( $format && 'summary' !== $format ) {
+			Utils\format_items( $format, $results_data, array( $slug_key, 'language', 'status' ) );
+		}
 
-		if ( $num_to_update === $num_updated ) {
-			WP_CLI::success( $line );
-		} elseif ( $num_updated > 0 ) {
-			WP_CLI::warning( $line );
-		} else {
-			WP_CLI::error( $line );
+		if ( ! $format || in_array( $format, array( 'table', 'summary' ), true ) ) {
+			$line = sprintf( "Updated $num_updated/$num_to_update %s.", WP_CLI\Utils\pluralize( 'translation', $num_updated ) );
+
+			if ( $num_to_update === $num_updated ) {
+				WP_CLI::success( $line );
+			} elseif ( $num_updated > 0 ) {
+				WP_CLI::warning( $line );
+			} else {
+				WP_CLI::error( $line );
+			}
 		}
 	}
 

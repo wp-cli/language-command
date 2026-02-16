@@ -389,6 +389,18 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * [--dry-run]
 	 * : Preview which translations would be updated.
 	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format. When not specified, updates show
+	 *   progress messages and success/warning/error messages. When specified,
+	 *   the output format changes based on the selected format.
+	 * ---
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 *   - summary
+	 * ---
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Update installed core languages packs.
@@ -401,7 +413,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 	 * @subcommand update
 	 *
 	 * @param string[] $args Positional arguments.
-	 * @param array{'dry-run'?: bool} $assoc_args Associative arguments.
+	 * @param array{'dry-run'?: bool, format?: string} $assoc_args Associative arguments.
 	 */
 	public function update( $args, $assoc_args ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found -- Overruling the documentation, so not useless ;-).
 		parent::update( $args, $assoc_args );
