@@ -83,4 +83,7 @@
 		<exclude-pattern>*/src/Language_Namespace\.php$</exclude-pattern>
 	</rule>
 
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<exclude-pattern>*/tests/phpstan</exclude-pattern>
+	</rule>
 </ruleset>
