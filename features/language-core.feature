@@ -476,3 +476,50 @@ Feature: Manage core translation files for a WordPress install
         | en_US     | active     |
         | nl_NL     | installed  |
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Install languages with different output formats
+    Given a WP install
+    And an empty cache
+
+    When I run `wp language core install de_DE nl_NL --format=csv`
+    Then the return code should be 0
+    And STDOUT should be:
+      """
+      locale,status
+      de_DE,installed
+      nl_NL,installed
+      """
+    And STDERR should be empty
+
+    When I run `wp language core install de_DE nl_NL --format=summary`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      Success: Installed 0 of 2 languages (2 skipped).
+      """
+    And STDERR should be empty
+
+    When I run `wp language core install de_DE nl_NL invalid_lang --format=json`
+    Then the return code should be 0
+    And STDOUT should be JSON containing:
+      """
+      [{"locale":"de_DE","status":"already installed"},{"locale":"nl_NL","status":"already installed"},{"locale":"invalid_lang","status":"not available"}]
+      """
+    And STDERR should be empty
+
+    When I run `wp language core install fr_FR --format=table`
+    Then the return code should be 0
+    And STDOUT should contain:
+      """
+      locale
+      """
+    And STDOUT should contain:
+      """
+      fr_FR
+      """
+    And STDOUT should contain:
+      """
+      installed
+      """
+    And STDERR should be empty
