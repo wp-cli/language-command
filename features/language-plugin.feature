@@ -548,7 +548,7 @@ Feature: Manage plugin translation files for a WordPress install
       """
     And STDOUT should contain:
       """
-      Plugin,Akismet
+      Plugin,"Akismet"
       """
     And STDERR should be empty
 
