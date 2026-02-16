@@ -147,7 +147,7 @@ Returns exit code 0 when installed, 1 when uninstalled.
 Installs a given language.
 
 ~~~
-wp language core install <language>... [--activate]
+wp language core install <language>... [--activate] [--format=<format>]
 ~~~
 
 Downloads the language pack from WordPress.org. Find your language code at: https://translate.wordpress.org/
@@ -159,6 +159,16 @@ Downloads the language pack from WordPress.org. Find your language code at: http
 
 	[--activate]
 		If set, the language will be activated immediately after install.
+
+	[--format=<format>]
+		Render output in a particular format (for one or more languages).
+		---
+		options:
+		  - table
+		  - csv
+		  - json
+		  - summary
+		---
 
 **EXAMPLES**
 
