@@ -16,7 +16,6 @@ Feature: Manage theme translation files for a WordPress install
       | language  | english_name            | status        |
       | cs_CZ     | Czech                   | uninstalled   |
       | de_DE     | German                  | uninstalled   |
-      | en_US     | English (United States) | active        |
       | en_GB     | English (UK)            | uninstalled   |
 
     When I try `wp language theme list not-a-theme --format=json`
@@ -85,7 +84,6 @@ Feature: Manage theme translation files for a WordPress install
       | cs_CZ     | Czech                   | installed   |
       | de_DE     | German                  | installed   |
       | en_GB     | English (UK)            | installed   |
-      | en_US     | English (United States) | active      |
 
     When I run `wp language theme list twentyten --fields=language,english_name,update`
     Then STDOUT should be a table containing rows:
@@ -119,7 +117,6 @@ Feature: Manage theme translation files for a WordPress install
       | language  | english_name            | status        |
       | cs_CZ     | Czech                   | installed     |
       | de_DE     | German                  | installed     |
-      | en_US     | English (United States) | installed     |
       | en_GB     | English (UK)            | active        |
 
     When I run `wp language theme uninstall twentyten cs_CZ de_DE`
