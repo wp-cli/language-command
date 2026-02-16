@@ -476,6 +476,7 @@ Feature: Manage core translation files for a WordPress install
         | en_US     | active     |
         | nl_NL     | installed  |
     And STDERR should be empty
+
   @require-wp-4.0
   Scenario: Core translation update with format flag
     Given a WP install
