@@ -548,7 +548,7 @@ Feature: Manage plugin translation files for a WordPress install
       """
     And STDOUT should contain:
       """
-      Plugin,Akismet Anti-spam: Spam Protection
+      Plugin,Akismet
       """
     And STDERR should be empty
 
