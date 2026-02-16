@@ -325,6 +325,8 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 		}
 
 		$available = ! empty( $available[ $text_domain ] ) ? array_keys( $available[ $text_domain ] ) : array();
+		// en_US is always installed for core, but may not be available for plugins/themes,
+		// especially when custom translation sources are used.
 		if ( 'core' === $this->obj_type ) {
 			$available[] = 'en_US';
 		}
