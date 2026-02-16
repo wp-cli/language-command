@@ -264,13 +264,25 @@ wp language core uninstall <language>...
 Updates installed languages for core.
 
 ~~~
-wp language core update [--dry-run]
+wp language core update [--dry-run] [--format=<format>]
 ~~~
 
 **OPTIONS**
 
 	[--dry-run]
 		Preview which translations would be updated.
+
+	[--format=<format>]
+		Render output in a particular format. When not specified, updates show
+		  progress messages and success/warning/error messages. When specified,
+		  the output format changes based on the selected format.
+		---
+		options:
+		  - table
+		  - csv
+		  - json
+		  - summary
+		---
 
 **EXAMPLES**
 
@@ -506,7 +518,7 @@ wp language plugin uninstall [<plugin>] [--all] <language>... [--format=<format>
 Updates installed languages for one or more plugins.
 
 ~~~
-wp language plugin update [<plugin>...] [--all] [--dry-run]
+wp language plugin update [<plugin>...] [--all] [--dry-run] [--format=<format>]
 ~~~
 
 **OPTIONS**
@@ -519,6 +531,18 @@ wp language plugin update [<plugin>...] [--all] [--dry-run]
 
 	[--dry-run]
 		Preview which translations would be updated.
+
+	[--format=<format>]
+		Render output in a particular format. When not specified, updates show
+		  progress messages and success/warning/error messages. When specified,
+		  the output format changes based on the selected format.
+		---
+		options:
+		  - table
+		  - csv
+		  - json
+		  - summary
+		---
 
 **EXAMPLES**
 
@@ -753,7 +777,7 @@ wp language theme uninstall [<theme>] [--all] <language>... [--format=<format>]
 Updates installed languages for one or more themes.
 
 ~~~
-wp language theme update [<theme>...] [--all] [--dry-run]
+wp language theme update [<theme>...] [--all] [--dry-run] [--format=<format>]
 ~~~
 
 **OPTIONS**
@@ -766,6 +790,18 @@ wp language theme update [<theme>...] [--all] [--dry-run]
 
 	[--dry-run]
 		Preview which translations would be updated.
+
+	[--format=<format>]
+		Render output in a particular format. When not specified, updates show
+		  progress messages and success/warning/error messages. When specified,
+		  the output format changes based on the selected format.
+		---
+		options:
+		  - table
+		  - csv
+		  - json
+		  - summary
+		---
 
 **EXAMPLES**
 
