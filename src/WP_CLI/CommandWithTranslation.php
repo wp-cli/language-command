@@ -439,4 +439,16 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	protected function get_formatter( &$assoc_args ) {
 		return new Formatter( $assoc_args, $this->obj_fields, $this->obj_type );
 	}
+
+	/**
+	 * Clears the translation files cache for a given directory.
+	 *
+	 * As of WP 6.5, the presence of .mo and .l10n.php files is cached.
+	 *
+	 * @param string $dir The directory to clear the cache for.
+	 */
+	protected function clear_translation_files_cache( $dir ) {
+		$path = rtrim( $dir, '/' ) . '/';
+		wp_cache_delete( md5( $path ), 'translation_files' );
+	}
 }

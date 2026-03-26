@@ -225,9 +225,12 @@ Feature: Manage core translation files for a WordPress install
     Given an empty directory
     And WP files
     And a database
-    And I run `wp core download --version=<original> --force`
+    And I try `wp core download --version=<original> --force`
+    And the return code should be 0
     And wp-config.php
-    And I run `wp core install --url='localhost:8001' --title='Test' --admin_user=wpcli --admin_email=admin@example.com --admin_password=1`
+    # The SQLite object cache drop-in might produce a "no such table: wp_options" STDERR during installation.
+    And I try `wp core install --url='localhost:8001' --title='Test' --admin_user=wpcli --admin_email=admin@example.com --admin_password=1`
+    And the return code should be 0
 
     When I run `wp language core list --fields=language,status,update`
     Then STDOUT should be a table containing rows:
@@ -505,9 +508,12 @@ Feature: Manage core translation files for a WordPress install
     Given an empty directory
     And WP files
     And a database
-    And I run `wp core download --version=<original> --force`
+    And I try `wp core download --version=<original> --force`
+    And the return code should be 0
     And wp-config.php
-    And I run `wp core install --url='localhost:8001' --title='Test' --admin_user=wpcli --admin_email=admin@example.com --admin_password=1`
+    # The SQLite object cache drop-in might produce a "no such table: wp_options" STDERR during installation.
+    And I try `wp core install --url='localhost:8001' --title='Test' --admin_user=wpcli --admin_email=admin@example.com --admin_password=1`
+    And the return code should be 0
 
     When I run `wp language core install en_CA ja`
     Then STDERR should be empty

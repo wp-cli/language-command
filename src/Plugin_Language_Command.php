@@ -551,11 +551,13 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				if ( $count_files_to_remove === $count_files_removed ) {
 					$result['status'] = 'uninstalled';
 					++$successes;
+					$this->clear_translation_files_cache( $dir );
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin}' uninstalled." );
 				} elseif ( $count_files_removed ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin}' partially uninstalled." );
 					$result['status'] = 'partial uninstall';
 					++$errors;
+					$this->clear_translation_files_cache( $dir );
 				} elseif ( $had_one_file ) { /* $count_files_removed == 0 */
 						\WP_CLI::log( "Couldn't uninstall language '{$language_code}' from plugin {$plugin}." );
 						$result['status'] = 'failed to uninstall';
