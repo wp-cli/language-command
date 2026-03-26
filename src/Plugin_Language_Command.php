@@ -551,6 +551,7 @@ class Plugin_Language_Command extends WP_CLI\CommandWithTranslation {
 				if ( $count_files_to_remove === $count_files_removed ) {
 					$result['status'] = 'uninstalled';
 					++$successes;
+					$this->clear_translation_files_cache( $dir );
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin}' uninstalled." );
 				} elseif ( $count_files_removed ) {
 					\WP_CLI::log( "Language '{$language_code}' for '{$plugin}' partially uninstalled." );

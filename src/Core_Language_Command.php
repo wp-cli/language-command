@@ -374,6 +374,7 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 			}
 
 			if ( $deleted ) {
+				$this->clear_translation_files_cache( WP_LANG_DIR . $dir );
 				WP_CLI::success( 'Language uninstalled.' );
 			} else {
 				WP_CLI::error( "Couldn't uninstall language." );
