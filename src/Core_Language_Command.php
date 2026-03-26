@@ -370,7 +370,9 @@ class Core_Language_Command extends WP_CLI\CommandWithTranslation {
 				}
 
 				/** @var WP_Filesystem_Base $wp_filesystem */
-				$deleted = $wp_filesystem->delete( WP_LANG_DIR . $dir . '/' . $file );
+				if ( $wp_filesystem->delete( WP_LANG_DIR . $dir . '/' . $file ) ) {
+					$deleted = true;
+				}
 			}
 
 			if ( $deleted ) {
