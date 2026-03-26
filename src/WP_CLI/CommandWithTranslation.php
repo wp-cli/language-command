@@ -443,13 +443,12 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 	/**
 	 * Clears the translation files cache for a given directory.
 	 *
+	 * As of WP 6.5, the presence of .mo and .l10n.php files is cached.
+	 *
 	 * @param string $dir The directory to clear the cache for.
 	 */
 	protected function clear_translation_files_cache( $dir ) {
-		// As of WP 6.5, the presence of .mo and .l10n.php files is cached.
-		if ( function_exists( 'wp_cache_delete' ) ) {
-			$path = rtrim( $dir, '/' ) . '/';
-			wp_cache_delete( md5( $path ), 'translation_files' );
-		}
+		$path = rtrim( $dir, '/' ) . '/';
+		wp_cache_delete( md5( $path ), 'translation_files' );
 	}
 }
