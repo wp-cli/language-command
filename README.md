@@ -3,7 +3,7 @@ wp-cli/language-command
 
 Installs, activates, and manages language packs.
 
-[![Testing](https://github.com/wp-cli/language-command/actions/workflows/testing.yml/badge.svg)](https://github.com/wp-cli/language-command/actions/workflows/testing.yml)
+[![Testing](https://github.com/wp-cli/language-command/actions/workflows/testing.yml/badge.svg)](https://github.com/wp-cli/language-command/actions/workflows/testing.yml) [![Code Coverage](https://codecov.io/gh/wp-cli/language-command/branch/main/graph/badge.svg)](https://codecov.io/gh/wp-cli/language-command/tree/main)
 
 Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contributing) | [Support](#support)
 
