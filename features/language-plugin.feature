@@ -592,3 +592,35 @@ Feature: Manage plugin translation files for a WordPress install
     # If the fix is working, installed languages should be detected via text domain
     When I run `wp language plugin is-installed test-plugin de_DE`
     Then the return code should be 0
+
+  @require-wp-4.0
+  Scenario: Update a translation that the translations API does not list
+    Given a WP install
+    And an empty cache
+
+    When I run `wp plugin install akismet --version=3.2 --force`
+    Then STDERR should be empty
+
+    When I run `wp language plugin install akismet de_DE`
+    Then STDERR should be empty
+
+    When I run `wp plugin install akismet --version=4.0 --force`
+    Then STDERR should be empty
+
+    # The update check still offers the de_DE language pack, but the translations
+    # API no longer reports de_DE for the installed version, so there is no
+    # english_name to fall back on.
+    And that HTTP requests to api.wordpress.org/translations/plugins/1.0/ will respond with:
+      """
+      HTTP/1.1 200
+      Content-Type: application/json
+
+      {"translations":[]}
+      """
+
+    When I run `wp language plugin update akismet`
+    Then STDOUT should contain:
+      """
+      Updating 'de_DE' translation for Akismet
+      """
+    And STDERR should be empty
