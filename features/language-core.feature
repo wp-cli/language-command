@@ -341,9 +341,12 @@ Feature: Manage core translation files for a WordPress install
     And a disable_sidebar_check.php file:
       """
       <?php
-      WP_CLI::add_wp_hook( 'init', static function () {
-        remove_action( 'after_switch_theme', '_wp_sidebars_changed' );
-      } );
+      WP_CLI::add_wp_hook(
+          'init',
+          static function () {
+              remove_action( 'after_switch_theme', '_wp_sidebars_changed' );
+          }
+      );
       """
 
     When I run `wp language core install de_DE --activate --require=disable_sidebar_check.php`
