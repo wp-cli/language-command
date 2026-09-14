@@ -220,6 +220,36 @@ Feature: Manage core translation files for a WordPress install
       """
     And the return code should be 0
 
+  @require-wp-4.0
+  Scenario: Use cached language file when available
+    Given a WP install
+    And an empty cache
+
+    When I run `wp language core install en_GB`
+    Then STDOUT should contain:
+      """
+      Success: Installed 1 of 1 languages.
+      """
+    And STDERR should be empty
+
+    When I run `wp language core uninstall en_GB`
+    Then STDOUT should be:
+      """
+      Success: Language uninstalled.
+      """
+    And STDERR should be empty
+
+    When I run `wp language core install en_GB`
+    Then STDOUT should contain:
+      """
+      Using cached file
+      """
+    And STDOUT should contain:
+      """
+      Success: Installed 1 of 1 languages.
+      """
+    And STDERR should be empty
+
   @require-wp-6.0 @require-php-7.2
   Scenario Outline: Core translation update in newer versions
     Given an empty directory
