@@ -272,8 +272,11 @@ Feature: Manage plugin translation files for a WordPress install
   Scenario: Ensure correct language is installed for plugin version
     Given a WP install
     And an empty cache
-    And I run `wp plugin install akismet --version=3.2 --force`
-    And I run `wp plugin install jetpack --version=6.0 --force`
+    And these installed plugins:
+      """
+      akismet --version=3.2 --force
+      jetpack --version=6.0 --force
+      """
 
     When I run `wp language plugin install akismet de_DE_formal`
     Then STDOUT should contain:
@@ -309,9 +312,12 @@ Feature: Manage plugin translation files for a WordPress install
       | akismet  | de_DE_formal | none   | installed |
       | jetpack  | de_DE        | none   | installed |
 
-    When I run `wp plugin install akismet --version=4.0 --force`
-    And I run `wp plugin install jetpack --version=6.4 --force`
-    And I run `wp language plugin list --all --fields=plugin,language,update,status`
+    Given these installed plugins:
+      """
+      akismet --version=4.0 --force
+      jetpack --version=6.4 --force
+      """
+    When I run `wp language plugin list --all --fields=plugin,language,update,status`
     Then STDOUT should be a table containing rows:
       | plugin   | language     | update    | status    |
       | akismet  | de_DE_formal | available | installed |
@@ -351,8 +357,11 @@ Feature: Manage plugin translation files for a WordPress install
   Scenario: Ensure availability status is correct for each plugin
     Given a WP install
     And an empty cache
-    And I run `wp plugin install akismet --version=3.2 --force`
-    And I run `wp plugin install jetpack --version=6.0 --force`
+    And these installed plugins:
+      """
+      akismet --version=3.2 --force
+      jetpack --version=6.0 --force
+      """
 
     When I run `wp language plugin install akismet de_DE`
     Then STDOUT should contain:
@@ -367,9 +376,12 @@ Feature: Manage plugin translation files for a WordPress install
       """
     And STDERR should be empty
 
-    When I run `wp plugin install akismet --version=4.0 --force`
-    And I run `wp plugin install jetpack --version=6.4 --force`
-    And I run `wp language plugin update jetpack`
+    Given these installed plugins:
+      """
+      akismet --version=4.0 --force
+      jetpack --version=6.4 --force
+      """
+    When I run `wp language plugin update jetpack`
     Then STDOUT should contain:
       """
       Downloading translation from https://downloads.wordpress.org/translation/plugin/jetpack/6.4/de_DE.zip
@@ -388,8 +400,11 @@ Feature: Manage plugin translation files for a WordPress install
     And I run `wp plugin path`
     And save STDOUT as {PLUGIN_DIR}
     And an empty {PLUGIN_DIR} directory
-    And I run `wp plugin install akismet --version=4.0 --force`
-    And I run `wp plugin install jetpack --version=6.4 --force`
+    And these installed plugins:
+      """
+      akismet --version=4.0 --force
+      jetpack --version=6.4 --force
+      """
 
     When I try `wp language plugin install de_DE`
     Then the return code should be 1
@@ -478,8 +493,11 @@ Feature: Manage plugin translation files for a WordPress install
     When I run `wp language plugin install akismet de_DE`
     Then STDERR should be empty
 
-    When I run `wp plugin install akismet --version=4.0 --force`
-    And I run `wp language plugin list akismet --fields=plugin,language,update,status`
+    Given these installed plugins:
+      """
+      akismet --version=4.0 --force
+      """
+    When I run `wp language plugin list akismet --fields=plugin,language,update,status`
     Then STDOUT should be a table containing rows:
       | plugin  | language | update    | status    |
       | akismet | de_DE    | available | installed |
@@ -492,9 +510,15 @@ Feature: Manage plugin translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp language plugin uninstall akismet de_DE`
-    And I run `wp plugin install akismet --version=3.2 --force`
+    And these installed plugins:
+      """
+      akismet --version=3.2 --force
+      """
     And I run `wp language plugin install akismet de_DE`
-    And I run `wp plugin install akismet --version=4.0 --force`
+    And these installed plugins:
+      """
+      akismet --version=4.0 --force
+      """
     And I run `wp language plugin update akismet --format=csv`
     Then STDOUT should contain:
       """
@@ -507,9 +531,15 @@ Feature: Manage plugin translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp language plugin uninstall akismet de_DE`
-    And I run `wp plugin install akismet --version=3.2 --force`
+    And these installed plugins:
+      """
+      akismet --version=3.2 --force
+      """
     And I run `wp language plugin install akismet de_DE`
-    And I run `wp plugin install akismet --version=4.0 --force`
+    And these installed plugins:
+      """
+      akismet --version=4.0 --force
+      """
     And I run `wp language plugin update akismet --format=summary`
     Then STDOUT should contain:
       """
@@ -528,8 +558,11 @@ Feature: Manage plugin translation files for a WordPress install
     When I run `wp language plugin install akismet de_DE`
     Then STDERR should be empty
 
-    When I run `wp plugin install akismet --version=4.0 --force`
-    And I run `wp language plugin list akismet --fields=plugin,language,update,status`
+    Given these installed plugins:
+      """
+      akismet --version=4.0 --force
+      """
+    When I run `wp language plugin list akismet --fields=plugin,language,update,status`
     Then STDOUT should be a table containing rows:
       | plugin  | language | update    | status    |
       | akismet | de_DE    | available | installed |

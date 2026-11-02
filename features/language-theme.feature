@@ -230,7 +230,10 @@ Feature: Manage theme translation files for a WordPress install
   Scenario: Ensure correct language is installed for theme version
     Given a WP install
     And an empty cache
-    And I run `wp theme install twentyseventeen --version=1.0 --force`
+    And these installed themes:
+      """
+      twentyseventeen --version=1.0 --force
+      """
 
     When I run `wp language theme install twentyseventeen de_DE`
     Then STDOUT should contain:
@@ -238,8 +241,11 @@ Feature: Manage theme translation files for a WordPress install
       Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.0/de_DE.zip
       """
 
-    When I run `wp theme install twentyseventeen --version=1.6 --force`
-    And I run `wp language theme update twentyseventeen`
+    Given these installed themes:
+      """
+      twentyseventeen --version=1.6 --force
+      """
+    When I run `wp language theme update twentyseventeen`
     Then STDOUT should contain:
       """
       Downloading translation from https://downloads.wordpress.org/translation/theme/twentyseventeen/1.6/de_DE.zip
@@ -251,8 +257,11 @@ Feature: Manage theme translation files for a WordPress install
     And I run `wp theme path`
     And save STDOUT as {THEME_DIR}
     And an empty {THEME_DIR} directory
-    And I run `wp theme install twentyseventeen --version=1.0 --force`
-    And I run `wp theme install twentysixteen --version=1.0 --force`
+    And these installed themes:
+      """
+      twentyseventeen --version=1.0 --force
+      twentysixteen --version=1.0 --force
+      """
 
     When I try `wp language theme install de_DE`
     Then the return code should be 1
@@ -316,7 +325,10 @@ Feature: Manage theme translation files for a WordPress install
   Scenario: List languages by multiple statuses
     Given a WP install
     And an empty cache
-    And I run `wp theme install twentyten --force`
+    And these installed themes:
+      """
+      twentyten --force
+      """
     And I run `wp language theme install twentyten nl_NL`
 
     When I run `wp language theme list twentyten --fields=language,status --status=active,installed`
@@ -362,8 +374,11 @@ Feature: Manage theme translation files for a WordPress install
     When I run `wp language theme install twentyfifteen de_DE`
     Then STDERR should be empty
 
-    When I run `wp theme install twentyfifteen --version=2.5 --force`
-    And I run `wp language theme list twentyfifteen --fields=theme,language,update,status`
+    Given these installed themes:
+      """
+      twentyfifteen --version=2.5 --force
+      """
+    When I run `wp language theme list twentyfifteen --fields=theme,language,update,status`
     Then STDOUT should be a table containing rows:
       | theme         | language | update    | status    |
       | twentyfifteen | de_DE    | available | installed |
@@ -376,9 +391,15 @@ Feature: Manage theme translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp language theme uninstall twentyfifteen de_DE`
-    And I run `wp theme install twentyfifteen --version=2.0 --force`
+    And these installed themes:
+      """
+      twentyfifteen --version=2.0 --force
+      """
     And I run `wp language theme install twentyfifteen de_DE`
-    And I run `wp theme install twentyfifteen --version=2.5 --force`
+    And these installed themes:
+      """
+      twentyfifteen --version=2.5 --force
+      """
     And I run `wp language theme update twentyfifteen --format=csv`
     Then STDOUT should contain:
       """
@@ -391,9 +412,15 @@ Feature: Manage theme translation files for a WordPress install
     And STDERR should be empty
 
     When I run `wp language theme uninstall twentyfifteen de_DE`
-    And I run `wp theme install twentyfifteen --version=2.0 --force`
+    And these installed themes:
+      """
+      twentyfifteen --version=2.0 --force
+      """
     And I run `wp language theme install twentyfifteen de_DE`
-    And I run `wp theme install twentyfifteen --version=2.5 --force`
+    And these installed themes:
+      """
+      twentyfifteen --version=2.5 --force
+      """
     And I run `wp language theme update twentyfifteen --format=summary`
     Then STDOUT should contain:
       """
@@ -412,8 +439,11 @@ Feature: Manage theme translation files for a WordPress install
     When I run `wp language theme install twentyfifteen de_DE`
     Then STDERR should be empty
 
-    When I run `wp theme install twentyfifteen --version=2.5 --force`
-    And I run `wp language theme list twentyfifteen --fields=theme,language,update,status`
+    Given these installed themes:
+      """
+      twentyfifteen --version=2.5 --force
+      """
+    When I run `wp language theme list twentyfifteen --fields=theme,language,update,status`
     Then STDOUT should be a table containing rows:
       | theme         | language | update    | status    |
       | twentyfifteen | de_DE    | available | installed |

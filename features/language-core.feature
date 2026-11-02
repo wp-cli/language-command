@@ -343,7 +343,10 @@ Feature: Manage core translation files for a WordPress install
   @require-wp-5.7 @require-mysql
   Scenario: Ensure correct language is installed for WP version
     Given a WP install
-    And I try `wp theme install twentytwentyone`
+    And these installed themes:
+      """
+      twentytwentyone
+      """
     And I run `wp theme activate twentytwentyone`
     And an empty cache
     And I run `wp core download --version=5.6.14 --force`
@@ -364,7 +367,10 @@ Feature: Manage core translation files for a WordPress install
   @require-wp-4.0 @require-mysql
   Scenario: Ensure upgrader output is in English
     Given a WP install
-    And I try `wp theme install twentytwentyone`
+    And these installed themes:
+      """
+      twentytwentyone
+      """
     And I run `wp theme activate twentytwentyone`
     And an empty cache
     And I run `wp core download --version=5.4.1 --force`
