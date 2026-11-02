@@ -222,8 +222,6 @@ Feature: Manage plugin translation files for a WordPress install
   @require-wp-4.0
   Scenario: Not providing plugin slugs should throw an error unless --all given
     Given a WP install
-    And I run `wp plugin path`
-    And save STDOUT as {PLUGIN_DIR}
 
     When I try `wp language plugin list`
     Then the return code should be 1
@@ -397,8 +395,6 @@ Feature: Manage plugin translation files for a WordPress install
   @require-wp-4.0
   Scenario: Install translations for all installed plugins
     Given a WP install
-    And I run `wp plugin path`
-    And save STDOUT as {PLUGIN_DIR}
     And an empty {PLUGIN_DIR} directory
     And these installed plugins:
       """

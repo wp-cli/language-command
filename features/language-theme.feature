@@ -180,8 +180,6 @@ Feature: Manage theme translation files for a WordPress install
   @require-wp-4.0
   Scenario: Not providing theme slugs should throw an error unless --all given
     Given a WP install
-    And I run `wp theme path`
-    And save STDOUT as {THEME_DIR}
 
     When I try `wp language theme list`
     Then the return code should be 1
@@ -254,8 +252,6 @@ Feature: Manage theme translation files for a WordPress install
   @require-wp-4.0
   Scenario: Install translations for all installed themes
     Given a WP install
-    And I run `wp theme path`
-    And save STDOUT as {THEME_DIR}
     And an empty {THEME_DIR} directory
     And these installed themes:
       """
