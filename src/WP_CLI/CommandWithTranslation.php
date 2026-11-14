@@ -106,13 +106,12 @@ abstract class CommandWithTranslation extends WP_CLI_Command {
 				$translation = wp_list_filter( $all_languages, array( 'language' => $update->language ) );
 				$translation = (object) reset( $translation );
 
-				$update->Type    = ucfirst( $update->type );
-				$update->Name    = $name;
-				$update->Version = $update->version;
-
-				if ( isset( $translation->english_name ) ) {
-					$update->Language = $translation->english_name;
-				}
+				$update->Type     = ucfirst( $update->type );
+				$update->Name     = $name;
+				$update->Version  = $update->version;
+				$update->Language = isset( $translation->english_name )
+					? $translation->english_name
+					: $update->language;
 
 				if ( ! isset( $updates_per_type[ $update->type ] ) ) {
 					$updates_per_type[ $update->type ] = array();
