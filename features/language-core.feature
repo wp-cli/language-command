@@ -593,6 +593,41 @@ Feature: Manage core translation files for a WordPress install
       | original | update |
       | 6.5      | 6.6    |
 
+  @require-wp-6.0 @require-php-7.2
+  Scenario: Core translation update respects --quiet
+    Given an empty directory
+    And WP files
+    And a database
+    And I try `wp core download --version=6.5 --force`
+    And the return code should be 0
+    And wp-config.php
+    # The SQLite object cache drop-in might produce a "no such table: wp_options" STDERR during installation.
+    And I try `wp core install --url='localhost:8001' --title='Test' --admin_user=wpcli --admin_email=admin@example.com --admin_password=1`
+    And the return code should be 0
+
+    When I run `wp language core install de_DE_formal ja`
+    Then STDERR should be empty
+
+    Given I try `wp core download --version=6.6 --force`
+    Then the return code should be 0
+    And I run `wp core update-db`
+
+    When I run `wp language core list --fields=language,status,update`
+    Then STDOUT should be a table containing rows:
+      | language     | status    | update    |
+      | de_DE_formal | installed | available |
+      | ja           | installed | available |
+
+    When I run `wp --quiet language core update`
+    Then STDOUT should be empty
+    And STDERR should be empty
+
+    When I run `wp language core list --fields=language,status,update`
+    Then STDOUT should be a table containing rows:
+      | language     | status    | update |
+      | de_DE_formal | installed | none   |
+      | ja           | installed | none   |
+
   @require-wp-4.0
   Scenario: Install languages with different output formats
     Given a WP install
