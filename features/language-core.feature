@@ -220,6 +220,36 @@ Feature: Manage core translation files for a WordPress install
       """
     And the return code should be 0
 
+  @require-wp-4.0
+  Scenario: Use cached language file when available
+    Given a WP install
+    And an empty cache
+
+    When I run `wp language core install en_GB`
+    Then STDOUT should contain:
+      """
+      Success: Installed 1 of 1 languages.
+      """
+    And STDERR should be empty
+
+    When I run `wp language core uninstall en_GB`
+    Then STDOUT should be:
+      """
+      Success: Language uninstalled.
+      """
+    And STDERR should be empty
+
+    When I run `wp language core install en_GB`
+    Then STDOUT should contain:
+      """
+      Using cached file
+      """
+    And STDOUT should contain:
+      """
+      Success: Installed 1 of 1 languages.
+      """
+    And STDERR should be empty
+
   @require-wp-6.0 @require-php-7.2
   Scenario Outline: Core translation update in newer versions
     Given an empty directory
@@ -313,7 +343,10 @@ Feature: Manage core translation files for a WordPress install
   @require-wp-5.7 @require-mysql
   Scenario: Ensure correct language is installed for WP version
     Given a WP install
-    And I try `wp theme install twentytwentyone`
+    And these installed themes:
+      """
+      twentytwentyone
+      """
     And I run `wp theme activate twentytwentyone`
     And an empty cache
     And I run `wp core download --version=5.6.14 --force`
@@ -334,16 +367,22 @@ Feature: Manage core translation files for a WordPress install
   @require-wp-4.0 @require-mysql
   Scenario: Ensure upgrader output is in English
     Given a WP install
-    And I try `wp theme install twentytwentyone`
+    And these installed themes:
+      """
+      twentytwentyone
+      """
     And I run `wp theme activate twentytwentyone`
     And an empty cache
     And I run `wp core download --version=5.4.1 --force`
     And a disable_sidebar_check.php file:
       """
       <?php
-      WP_CLI::add_wp_hook( 'init', static function () {
-        remove_action( 'after_switch_theme', '_wp_sidebars_changed' );
-      } );
+      WP_CLI::add_wp_hook(
+          'init',
+          static function () {
+              remove_action( 'after_switch_theme', '_wp_sidebars_changed' );
+          }
+      );
       """
 
     When I run `wp language core install de_DE --activate --require=disable_sidebar_check.php`
