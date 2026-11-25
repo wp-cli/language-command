@@ -653,3 +653,73 @@ Feature: Manage plugin translation files for a WordPress install
       Updating 'de_DE' translation for Akismet
       """
     And STDERR should be empty
+
+  @require-wp-4.0
+  Scenario: Update a translation pack from a source that the translations API does not know
+    Given a WP install
+    And a wp-content/plugins/private-plugin/private-plugin.php file:
+      """
+      <?php
+      /**
+       * Plugin Name: Private Plugin
+       * Version: 0.1.0
+       */
+      """
+    # Plugins that host their own language packs add them to the update transient.
+    And a wp-content/mu-plugins/private-language-packs.php file:
+      """
+      <?php
+      add_filter( 'site_transient_update_plugins', function ( $value ) {
+        if ( ! is_object( $value ) ) {
+          $value = new stdClass();
+        }
+        $value->translations[] = array(
+          'type'       => 'plugin',
+          'slug'       => 'private-plugin',
+          'language'   => 'de_DE',
+          'version'    => '0.1.0',
+          'updated'    => '2026-01-01 00:00:00',
+          'package'    => 'https://example.invalid/private-plugin-de_DE.zip',
+          'autoupdate' => true,
+        );
+        return $value;
+      } );
+      """
+    And that HTTP requests to api.wordpress.org/plugins/update-check/1.1/ will respond with:
+      """
+      HTTP/1.1 200
+      Content-Type: application/json
+
+      {"plugins":[],"translations":[],"no_update":[]}
+      """
+    And that HTTP requests to api.wordpress.org/translations/plugins/1.0/ will respond with:
+      """
+      HTTP/1.1 200
+      Content-Type: application/json
+
+      {"translations":[]}
+      """
+    And that HTTP requests to https://example.invalid/private-plugin-de_DE.zip will respond with:
+      """
+      HTTP/1.1 404
+      Content-Type: text/plain
+
+      Not found
+      """
+
+    When I run `wp language plugin update private-plugin --dry-run --format=csv`
+    Then STDOUT should contain:
+      """
+      Plugin,"Private Plugin",0.1.0,de_DE
+      """
+    And STDERR should be empty
+
+    When I try `wp language plugin update private-plugin`
+    Then STDOUT should contain:
+      """
+      Updating 'de_DE' translation for Private Plugin 0.1.0...
+      """
+    And STDERR should not contain:
+      """
+      Undefined property
+      """
